@@ -4,7 +4,7 @@
 ![Tests](https://github.com/spatie/laravel-schedule-monitor/workflows/Tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-schedule-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-schedule-monitor)
 
-This package will monitor your Laravel schedule. It will write an entry to a log table in the db each time a schedule tasks starts, end, fails or is skipped. Using the `list` command you can check when the schedule tasks have been executed.
+This package will monitor your Laravel schedule. It will write an entry to a log table in the db each time a schedule tasks starts, end, fails or is skipped. Using the `list` command you can check when the scheduled tasks have been executed.
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
 
@@ -222,6 +222,16 @@ protected function schedule(Schedule $schedule)
    $schedule->command('your-command')->daily()->graceTimeInMinutes(10);
 }
 ```
+
+## Third party scheduled task monitors
+
+We assume that, when your scheduled tasks do not run properly, a scheduled task that would send out notifications would probably not run either.  That's why this package doesn't send out notifications by itself, but relies on external services.
+
+These services can notify you when scheduled tasks do not run properly:
+
+- [Oh Dear](https://ohdear.app) (in closed beta)
+- [thenping.me](https://thenping.me) (in closed beta)
+- [Cronbox](https://cronbox.app)
 
 ## Testing
 
