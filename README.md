@@ -223,8 +223,6 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
-## Getting
-
 ## Testing
 
 ``` bash
