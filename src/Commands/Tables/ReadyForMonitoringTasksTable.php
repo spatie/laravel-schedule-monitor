@@ -21,7 +21,7 @@ class ReadyForMonitoringTasksTable extends ScheduledTasksTable
         $this->command->line('Run sync to start monitoring');
         $this->command->line('----------------------------');
         $this->command->line('');
-        $this->command->line('These tasks will be monitored after running `php artisan cron-monitor:sync`');
+        $this->command->line('These tasks will be monitored after running `php artisan schedule-monitor:sync`');
         $this->command->line('');
 
         $tasks = ScheduledTasks::createForSchedule()
