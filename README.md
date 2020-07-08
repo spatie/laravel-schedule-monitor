@@ -118,7 +118,6 @@ To monitor your schedule you should first run `schedule-monitor:sync`. This comm
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/sync.png)
 
-
 To view all monitored scheduled tasks, you can run `schedule-monitor:list`. This command will list all monitored scheduled tasks. It will show you when a scheduled task has last started, finished, or failed.
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list.png)
@@ -144,6 +143,25 @@ protected function schedule(Schedule $schedule)
 ```
 
 When you change the name of task, the schedule monitor will remove all log items of the monitor with the old name, and create a new monitor using the new name of the task.
+
+### Setting a grace time
+
+When the package detects that the last run of a scheduled task did not run in time, the `schedule-monitor` list will display that task using a red background color. In this screenshot the task named `your-command` ran too late.
+
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
+
+The package will determine that a package ran too if did not finish at the time it was supposed to run + the grace time. You can think of the grace time as the amount of minutes that a task under normal circumstances needs to finish. By default, the package grants a grace time of 5 minutes to each task.
+
+You can customize the grace time by using the `graceTimeInMinutes` method on a task. In this example a grace time of 10 minutes is used for the `your-command` task.
+
+```php
+// in app/Console/Kernel.php
+
+protected function schedule(Schedule $schedule)
+{
+   $schedule->command('your-command')->daily()->graceTimeInMinutes(10);
+}
+```
 
 ### Ignoring scheduled tasks
 
@@ -204,6 +222,8 @@ protected function schedule(Schedule $schedule)
    $schedule->command('your-command')->daily()->graceTimeInMinutes(10);
 }
 ```
+
+## Getting
 
 ## Testing
 
