@@ -66,10 +66,12 @@ class MonitoredTasksTable extends ScheduledTasksTable
 
         $this->command->table($headers, $rows);
 
-        if ($tasks->contains(fn (Task $task) => ! $task->isBeingMonitoredAtOhDear())) {
-            $this->command->line('');
-            $this->command->line('Some tasks are not registered on Oh Dear. You will not be notified when they do not run on time.');
-            $this->command->line('Run `php artisan server-monitor:sync` to register them and receive notifications.');
+        if ($this->usingOhDear()) {
+            if ($tasks->contains(fn (Task $task) => ! $task->isBeingMonitoredAtOhDear())) {
+                $this->command->line('');
+                $this->command->line('Some tasks are not registered on Oh Dear. You will not be notified when they do not run on time.');
+                $this->command->line('Run `php artisan server-monitor:sync` to register them and receive notifications.');
+            }
         }
     }
 

@@ -76,9 +76,9 @@ abstract class Task
         return Carbon::instance($dateTime);
     }
 
-    public function nextRunAt(): Carbon
+    public function nextRunAt(Carbon $now = null): Carbon
     {
-        $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate(now());
+        $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate($now ?? now());
 
         return Carbon::instance($dateTime);
     }
@@ -109,8 +109,17 @@ abstract class Task
             return false;
         }
 
-        $shouldHaveFinishedAt = $this->previousRunAt()->addMinutes($this->graceTimeInMinutes());
+        $lastFinishedAt = $this->lastRunFinishedAt()
+            ? $this->lastRunFinishedAt()
+            : $this->monitoredScheduledTask->created_at;
 
+        $expectedNextRunStart = $this->nextRunAt($lastFinishedAt->subSecond());
+
+        $shouldHaveFinishedAt = $expectedNextRunStart->addMinutes($this->graceTimeInMinutes());
+
+        return $shouldHaveFinishedAt->isPast();
+
+        /*
         if ($this->monitoredScheduledTask->created_at->isAfter($shouldHaveFinishedAt)) {
             return false;
         }
@@ -128,6 +137,7 @@ abstract class Task
         }
 
         return now()->isAfter($shouldHaveFinishedAt);
+        */
     }
 
     public function lastRunFailed(): bool

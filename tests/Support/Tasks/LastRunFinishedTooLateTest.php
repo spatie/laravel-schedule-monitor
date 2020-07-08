@@ -37,10 +37,10 @@ class LastRunFinishedTooLateTest extends TestCase
     {
         $this->assertFalse($this->task()->lastRunFinishedTooLate());
 
-        TestTime::addMinutes(4);
+        TestTime::addMinutes(5);
         $this->assertFalse($this->task()->lastRunFinishedTooLate());
 
-        TestTime::addMinute();
+        TestTime::addSecond();
         $this->assertTrue($this->task()->lastRunFinishedTooLate());
     }
 
