@@ -118,26 +118,6 @@ abstract class Task
         $shouldHaveFinishedAt = $expectedNextRunStart->addMinutes($this->graceTimeInMinutes());
 
         return $shouldHaveFinishedAt->isPast();
-
-        /*
-        if ($this->monitoredScheduledTask->created_at->isAfter($shouldHaveFinishedAt)) {
-            return false;
-        }
-
-        if ($shouldHaveFinishedAt->isFuture()) {
-            return false;
-        }
-
-        if (! $this->lastRunFinishedAt()) {
-            return true;
-        }
-
-        if ($this->lastRunFinishedAt()->between($this->previousRunAt(), $this->nextRunAt())) {
-            return false;
-        }
-
-        return now()->isAfter($shouldHaveFinishedAt);
-        */
     }
 
     public function lastRunFailed(): bool
