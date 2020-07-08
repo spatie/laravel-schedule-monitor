@@ -28,12 +28,16 @@ You can install the package via composer:
 composer require spatie/laravel-schedule-monitor
 ```
 
+#### Preparing the database
+
 You must publish and run migrations:
 
 ```bash
 php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="migrations"
 php artisan migrate
 ```
+
+#### Publishing the config file
 
 You can publish the config file with:
 ```bash
@@ -77,9 +81,11 @@ return [
     ],
 ```
 
+#### Cleaning the database
+
+
 You must register the `schedule-monitor:clean` tasks in your console kernel. This command will clean up old records from the schedule monitor log table.
 
-- `schedule-monitor:sync`: this command is responsible for syncing your schedule with the database, and optionally Oh Dear. If you are using [Oh Dear](https://ohdear.app) for getting notifications, we recommend scheduling it at on odd time like '04:56', so the Oh Dear server doesn't get all the sync requests from all users at the same time.
 
 ```php
 // app/Console/Kernel.php
@@ -94,7 +100,17 @@ class Kernel extends ConsoleKernel
 }
 ```
 
-Each time you change the schedule, we recommend manually running `schedule-monitor:sync` and `schedule:list`.
+#### Syncing the schedule
+
+Every time you deploy your application, you should execute the `schedule-monitor:sync` command
+
+```bash
+schedule-monitor:sync
+```
+
+This command is responsible for syncing your schedule with the database, and optionally Oh Dear. We highly recommend adding this command to the script that deploys your production environment.
+
+In a non-production environment you should manually run `schedule-monitor:sync`. You can verify if everything synced correctly using `schedule-monitor:list`.
 
 ## Usage
 
