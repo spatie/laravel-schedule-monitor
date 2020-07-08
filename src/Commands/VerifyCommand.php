@@ -33,7 +33,7 @@ class VerifyCommand extends Command
     public function verifySdkInstalled(): self
     {
         if (! class_exists(OhDear::class)) {
-            throw new Exception("You must install the Oh Dear SDK in order to sync your schedule with Oh Dear. Run `composer install ohdearapp/ohdear-php-sdk`.");
+            throw new Exception("You must install the Oh Dear SDK in order to sync your schedule with Oh Dear. Run `composer require ohdearapp/ohdear-php-sdk`.");
         }
 
         $this->comment('The Oh Dear SDK is installed.');

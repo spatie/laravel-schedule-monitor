@@ -10,4 +10,5 @@
 /.editorconfig      export-ignore
 /.php.cs            export-ignore
 /.github            export-ignore
+/docs               export-ignore
 

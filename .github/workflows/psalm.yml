@@ -26,8 +26,8 @@ jobs:
                   path: vendor
                   key: composer-${{ hashFiles('composer.lock') }}
 
-            - name: Run composer install
-              run: composer install -n --prefer-dist
+            - name: Run composer require
+              run: composer require -n --prefer-dist
 
             - name: Run psalm
               run: ./vendor/bin/psalm -c psalm.xml
