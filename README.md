@@ -1,7 +1,7 @@
 # Monitor scheduled tasks in a Laravel app
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-schedule-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-schedule-monitor)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-schedule-monitor/run-tests?label=tests)](https://github.com/spatie/laravel-schedule-monitor/actions?query=workflow%3Arun-tests+branch%3Amaster)
+![Tests](https://github.com/spatie/laravel-schedule-monitor/workflows/Tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-schedule-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-schedule-monitor)
 
 This package will monitor your Laravel schedule. It will write an entry to a log table in the db each time a schedule tasks starts, end, fails or is skipped. Using the `list` command you can check when the schedule tasks have been executed.
