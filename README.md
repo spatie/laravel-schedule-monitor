@@ -6,7 +6,7 @@
 
 This package will monitor your Laravel schedule. It will write an entry to a log table in the db each time a schedule tasks starts, end, fails or is skipped. Using the `list` command you can check when the schedule tasks have been executed.
 
-TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
 
 Optionally, this package can sync your schedule with [Oh Dear](https://ohdear.app). Oh Dear will send you a notification whenever a scheduled task doesn't run on time or fails.
 
