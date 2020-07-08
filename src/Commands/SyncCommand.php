@@ -69,7 +69,7 @@ class SyncCommand extends Command
             return $this;
         }
 
-        $this->info('Start syncing schedule with Oh Dear...');
+        $this->comment('Start syncing schedule with Oh Dear...');
 
         $monitoredScheduledTasks = MonitoredScheduledTask::get();
 
@@ -85,9 +85,6 @@ class SyncCommand extends Command
                 ];
             })
             ->toArray();
-
-
-        $this->comment('Start syncing schedule with Oh Dear...');
 
         $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
         $this->comment('Successfully synced schedule with Oh Dear!');

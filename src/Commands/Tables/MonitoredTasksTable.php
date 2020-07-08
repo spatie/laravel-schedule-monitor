@@ -4,6 +4,7 @@ namespace Spatie\ScheduleMonitor\Commands\Tables;
 
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
+use Symfony\Component\Console\Helper\TableStyle;
 
 class MonitoredTasksTable extends ScheduledTasksTable
 {
@@ -47,17 +48,16 @@ class MonitoredTasksTable extends ScheduledTasksTable
                 'name' => $task->name(),
                 'type' => ucfirst($task->type()),
                 'cron_expression' => $task->humanReadableCron(),
-                optional($task->lastRunStartedAt())->format('Y-m-d H:i:s') ?? 'Did not start yet',
-                $this->getLastRunFinishedAt($task),
-                $this->getLastRunFailedAt($task),
-                $task->nextRunAt()->format('Y-m-d H:i:s'),
+                'started_at' => optional($task->lastRunStartedAt())->format('Y-m-d H:i:s') ?? 'Did not start yet',
+                'finished_at' => $this->getLastRunFinishedAt($task),
+                'failed_at' => $this->getLastRunFailedAt($task),
+                'next_run' => $task->nextRunAt()->format('Y-m-d H:i:s'),
                 'grace_time' => $task->graceTimeInMinutes(),
             ];
 
             if ($this->usingOhDear()) {
                 $row = array_merge($row, [
                     'registered_at_oh_dear' => $task->isBeingMonitoredAtOhDear() ? '✅' : '❌',
-                    'grace_time' => $task->graceTimeInMinutes(),
                 ]);
             }
 

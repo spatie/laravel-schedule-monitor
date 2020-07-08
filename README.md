@@ -101,11 +101,12 @@ Each time you change the schedule, we recommend manually running `schedule-monit
 
 To monitor your schedule you should first run `schedule-monitor:sync`. This command will take a look at your schedule and create an entry for each task in the `monitored_scheduled_tasks` table.
 
-TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/sync.png)
+
 
 To view all monitored scheduled tasks, you can run `schedule-monitor:list`. This command will list all monitored scheduled tasks. It will show you when a scheduled task has last started, finished, or failed.
 
-TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list.png)
 
 The package will write an entry to the `monitored_scheduled_task_log_items` table in the db each time a schedule tasks starts, end, fails or is skipped. Take a look at the contest of that table if you want to know when and how scheduled tasks did execute. The log items also hold other interesting metrics like memory usage, execution time, and more.
 
@@ -160,7 +161,7 @@ composer require ohdearapp/ohdear-php-sdk
 php artisan schedule-monitor:verify
 ```
 
-// TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/verify.png)
 
 To sync your schedule with Oh Dear run this command:
 
@@ -168,11 +169,11 @@ To sync your schedule with Oh Dear run this command:
 php artisan schedule-monitor:sync
 ```
 
-// TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/sync-oh-dear.png)
 
 After that, the `list` command should show that all the scheduled tasks in your app are registered on Oh Dear.
 
-// TODO: add screenshot
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-oh-dear.png)
 
 To keep scheduled jobs as short as possible, Oh Dear will be pinged via queued jobs. To ensure speedy delivery to Oh Dear, and to avoid false positive notifications, we highly recommend creating a dedicated queue for these jobs. You can put the name of that queue in the `queue` key of the config file.
 
