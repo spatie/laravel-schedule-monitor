@@ -77,10 +77,9 @@ return [
     ],
 ```
 
-You must register these tasks in your console kernel:
+You must register the `schedule-monitor:clean` tasks in your console kernel. This command will clean up old records from the schedule monitor log table.
 
 - `schedule-monitor:sync`: this command is responsible for syncing your schedule with the database, and optionally Oh Dear. If you are using [Oh Dear](https://ohdear.app) for getting notifications, we recommend scheduling it at on odd time like '04:56', so the Oh Dear server doesn't get all the sync requests from all users at the same time.
-- `schedule-monitor:clean`: this command will clean up old records from the schedule monitor log table.
 
 ```php
 // app/Console/Kernel.php

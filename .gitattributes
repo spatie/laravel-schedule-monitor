@@ -11,4 +11,5 @@
 /.php.cs            export-ignore
 /.github            export-ignore
 /docs               export-ignore
+tests/**/__snapshots__/** text eol=lf
 
