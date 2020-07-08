@@ -43,15 +43,17 @@ class MonitoredTasksTable extends ScheduledTasksTable
             ]);
         }
 
-        $rows = $tasks->map(function (Task $task) {
+        $dateFormat = config('schedule-monitor.date_format');
+
+        $rows = $tasks->map(function (Task $task) use ($dateFormat) {
             $row = [
                 'name' => $task->name(),
                 'type' => ucfirst($task->type()),
                 'cron_expression' => $task->humanReadableCron(),
-                'started_at' => optional($task->lastRunStartedAt())->format('Y-m-d H:i:s') ?? 'Did not start yet',
+                'started_at' => optional($task->lastRunStartedAt())->format($dateFormat) ?? 'Did not start yet',
                 'finished_at' => $this->getLastRunFinishedAt($task),
                 'failed_at' => $this->getLastRunFailedAt($task),
-                'next_run' => $task->nextRunAt()->format('Y-m-d H:i:s'),
+                'next_run' => $task->nextRunAt()->format($dateFormat),
                 'grace_time' => $task->graceTimeInMinutes(),
             ];
 
@@ -75,9 +77,11 @@ class MonitoredTasksTable extends ScheduledTasksTable
         }
     }
 
-    private function getLastRunFinishedAt(Task $task)
+    public function getLastRunFinishedAt(Task $task)
     {
-        $formattedLastRunFinishedAt = optional($task->lastRunFinishedAt())->format('Y-m-d H:i:s') ?? '';
+        $dateFormat = config('schedule-monitor.date_format');
+
+        $formattedLastRunFinishedAt = optional($task->lastRunFinishedAt())->format($dateFormat) ?? '';
 
         if ($task->lastRunFinishedTooLate()) {
             $formattedLastRunFinishedAt = "<bg=red>{$formattedLastRunFinishedAt}</>";
@@ -92,7 +96,9 @@ class MonitoredTasksTable extends ScheduledTasksTable
             return '';
         }
 
-        $formattedLastFailedAt = $lastRunFailedAt->format('Y-m-d H:i:s');
+        $dateFormat = config('schedule-monitor.date_format');
+
+        $formattedLastFailedAt = $lastRunFailedAt->format($dateFormat);
 
         if ($task->lastRunFailed()) {
             $formattedLastFailedAt = "<bg=red>{$formattedLastFailedAt}</>";

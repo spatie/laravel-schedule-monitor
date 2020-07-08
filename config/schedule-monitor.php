@@ -9,6 +9,12 @@ return [
     'delete_log_items_older_than_days' => 30,
 
     /*
+     * The date format used for all dates displayed on the output of commands
+     * provided by this package.
+     */
+    'date_format' => 'Y-m-d H:i:s',
+
+    /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
      *
