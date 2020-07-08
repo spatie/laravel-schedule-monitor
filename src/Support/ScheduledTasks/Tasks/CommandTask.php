@@ -14,16 +14,32 @@ class CommandTask extends Task
             return false;
         }
 
-        return Str::contains($event->command, "'artisan'");
+        return Str::contains($event->command, self::artisanString());
     }
 
     public function defaultName(): ?string
     {
-        return Str::after($this->event->command, "'artisan' ");
+        return Str::after($this->event->command, self::artisanString() . ' ');
     }
 
     public function type(): string
     {
         return 'command';
+    }
+
+    public static function artisanString(): string
+    {
+        $baseString = 'artisan';
+
+        $quote = self::isRunningWindows()
+            ? '"'
+            : "'";
+
+        return "{$quote}{$baseString}{$quote}";
+    }
+
+    protected static function isRunningWindows()
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }
