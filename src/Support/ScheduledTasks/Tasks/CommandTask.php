@@ -14,7 +14,7 @@ class CommandTask extends Task
             return false;
         }
 
-        return str_contains($event->command, "'artisan'");
+        return Str::contains($event->command, "'artisan'");
     }
 
     public function defaultName(): ?string
