@@ -4,7 +4,6 @@ namespace Spatie\ScheduleMonitor\Commands\Tables;
 
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
-use Symfony\Component\Console\Helper\TableStyle;
 
 class MonitoredTasksTable extends ScheduledTasksTable
 {
