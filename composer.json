@@ -28,7 +28,7 @@
         "spatie/phpunit-snapshot-assertions": "^4.2",
         "spatie/test-time": "^1.2",
         "vimeo/psalm": "^3.11",
-        "ohdearapp/ohdear-php-sdk": "dev-cron-checks"
+        "ohdearapp/ohdear-php-sdk": "^3.0"
     },
     "suggest": {
         "ohdearapp/ohdear-php-sdk": "Needed to sync your schedule with Oh Dear"
@@ -60,11 +60,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../ohdear-php-sdk"
-        }
-    ]
+    "prefer-stable": true
 }
