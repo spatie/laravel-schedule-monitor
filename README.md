@@ -225,7 +225,7 @@ protected function schedule(Schedule $schedule)
 
 ## Third party scheduled task monitors
 
-We assume that, when your scheduled tasks do not run properly, a scheduled task that would send out notifications would probably not run either.  That's why this package doesn't send out notifications by itself, but relies on external services.
+We assume that, when your scheduled tasks do not run properly, a scheduled task that sends out notifications would probably not run either.  That's why this package doesn't send out notifications by itself.
 
 These services can notify you when scheduled tasks do not run properly:
 
