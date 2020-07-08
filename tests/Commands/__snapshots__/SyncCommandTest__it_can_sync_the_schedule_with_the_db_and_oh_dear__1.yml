@@ -1,0 +1,28 @@
+-
+    name: dummy
+    type: cron
+    cron_expression: '* * * * *'
+    grace_time_in_minutes: 5
+    server_timezone: UTC
+    description: ''
+-
+    name: execute
+    type: cron
+    cron_expression: '*/15 * * * *'
+    grace_time_in_minutes: 5
+    server_timezone: UTC
+    description: ''
+-
+    name: my-closure
+    type: cron
+    cron_expression: '0 * * * *'
+    grace_time_in_minutes: 5
+    server_timezone: UTC
+    description: ''
+-
+    name: Spatie\ScheduleMonitor\Tests\TestClasses\TestJob
+    type: cron
+    cron_expression: '0 0 * * *'
+    grace_time_in_minutes: 5
+    server_timezone: UTC
+    description: ''
