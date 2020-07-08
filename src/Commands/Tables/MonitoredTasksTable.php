@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor\Commands\Tables;
 
+use OhDear\PhpSdk\OhDear;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 
@@ -102,6 +103,10 @@ class MonitoredTasksTable extends ScheduledTasksTable
 
     protected function usingOhDear(): bool
     {
+        if (! class_exists(OhDear::class)) {
+            return false;
+        }
+
         if (empty(config('schedule-monitor.oh_dear.api_token'))) {
             return false;
         }
