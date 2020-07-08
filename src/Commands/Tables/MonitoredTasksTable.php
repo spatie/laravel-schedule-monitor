@@ -77,7 +77,7 @@ class MonitoredTasksTable extends ScheduledTasksTable
 
     private function getLastRunFinishedAt(Task $task)
     {
-        $formattedLastRunFinishedAt = optional($task->lastRunFinishedAt())->format('Y-m-d H:i:s') ?? 'Did not end yet';
+        $formattedLastRunFinishedAt = optional($task->lastRunFinishedAt())->format('Y-m-d H:i:s') ?? '';
 
         if ($task->lastRunFinishedTooLate()) {
             $formattedLastRunFinishedAt = "<bg=red>{$formattedLastRunFinishedAt}</>";
@@ -89,7 +89,7 @@ class MonitoredTasksTable extends ScheduledTasksTable
     public function getLastRunFailedAt(Task $task): string
     {
         if (! $lastRunFailedAt = $task->lastRunFailedAt()) {
-            return 'Did not fail yet';
+            return '';
         }
 
         $formattedLastFailedAt = $lastRunFailedAt->format('Y-m-d H:i:s');
