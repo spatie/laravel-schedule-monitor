@@ -22,7 +22,7 @@ class UnnamedTasksTable extends ScheduledTasksTable
         $this->command->line('');
 
 
-        $headers = ['Type', 'Cron'];
+        $headers = ['Type', 'Frequency'];
         $rows = $unnamedTasks->map(function (Task $task) {
             return [
                 'type' => ucfirst($task->type()),

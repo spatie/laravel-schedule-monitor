@@ -29,7 +29,7 @@ class MonitoredTasksTable extends ScheduledTasksTable
         $headers = [
             'Name',
             'Type',
-            'Cron',
+            'Frequency',
             'Last started at',
             'Last finished at',
             'Last failed at',

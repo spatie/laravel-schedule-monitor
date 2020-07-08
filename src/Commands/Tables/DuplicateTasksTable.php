@@ -21,7 +21,7 @@ class DuplicateTasksTable extends ScheduledTasksTable
         $this->command->line('These tasks could not be monitored because they have a duplicate name.');
         $this->command->line('');
 
-        $headers = ['Type', 'Cron'];
+        $headers = ['Type', 'Frequency'];
         $rows = $duplicateTasks->map(function (Task $task) {
             return [
                 'name' => $task->name(),

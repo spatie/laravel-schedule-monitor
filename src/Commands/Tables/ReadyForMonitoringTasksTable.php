@@ -28,7 +28,7 @@ class ReadyForMonitoringTasksTable extends ScheduledTasksTable
             ->uniqueTasks()
             ->reject(fn (Task $task) => $task->isBeingMonitored());
 
-        $headers = ['Name', 'Type', 'Cron'];
+        $headers = ['Name', 'Type', 'Frequency'];
         $rows = $tasks->map(function (Task $task) {
             return [
                 'name' => $task->name(),
