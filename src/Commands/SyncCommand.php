@@ -18,7 +18,7 @@ class SyncCommand extends Command
 
     public function handle()
     {
-        $this->comment('Start syncing schedule...' . PHP_EOL);
+        $this->info('Start syncing schedule...' . PHP_EOL);
 
         $scheduledTasks = ScheduledTasks::createForSchedule();
 
@@ -27,15 +27,15 @@ class SyncCommand extends Command
             ->syncMonitoredScheduledTaskWithOhDear();
 
         $monitoredScheduledTasksCount = MonitoredScheduledTask::count();
-        $this->comment('');
-        $this->comment('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
-        $this->comment('');
-        $this->comment('Run `php artisan schedule-monitor:list` to see which jobs are now monitored.');
+        $this->info('');
+        $this->info('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
+        $this->info('');
+        $this->info('Run `php artisan schedule-monitor:list` to see which jobs are now monitored.');
     }
 
     protected function syncScheduledTasksWithDatabase(ScheduledTasks $scheduledTasks): self
     {
-        $this->info('Start syncing schedule with database...');
+        $this->comment('Start syncing schedule with database...');
 
         $monitoredScheduledTasks = ScheduledTasks::createForSchedule()
             ->uniqueTasks()
@@ -87,10 +87,10 @@ class SyncCommand extends Command
             ->toArray();
 
 
-        $this->info('Start syncing schedule with Oh Dear...');
+        $this->comment('Start syncing schedule with Oh Dear...');
 
         $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
-        $this->info('Successfully synced schedule with Oh Dear!');
+        $this->comment('Successfully synced schedule with Oh Dear!');
 
         collect($cronChecks)
             ->each(
