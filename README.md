@@ -152,7 +152,7 @@ This cron check at Oh Dear is currently in beta, and you'll have to [request](ma
 To get started you will first need to install the Oh Dear SDK.
  
 ```bash
-composer require ohdearapp/ohdear-php-sdk
+composer require ohdearapp/ohdear-php-sdk:v3
 ```
  
  Next you, need to make sure the `api_token` and `site_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear site id. To verify that these values hold correct values you can run this command.
