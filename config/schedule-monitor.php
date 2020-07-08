@@ -2,7 +2,7 @@
 
 return [
     /*
-     * Schedule Monitor will log each start, finish and failure of all scheduled jobs.
+     * The schedule monitor will log each start, finish and failure of all scheduled jobs.
      * After a while the `monitored_scheduled_task_log_items` might become big.
      * Here you can specify the amount of days log items should be kept.
      */
