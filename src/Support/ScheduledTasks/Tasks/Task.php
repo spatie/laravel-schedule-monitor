@@ -21,6 +21,10 @@ abstract class Task
 
     abstract public static function canHandleEvent(Event $event): bool;
 
+    abstract public function defaultName(): ?string;
+
+    abstract public function type(): string;
+
     public function __construct(Event $event)
     {
         $this->event = $event;
@@ -48,7 +52,7 @@ abstract class Task
             return true;
         }
 
-        return ! $this->event->doNotMonitor;
+        return ! $this->event->doNotMonitor ?? true;
     }
 
     public function isBeingMonitored(): bool
@@ -133,16 +137,10 @@ abstract class Task
         return $lastRunFailedAt->isAfter($lastRunStartedAt->subSecond());
     }
 
-
-
-    abstract public function defaultName(): ?string;
-
     public function graceTimeInMinutes()
     {
         return $this->event->graceTimeInMinutes ?? 5;
     }
-
-    abstract public function type(): string;
 
     public function cronExpression(): string
     {
