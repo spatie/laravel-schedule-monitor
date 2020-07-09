@@ -25,7 +25,7 @@ class ScheduledTasks
         $this->schedule = $schedule;
 
         $this->tasks = collect($this->schedule->events())
-            ->map(fn (Event $event) => ScheduledTaskFactory::createForEvent($event));
+            ->map(fn (Event $event): Task => ScheduledTaskFactory::createForEvent($event));
     }
 
     public function uniqueTasks(): Collection
