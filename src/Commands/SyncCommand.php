@@ -33,7 +33,7 @@ class SyncCommand extends Command
         $this->info('Run `php artisan schedule-monitor:list` to see which jobs are now monitored.');
     }
 
-    protected function syncScheduledTasksWithDatabase(ScheduledTasks $scheduledTasks): self
+    protected function syncScheduledTasksWithDatabase(): self
     {
         $this->comment('Start syncing schedule with database...');
 
