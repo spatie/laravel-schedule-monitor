@@ -39,10 +39,6 @@ abstract class Task
 
     public function name(): ?string
     {
-        if (! isset($this->event->monitorName)) {
-            return $this->defaultName();
-        }
-
         return $this->event->monitorName ?? $this->defaultName();
     }
 
