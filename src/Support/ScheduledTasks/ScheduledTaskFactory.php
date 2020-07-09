@@ -11,7 +11,7 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 
 class ScheduledTaskFactory
 {
-    public static function createForEvent(Event $task): Task
+    public static function createForEvent(Event $event): Task
     {
         $taskClass = collect([
             ClosureTask::class,
@@ -19,8 +19,8 @@ class ScheduledTaskFactory
             CommandTask::class,
             ShellTask::class,
         ])
-            ->first(fn (string $taskClass) => $taskClass::canHandleEvent($task));
+            ->first(fn (string $taskClass) => $taskClass::canHandleEvent($event));
 
-        return new $taskClass($task);
+        return new $taskClass($event);
     }
 }
