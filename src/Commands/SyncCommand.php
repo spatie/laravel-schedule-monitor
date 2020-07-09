@@ -50,7 +50,9 @@ class SyncCommand extends Command
                 );
             });
 
-        MonitoredScheduledTask::query()->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))->delete();
+        MonitoredScheduledTask::query()
+            ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
+            ->delete();
 
         return $this;
     }
