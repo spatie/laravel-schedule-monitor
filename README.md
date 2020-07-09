@@ -160,7 +160,7 @@ When the package detects that the last run of a scheduled task did not run in ti
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
 
-The package will determine that a task ran too late if it was not finished at the time it was supposed to run + the grace time. You can think of the grace time as the amount of minutes that a task under normal circumstances needs to finish. By default, the package grants a grace time of 5 minutes to each task.
+The package will determine that a task ran too late if it was not finished at the time it was supposed to run + the grace time. You can think of the grace time as the number of minutes that a task under normal circumstances needs to finish. By default, the package grants a grace time of 5 minutes to each task.
 
 You can customize the grace time by using the `graceTimeInMinutes` method on a task. In this example a grace time of 10 minutes is used for the `your-command` task.
 
