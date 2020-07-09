@@ -18,7 +18,6 @@ class MonitoredTasksTable extends ScheduledTasksTable
             ->uniqueTasks()
             ->filter(fn (Task $task) => $task->isBeingMonitored());
 
-
         if ($tasks->isEmpty()) {
             $this->command->line('');
             $this->command->warn('There currently are no tasks being monitored!');
