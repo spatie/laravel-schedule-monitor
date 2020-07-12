@@ -27,7 +27,7 @@ class VerifyCommand extends Command
 
         $this->line('');
         $this->info('All ok!');
-        $this->info('Run `php artisan schedule-monitor:sync to sync your scheduled tasks with Oh Dear.');
+        $this->info('Run `php artisan schedule-monitor:sync` to sync your scheduled tasks with Oh Dear.');
     }
 
     public function verifySdkInstalled(): self
