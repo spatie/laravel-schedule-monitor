@@ -1,11 +1,11 @@
 <?php
 
-
 namespace Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Cron\CronExpression;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
@@ -69,36 +69,36 @@ abstract class Task
         return ! empty($this->monitoredScheduledTask->ping_url);
     }
 
-    public function previousRunAt(): Carbon
+    public function previousRunAt(): CarbonInterface
     {
         $dateTime = CronExpression::factory($this->cronExpression())->getPreviousRunDate(now());
 
-        return Carbon::instance($dateTime);
+        return Date::instance($dateTime);
     }
 
-    public function nextRunAt(Carbon $now = null): Carbon
+    public function nextRunAt(CarbonInterface $now = null): CarbonInterface
     {
         $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate($now ?? now());
 
-        return Carbon::instance($dateTime);
+        return Date::instance($dateTime);
     }
 
-    public function lastRunStartedAt(): ?Carbon
+    public function lastRunStartedAt(): ?CarbonInterface
     {
         return optional($this->monitoredScheduledTask)->last_started_at;
     }
 
-    public function lastRunFinishedAt(): ?Carbon
+    public function lastRunFinishedAt(): ?CarbonInterface
     {
         return optional($this->monitoredScheduledTask)->last_finished_at;
     }
 
-    public function lastRunFailedAt(): ?Carbon
+    public function lastRunFailedAt(): ?CarbonInterface
     {
         return optional($this->monitoredScheduledTask)->last_failed_at;
     }
 
-    public function lastRunSkippedAt(): ?Carbon
+    public function lastRunSkippedAt(): ?CarbonInterface
     {
         return optional($this->monitoredScheduledTask)->last_skipped_at;
     }
