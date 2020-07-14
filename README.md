@@ -242,6 +242,12 @@ These services can notify you when scheduled tasks do not run properly:
 - [Oh Dear](https://ohdear.app) (in closed beta)
 - [thenping.me](https://thenping.me) (in closed beta)
 - [Cronbox](https://cronbox.app)
+- [Healthchecks.io](https://healthchecks.io)
+- [Cronitor](https://cronitor.io)
+- [Cronhub](https://cronhub.io/)
+- [DeadMansSnitch](https://deadmanssnitch.com/)
+- [CronAlarm](https://www.cronalarm.com/)
+- [PushMon](https://www.pushmon.com/)
 
 ## Testing
 
