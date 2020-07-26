@@ -24,7 +24,7 @@ return [
         /*
          * You can generate an API token at the Oh Dear user settings screen
          *
-         * https://ohdear.app/TODO-ADD-LINK
+         * https://ohdear.app/user-settings/api
          */
         'api_token' => env('OH_DEAR_API_TOKEN', ''),
 
