@@ -52,7 +52,7 @@ abstract class Task
             return true;
         }
 
-        return ! $this->event->doNotMonitor ?? true;
+        return ! $this->event->doNotMonitor;
     }
 
     public function isBeingMonitored(): bool
