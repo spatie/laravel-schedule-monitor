@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 1.0.4 - 2020-09-08
+
+- add support for Laravel 8
+
 ## 1.0.3 - 2020-07-14
 
 - fix link config file
