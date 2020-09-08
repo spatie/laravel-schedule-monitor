@@ -20,10 +20,8 @@ class SyncCommand extends Command
     {
         $this->info('Start syncing schedule...' . PHP_EOL);
 
-        $scheduledTasks = ScheduledTasks::createForSchedule();
-
         $this
-            ->syncScheduledTasksWithDatabase($scheduledTasks)
+            ->syncScheduledTasksWithDatabase()
             ->syncMonitoredScheduledTaskWithOhDear();
 
         $monitoredScheduledTasksCount = MonitoredScheduledTask::count();

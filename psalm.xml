@@ -22,8 +22,4 @@
             </errorLevel>
         </UndefinedThisPropertyAssignment>
     </issueHandlers>
-
-    <plugins>
-        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
-    </plugins>
 </psalm>
