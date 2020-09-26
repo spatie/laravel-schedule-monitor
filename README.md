@@ -239,7 +239,7 @@ We assume that, when your scheduled tasks do not run properly, a scheduled task 
 
 These services can notify you when scheduled tasks do not run properly:
 
-- [Oh Dear](https://ohdear.app) (in closed beta)
+- [Oh Dear](https://ohdear.app)
 - [thenping.me](https://thenping.me) (in closed beta)
 - [Cronbox](https://cronbox.app)
 - [Healthchecks.io](https://healthchecks.io)
