@@ -145,7 +145,7 @@ class ScheduledTaskSubscriberTest extends TestCase
         Bus::fake();
 
         TestKernel::registerScheduledTasks(function (Schedule $schedule) {
-            $schedule->call(fn () => 1+1)->everyMinute()->runInBackground();
+            $schedule->call(fn () => 1 + 1)->everyMinute()->runInBackground();
         });
 
         $this->artisan(SyncCommand::class)->assertExitCode(0);
