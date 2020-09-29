@@ -38,7 +38,7 @@ class PingFinishedToOhDearTest extends TestCase
     }
 
     /** @test */
-    public function it_can_ping_oh_dear_when_a_scheduled_task_finishes()
+    public function it_can_ping_oh_dear_when_a_ping_successful_job_is_dispatched()
     {
         dispatch(new PingOhDearJob($this->monitoredScheduledTaskLogItem));
 
@@ -57,5 +57,11 @@ class PingFinishedToOhDearTest extends TestCase
 
             return true;
         });
+    }
+
+    /** @test */
+    public function it_will_dispatch_a_ohdear_job_when_a_task_is_finished()
+    {
+        // TODO
     }
 }
