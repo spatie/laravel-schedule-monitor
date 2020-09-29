@@ -29,7 +29,7 @@ class SyncCommandTest extends TestCase
             $schedule->command('dummy')->everyMinute();
             $schedule->exec('execute')->everyFifteenMinutes();
             $schedule->call(fn () => 1 + 1)->hourly()->monitorName('my-closure');
-            $schedule->job(new TestJob())->daily();
+            $schedule->job(new TestJob())->daily()->timezone('Asia/Kolkata');
         });
 
         $this->artisan(SyncCommand::class);
@@ -47,6 +47,7 @@ class SyncCommandTest extends TestCase
             'last_pinged_at' => null,
             'last_started_at' => null,
             'last_finished_at' => null,
+            'timezone' => 'UTC',
         ]);
 
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
@@ -59,6 +60,7 @@ class SyncCommandTest extends TestCase
             'last_pinged_at' => null,
             'last_started_at' => null,
             'last_finished_at' => null,
+            'timezone' => 'UTC',
         ]);
 
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
@@ -71,6 +73,7 @@ class SyncCommandTest extends TestCase
             'last_pinged_at' => null,
             'last_started_at' => null,
             'last_finished_at' => null,
+            'timezone' => 'UTC',
         ]);
 
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
@@ -83,6 +86,7 @@ class SyncCommandTest extends TestCase
             'last_pinged_at' => null,
             'last_started_at' => null,
             'last_finished_at' => null,
+            'timezone' => 'Asia/Kolkata',
         ]);
 
         $this->assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
