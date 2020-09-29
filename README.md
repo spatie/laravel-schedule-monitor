@@ -8,7 +8,7 @@ This package will monitor your Laravel schedule. It will write an entry to a log
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
 
-Optionally, this package can sync your schedule with [Oh Dear](https://ohdear.app). Oh Dear will send you a notification whenever a scheduled task doesn't run on time or fails.
+This package can also sync your schedule with [Oh Dear](https://ohdear.app). Oh Dear will send you a notification whenever a scheduled task doesn't run on time or fails.
 
 ## Support us
 
@@ -93,9 +93,7 @@ return [
 
 #### Cleaning the database
 
-
 You must register the `schedule-monitor:clean` tasks in your console kernel. This command will clean up old records from the schedule monitor log table.
-
 
 ```php
 // app/Console/Kernel.php
@@ -190,15 +188,13 @@ protected function schedule(Schedule $schedule)
 
 This package can sync your schedule with the [Oh Dear](https://ohdear.app) cron check. Oh Dear will send you a notification whenever a scheduled task does not finish on time.
 
-This cron check at Oh Dear is currently in beta, and you'll have to [request](mailto:support@ohdear.app) the team at Oh Dear for early access to use this feature.
-
 To get started you will first need to install the Oh Dear SDK.
- 
+
 ```bash
-composer require ohdearapp/ohdear-php-sdk:v3
+composer require ohdearapp/ohdear-php-sdk
 ```
- 
- Next you, need to make sure the `api_token` and `site_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear site id. To verify that these values hold correct values you can run this command.
+
+Next you, need to make sure the `api_token` and `site_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear site id. To verify that these values hold correct values you can run this command.
 
 ```bash
 php artisan schedule-monitor:verify
