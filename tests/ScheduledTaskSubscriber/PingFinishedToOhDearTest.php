@@ -3,6 +3,7 @@
 namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
 
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
@@ -57,11 +58,5 @@ class PingFinishedToOhDearTest extends TestCase
 
             return true;
         });
-    }
-
-    /** @test */
-    public function it_will_dispatch_a_ohdear_job_when_a_task_is_finished()
-    {
-        // TODO
     }
 }
