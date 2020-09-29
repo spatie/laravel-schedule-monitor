@@ -138,4 +138,19 @@ class ScheduledTaskSubscriberTest extends TestCase
             return $job->queue === 'custom-queue';
         });
     }
+
+    /** @test */
+    public function it_works_correctly_when_a_task_is_run_in_the_background()
+    {
+        Bus::fake();
+
+        TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+            $schedule->call(fn () => 1+1)->everyMinute()->runInBackground();
+        });
+
+        $this->artisan(SyncCommand::class)->assertExitCode(0);
+        $this->artisan('schedule:run')->assertExitCode(0);
+
+        Bus::assertDispatched(PingOhDearJob::class);
+    }
 }

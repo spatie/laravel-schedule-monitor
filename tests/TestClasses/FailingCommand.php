@@ -12,6 +12,7 @@ class FailingCommand extends Command
 
     public function handle()
     {
+        sleep(60);
         throw new \Exception('failing');
     }
 }
