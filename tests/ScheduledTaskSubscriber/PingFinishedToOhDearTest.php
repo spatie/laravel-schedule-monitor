@@ -39,7 +39,7 @@ class PingFinishedToOhDearTest extends TestCase
     }
 
     /** @test */
-    public function it_can_ping_oh_dear_when_a_ping_successful_job_is_dispatched()
+    public function it_can_ping_oh_dear_when_a_scheduled_task_finishes()
     {
         dispatch(new PingOhDearJob($this->monitoredScheduledTaskLogItem));
 
