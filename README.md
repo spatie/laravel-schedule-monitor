@@ -233,6 +233,15 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
+## Unsupported methods
+
+Currently, this package does not work for tasks that use these methods:
+
+- `between`
+- `unlessBetween`
+- `when`
+- `skip`
+
 ## Third party scheduled task monitors
 
 We assume that, when your scheduled tasks do not run properly, a scheduled task that sends out notifications would probably not run either.  That's why this package doesn't send out notifications by itself.

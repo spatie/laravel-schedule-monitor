@@ -10,6 +10,7 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\JobTask;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\ShellTask;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
+use Spatie\TestTime\TestTime;
 
 class ScheduledTestFactoryTest extends TestCase
 {
@@ -77,5 +78,23 @@ class ScheduledTestFactoryTest extends TestCase
 
         $event = $this->app->make(Schedule::class)->command('foo:bar')->doNotMonitor();
         $this->assertFalse(ScheduledTaskFactory::createForEvent($event)->shouldMonitor());
+    }
+
+    /** @test */
+    public function it_can_handle_timezones()
+    {
+        TestTime::freeze('Y-m-d H:i:s', '2020-02-01 00:00:00');
+
+        $schedule = $this->app->make(Schedule::class);
+
+        $appTimezoneEvent = $schedule->command('foo:bar')->daily();
+        $appTimezoneTask = ScheduledTaskFactory::createForEvent($appTimezoneEvent);
+        $this->assertEquals('UTC', $appTimezoneTask->timezone());
+        $this->assertEquals('2020-02-02 00:00:00', $appTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'));
+
+        $otherTimezoneEvent = $schedule->command('foo:bar')->daily()->timezone('Asia/Kolkata');
+        $otherTimezoneTask = ScheduledTaskFactory::createForEvent($otherTimezoneEvent);
+        $this->assertEquals('Asia/Kolkata', $otherTimezoneTask->timezone());
+        $this->assertEquals('2020-02-01 18:30:00', $otherTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'));
     }
 }

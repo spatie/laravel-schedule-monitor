@@ -78,9 +78,18 @@ abstract class Task
 
     public function nextRunAt(CarbonInterface $now = null): CarbonInterface
     {
-        $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate($now ?? now());
+        $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate(
+            $now ?? now(),
+            0,
+            false,
+            $this->timezone()
+        );
 
-        return Date::instance($dateTime);
+        $date = Date::instance($dateTime);
+
+        $date->setTimezone(config('app.timezone'));
+
+        return $date;
     }
 
     public function lastRunStartedAt(): ?CarbonInterface
@@ -145,6 +154,11 @@ abstract class Task
     public function cronExpression(): string
     {
         return $this->event->getExpression();
+    }
+
+    public function timezone(): string
+    {
+        return $this->event->timezone;
     }
 
     public function humanReadableCron(): string

@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.0.0 - 2020-09-29
+
+- add support for timezones
+
 ## 1.0.4 - 2020-09-08
 
 - add support for Laravel 8
