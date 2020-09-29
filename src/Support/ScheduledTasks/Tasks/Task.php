@@ -158,7 +158,7 @@ abstract class Task
 
     public function timezone(): string
     {
-        return $this->event->timezone;
+        return (string)$this->event->timezone;
     }
 
     public function humanReadableCron(): string
