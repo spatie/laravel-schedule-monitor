@@ -22,17 +22,17 @@ class BackgroundCommandListener
                 $task
                     ->then(
                         function () use ($task) {
-                        if (! $monitoredTask = MonitoredScheduledTask::findForTask($task)) {
-                            return;
+                            if (! $monitoredTask = MonitoredScheduledTask::findForTask($task)) {
+                                return;
+                            }
+
+                            $event = new ScheduledTaskFinished(
+                                $task,
+                                0
+                            );
+
+                            $monitoredTask->markAsFinished($event);
                         }
-
-                        $event = new ScheduledTaskFinished(
-                            $task,
-                            0
-                        );
-
-                        $monitoredTask->markAsFinished($event);
-                    }
                     );
             });
     }
