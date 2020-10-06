@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor;
 
+use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -10,6 +11,8 @@ use Spatie\ScheduleMonitor\Commands\CleanLogCommand;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Commands\VerifyCommand;
+use Spatie\ScheduleMonitor\EventHandlers\BackgroundCommandListener;
+use Spatie\ScheduleMonitor\EventHandlers\ScheduledTaskEventSubscriber;
 
 class ScheduleMonitorServiceProvider extends ServiceProvider
 {
@@ -19,7 +22,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
             ->registerPublishables()
             ->registerCommands()
             ->configureOhDearApi()
-            ->registerEventSubscriber()
+            ->registerEventHandlers()
             ->registerSchedulerEventMacros();
     }
 
@@ -72,9 +75,10 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function registerEventSubscriber(): self
+    protected function registerEventHandlers(): self
     {
         Event::subscribe(ScheduledTaskEventSubscriber::class);
+        Event::listen(CommandStarting::class, BackgroundCommandListener::class);
 
         return $this;
     }

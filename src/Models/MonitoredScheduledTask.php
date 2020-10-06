@@ -80,6 +80,10 @@ class MonitoredScheduledTask extends Model
 
     public function markAsFinished(ScheduledTaskFinished $event): self
     {
+        if ($this->eventConcernsBackgroundTaskThatCompletedInForeground($event)) {
+            return $this;
+        }
+
         if ($event->task->exitCode !== 0 && ! is_null($event->task->exitCode)) {
             return $this->markAsFailed($event);
         }
@@ -87,9 +91,9 @@ class MonitoredScheduledTask extends Model
         $logItem = $this->createLogItem(MonitoredScheduledTaskLogItem::TYPE_FINISHED);
 
         $logItem->updateMeta([
-            'runtime' => $event->runtime,
+            'runtime' => $event->task->runInBackground ? null : $event->runtime,
             'exit_code' => $event->task->exitCode,
-            'memory' => memory_get_usage(true),
+            'memory' => $event->task->runInBackground ? null : memory_get_usage(true),
         ]);
 
         $this->update(['last_finished_at' => now()]);
@@ -97,6 +101,15 @@ class MonitoredScheduledTask extends Model
         $this->pingOhDear($logItem);
 
         return $this;
+    }
+
+    public function eventConcernsBackgroundTaskThatCompletedInForeground(ScheduledTaskFinished $event): bool
+    {
+        if (! $event->task->runInBackground) {
+            return false;
+        }
+
+        return $event->task->exitCode === null;
     }
 
     /**

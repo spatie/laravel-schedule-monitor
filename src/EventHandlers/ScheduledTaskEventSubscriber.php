@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ScheduleMonitor;
+namespace Spatie\ScheduleMonitor\EventHandlers;
 
 use Illuminate\Console\Events\ScheduledTaskFailed;
 use Illuminate\Console\Events\ScheduledTaskFinished;
