@@ -2,7 +2,9 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
-## 2?
+## 2.0.1 - 2020-10-06
+
+- report right exit code for scheduled tasks in background
 
 ## 2.0.0 - 2020-09-29
 
