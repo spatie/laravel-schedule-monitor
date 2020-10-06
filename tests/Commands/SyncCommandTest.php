@@ -199,4 +199,15 @@ class SyncCommandTest extends TestCase
         $this->assertCount(1, MonitoredScheduledTask::get());
         $this->assertEquals([], $this->ohDear->getSyncedCronCheckAttributes());
     }
+
+    /** @test */
+    public function it_will_create_cron_expression_with_between()
+    {
+        TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+            $schedule->command('dummy')->between('5am', '10pm');
+        });
+        $this->artisan(SyncCommand::class);
+
+        $this->assertSame('* 5-20 * * *', MonitoredScheduledTask::get()[0]->cron_expression);
+    }
 }
