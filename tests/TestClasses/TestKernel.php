@@ -24,6 +24,16 @@ class TestKernel extends Kernel
         );
     }
 
+    protected function defineConsoleSchedule()
+    {
+        $this->app->instance(
+            Schedule::class,
+            $schedule = new \Spatie\ScheduleMonitor\ScheduleWithCronBetween()
+        );
+
+        $this->schedule($schedule);
+    }
+
     public static function registerScheduledTasks(Closure $closure)
     {
         static::$registeredScheduleCommands[] = $closure;

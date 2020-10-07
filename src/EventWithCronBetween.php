@@ -3,6 +3,7 @@
 namespace Spatie\ScheduleMonitor;
 
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Support\Carbon;
 
 class EventWithCronBetween extends Event
 {
