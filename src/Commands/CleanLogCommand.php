@@ -10,7 +10,7 @@ class CleanLogCommand extends Command
 {
     public $signature = 'schedule-monitor:clean';
 
-    public $description = 'Display monitored scheduled tasks';
+    public $description = 'Clean up old records from the schedule monitor log.';
 
     public function handle()
     {
