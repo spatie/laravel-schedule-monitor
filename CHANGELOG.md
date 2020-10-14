@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.0.2 - 2020-10-14
+
+- drop support for Laravel 7
+- fix command description
+
 ## 2.0.1 - 2020-10-06
 
 - report right exit code for scheduled tasks in background
