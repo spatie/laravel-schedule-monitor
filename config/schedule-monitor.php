@@ -15,6 +15,12 @@ return [
     'date_format' => 'Y-m-d H:i:s',
 
     /*
+     * The database connection you'd like to use, leave empty to
+     * use the default connection
+     */
+    'db_connection' => '',
+
+    /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
      *
