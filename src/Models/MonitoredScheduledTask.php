@@ -30,7 +30,7 @@ class MonitoredScheduledTask extends Model
 
     public function __construct()
     {
-        $this->connection = config('schedule-monitor.mysql_connection') ?? config('database.default');
+        $this->connection = config('schedule-monitor.db_connection') ?? config('database.default');
     }
 
     public function logItems(): HasMany
