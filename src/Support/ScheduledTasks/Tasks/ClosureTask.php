@@ -13,7 +13,7 @@ class ClosureTask extends Task
             return false;
         }
 
-        return $event->getSummaryForDisplay() === 'Closure';
+        return in_array($event->getSummaryForDisplay(), ['Closure', 'Callback']);
     }
 
     public function type(): string
