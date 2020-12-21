@@ -28,6 +28,12 @@ class MonitoredScheduledTask extends Model
         'grace_time_in_minutes' => 'integer',
     ];
 
+    public function __construct()
+    {
+        $this->connection = config('schedule-monitor.db_connection') ?? config('database.default');
+        parent::__construct();
+    }
+
     public function logItems(): HasMany
     {
         return $this->hasMany(MonitoredScheduledTaskLogItem::class)->orderByDesc('id');

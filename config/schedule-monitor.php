@@ -14,6 +14,8 @@ return [
      */
     'date_format' => 'Y-m-d H:i:s',
 
+    'db_connection' => null,
+
     /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
