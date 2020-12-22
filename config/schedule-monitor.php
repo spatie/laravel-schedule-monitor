@@ -14,6 +14,12 @@ return [
      */
     'date_format' => 'Y-m-d H:i:s',
 
+    /**
+     * Specify a different db connection to use for schedule monitoring logs.
+     * Used default connection if not specified.
+     */
+    'db_connection' => env('SCHEDULE_MONITOR_DB_CONNECTION'),
+
     /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.

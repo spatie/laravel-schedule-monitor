@@ -18,6 +18,15 @@ class MonitoredScheduledTaskLogItem extends Model
         'meta' => 'array',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        // $this->connection = config('schedule-monitor.db_connection') ?? config('database.default');
+        parent::__construct($attributes);
+        if($connection = config('schedule-monitor.db_connection')){
+            $this->setConnection($connection);
+        }
+    }
+
     public function monitoredScheduledTask(): BelongsTo
     {
         return $this->belongsTo(MonitoredScheduledTask::class);
