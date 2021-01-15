@@ -34,7 +34,8 @@ class PingOhDearJob implements ShouldQueue
             return;
         }
 
-        Http::post($payload->url(), $payload->data());
+        $response = Http::post($payload->url(), $payload->data());
+        $response->throw();
 
         $this->logItem->monitoredScheduledTask->update(['last_pinged_at' => now()]);
     }
