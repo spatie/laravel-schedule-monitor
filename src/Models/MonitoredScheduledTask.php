@@ -157,7 +157,7 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if (!in_array($logItem->type, [
+        if (! in_array($logItem->type, [
             MonitoredScheduledTaskLogItem::TYPE_FAILED,
             MonitoredScheduledTaskLogItem::TYPE_FINISHED,
         ], true)) {
