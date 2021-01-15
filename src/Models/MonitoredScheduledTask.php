@@ -91,9 +91,9 @@ class MonitoredScheduledTask extends Model
         $logItem = $this->createLogItem(MonitoredScheduledTaskLogItem::TYPE_FINISHED);
 
         $logItem->updateMeta([
-            'runtime' => $event->task->runInBackground ? null : $event->runtime,
+            'runtime' => $event->task->runInBackground ? 0 : $event->runtime,
             'exit_code' => $event->task->exitCode,
-            'memory' => $event->task->runInBackground ? null : memory_get_usage(true),
+            'memory' => $event->task->runInBackground ? 0 : memory_get_usage(true),
         ]);
 
         $this->update(['last_finished_at' => now()]);
@@ -157,10 +157,10 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if (! in_array($logItem->type, [
+        if (!in_array($logItem->type, [
             MonitoredScheduledTaskLogItem::TYPE_FAILED,
             MonitoredScheduledTaskLogItem::TYPE_FINISHED,
-        ])) {
+        ], true)) {
             return $this;
         }
 
