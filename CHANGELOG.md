@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.2.0 - 2021-01-15
+
+- throw an exception if pinging Oh Dear has failed [#37](https://github.com/spatie/laravel-schedule-monitor/pull/37)
+- pass 0 instead of null parameters to Oh dear for Background tasks [#37](https://github.com/spatie/laravel-schedule-monitor/pull/37)
+
 ## 2.1.0 - 2020-12-04
 
 - add support for PHP 8
