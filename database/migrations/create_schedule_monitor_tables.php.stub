@@ -35,7 +35,7 @@ class {{ class }} extends Migration
 
             $table->unsignedBigInteger('monitored_scheduled_task_id');
             $table
-                ->foreign('monitored_scheduled_task_id', 'fk_scheduled_task_id')
+                ->foreign('monitored_scheduled_task_id', 'fk'.$this->getTasksName())
                 ->references('id')
                 ->on('monitored_scheduled_tasks')
                 ->cascadeOnDelete();
