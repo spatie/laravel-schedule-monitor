@@ -2,6 +2,13 @@
 
 return [
     /*
+     * If you have multiple apps using the same DB,
+     * then you should set these values to unique per app
+     */
+    'tasks_db_table' => 'monitored_scheduled_tasks',
+    'tasks_log_items_db_table' => 'monitored_scheduled_task_log_items',
+
+    /*
      * The schedule monitor will log each start, finish and failure of all scheduled jobs.
      * After a while the `monitored_scheduled_task_log_items` might become big.
      * Here you can specify the amount of days log items should be kept.

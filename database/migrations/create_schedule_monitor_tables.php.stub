@@ -8,7 +8,7 @@ class CreateScheduleMonitorTables extends Migration
 {
     public function up()
     {
-        Schema::create('monitored_scheduled_tasks', function (Blueprint $table) {
+        Schema::create($this->getTasksName(), function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('name');
@@ -30,7 +30,7 @@ class CreateScheduleMonitorTables extends Migration
         });
 
 
-        Schema::create('monitored_scheduled_task_log_items', function (Blueprint $table) {
+        Schema::create($this->getTaskLogItemsTable(), function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('monitored_scheduled_task_id');
@@ -46,5 +46,13 @@ class CreateScheduleMonitorTables extends Migration
 
             $table->timestamps();
         });
+    }
+
+    private function getTasksName(): string {
+        return config('schedule-monitor.tasks_db_table', 'monitored_scheduled_tasks');
+    }
+
+    private function getTaskLogItemsTable(): string {
+        return config('schedule-monitor.tasks_log_items_db_table', 'monitored_scheduled_task_log_items');
     }
 }
