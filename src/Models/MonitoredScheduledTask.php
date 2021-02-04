@@ -16,6 +16,12 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
 
 class MonitoredScheduledTask extends Model
 {
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('schedule-monitor.tasks_db_table');
+    }
+
     public $guarded = [];
 
     protected $casts = [

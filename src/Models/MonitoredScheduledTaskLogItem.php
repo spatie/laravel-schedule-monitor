@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MonitoredScheduledTaskLogItem extends Model
 {
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = config('schedule-monitor.tasks_log_items_db_table');
+    }
+
     public $guarded = [];
 
     public const TYPE_STARTING = 'starting';

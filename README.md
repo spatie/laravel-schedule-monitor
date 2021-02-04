@@ -28,10 +28,10 @@ composer require spatie/laravel-schedule-monitor
 
 #### Preparing the database
 
-You must publish and run migrations:
+You must run the command to create the migration and then run it:
 
 ```bash
-php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="migrations"
+php artisan schedule-monitor:create-migration
 php artisan migrate
 ```
 
