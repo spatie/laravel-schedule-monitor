@@ -1,6 +1,5 @@
 {
     "name": "spatie/laravel-schedule-monitor",
-    "type": "laravel-module",
     "description": "Monitor scheduled tasks in a Laravel app",
     "keywords": [
         "spatie",
