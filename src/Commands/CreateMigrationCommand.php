@@ -9,6 +9,8 @@ use OhDear\PhpSdk\OhDear;
 
 class CreateMigrationCommand extends Command
 {
+    const DEFAULT_CLASS_NAME = 'CreateScheduleMonitorTables';
+
     public $signature = 'schedule-monitor:create-migration';
 
     public $description = 'Create the migration for the db tables';
@@ -24,7 +26,7 @@ class CreateMigrationCommand extends Command
 
         $stubPath = __DIR__ . '/../../database/migrations/create_schedule_monitor_tables.php.stub';
         $stub = $filesystem->get($stubPath);
-        $migration = str_replace('{{ class }}', $tasksClassName, $stub);
+        $migration = str_replace(self::DEFAULT_CLASS_NAME, $tasksClassName, $stub);
         $targetPath = database_path('migrations/' . date('Y_m_d_His', time()) . '_'.$tasksClassName.'.php');
         $filesystem->put($targetPath, $migration);
 
