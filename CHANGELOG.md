@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.2.1 - 2021-03-29
+
+- upgrade to latest lorisleiva/cron-translator version (#40)
+
 ## 2.2.0 - 2021-01-15
 
 - throw an exception if pinging Oh Dear has failed [#37](https://github.com/spatie/laravel-schedule-monitor/pull/37)
