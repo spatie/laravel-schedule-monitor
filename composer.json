@@ -19,7 +19,7 @@
         "php": "^7.4|^8.0",
         "illuminate/bus": "^8.0",
         "nesbot/carbon": "^2.41.3",
-        "lorisleiva/cron-translator": "^0.1.1"
+        "lorisleiva/cron-translator": "^0.2.0"
     },
     "require-dev": {
         "laravel/legacy-factories": "^1.0.4",
