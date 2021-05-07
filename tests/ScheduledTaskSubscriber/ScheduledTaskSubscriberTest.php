@@ -153,4 +153,26 @@ class ScheduledTaskSubscriberTest extends TestCase
 
         Bus::assertDispatched(PingOhDearJob::class);
     }
+
+    /** @test */
+    public function it_stores_the_command_output()
+    {
+        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+            $path = storage_path('logs/dummy-task.log');
+
+            $schedule
+                ->call(fn () => file_put_contents($path, 'dummy output'))
+                ->everyMinute()
+                ->sendOutputTo($path)
+                ->monitorName('dummy-task');
+        });
+
+        $this->artisan(SyncCommand::class)->assertExitCode(0);
+        $this->artisan('schedule:run')->assertExitCode(0);
+
+        $task = MonitoredScheduledTask::findByName('dummy-task');
+        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
+
+        $this->assertEquals('dummy output', $logItem->meta['output'] ?? null);
+    }
 }
