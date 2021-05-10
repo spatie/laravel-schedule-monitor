@@ -4,6 +4,7 @@ namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
 
 use Exception;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Bus;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
@@ -157,13 +158,13 @@ class ScheduledTaskSubscriberTest extends TestCase
     /** @test */
     public function it_stores_the_command_output()
     {
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $path = storage_path('logs/dummy-task.log');
+        copy(__DIR__.'/../stubs/artisan', base_path('artisan'));
 
+        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
             $schedule
-                ->call(fn () => file_put_contents($path, 'dummy output'))
+                ->command('help')
                 ->everyMinute()
-                ->sendOutputTo($path)
+                ->storeOutput()
                 ->monitorName('dummy-task');
         });
 
@@ -173,6 +174,6 @@ class ScheduledTaskSubscriberTest extends TestCase
         $task = MonitoredScheduledTask::findByName('dummy-task');
         $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-        $this->assertEquals('dummy output', $logItem->meta['output'] ?? null);
+        $this->assertTrue(Str::contains($logItem->meta['output'] ?? '', 'Display help for a command'));
     }
 }
