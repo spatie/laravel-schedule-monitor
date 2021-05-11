@@ -4,7 +4,6 @@ namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
 
 use Exception;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Bus;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
@@ -174,6 +173,6 @@ class ScheduledTaskSubscriberTest extends TestCase
         $task = MonitoredScheduledTask::findByName('dummy-task');
         $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-        $this->assertTrue(Str::contains($logItem->meta['output'] ?? '', 'Display help for a command'));
+        $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
     }
 }
