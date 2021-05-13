@@ -167,7 +167,7 @@ class ScheduledTaskSubscriberTest extends TestCase
     }
 
     /** @test */
-    public function it_stores_the_command_output()
+    public function it_stores_the_command_output_to_db()
     {
         TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
             $schedule
@@ -184,5 +184,24 @@ class ScheduledTaskSubscriberTest extends TestCase
         $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
         $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
+    }
+
+    /** @test */
+    public function it_does_not_store_the_command_output_to_db()
+    {
+        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+            $schedule
+                ->command('help')
+                ->everyMinute()
+                ->monitorName('dummy-task');
+        });
+
+        $this->artisan(SyncCommand::class)->assertExitCode(0);
+        $this->artisan('schedule:run')->assertExitCode(0);
+
+        $task = MonitoredScheduledTask::findByName('dummy-task');
+        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
+
+        $this->assertNull($logItem->meta['output']);
     }
 }
