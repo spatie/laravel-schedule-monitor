@@ -103,6 +103,13 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
             return $this;
         });
 
+        SchedulerEvent::macro('storeOutputToDb', function () {
+            $this->storeOutputToDb = true;
+            $this->ensureOutputIsBeingCaptured();
+
+            return $this;
+        });
+
         return $this;
     }
 }

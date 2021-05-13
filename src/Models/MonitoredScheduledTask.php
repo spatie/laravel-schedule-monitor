@@ -182,6 +182,10 @@ class MonitoredScheduledTask extends Model
      */
     protected function getEventTaskOutput($event): ?string
     {
+        if (! ($event->task->storeOutputToDb ?? false)) {
+            return null;
+        }
+
         if (is_null($event->task->output)) {
             return null;
         }
