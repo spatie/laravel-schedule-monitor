@@ -15,7 +15,10 @@ class PingOhDearJob implements ShouldQueue
 {
     public $deleteWhenMissingModels = true;
 
-    use Dispatchable, SerializesModels, InteractsWithQueue, Queueable;
+    use Dispatchable;
+    use SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
 
     public MonitoredScheduledTaskLogItem $logItem;
 
