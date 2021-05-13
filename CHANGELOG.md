@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.3.0 - 2021-05-13
+
+- add `storeOutputInDb`
+
 ## 2.2.1 - 2021-03-29
 
 - upgrade to latest lorisleiva/cron-translator version (#40)

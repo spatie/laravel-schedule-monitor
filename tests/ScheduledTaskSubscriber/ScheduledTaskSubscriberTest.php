@@ -173,7 +173,7 @@ class ScheduledTaskSubscriberTest extends TestCase
             $schedule
                 ->command('help')
                 ->everyMinute()
-                ->storeOutputToDb()
+                ->storeOutputInDb()
                 ->monitorName('dummy-task');
         });
 

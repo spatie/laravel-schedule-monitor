@@ -182,18 +182,20 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
-### Storing output to database
+### Storing output in the database
 
-You can store the output by tacking on `storeOutputToDb` when scheduling the task.
+You can store the output by tacking on `storeOutputInDb` when scheduling the task.
 
 ```php
 // in app/Console/Kernel.php
 
 protected function schedule(Schedule $schedule)
 {
-   $schedule->command('your-command')->daily()->storeOutputToDb();
+   $schedule->command('your-command')->daily()->storeOutputInDb();
 }
 ```
+
+The output will be stored in the `monitored_scheduled_task_log_items` table, in the `output` key of the `meta` column.
 
 ### Getting notified when a scheduled task doesn't finish in time
 
