@@ -182,6 +182,19 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
+### Storing output to database
+
+You can store the output by tacking on `storeOutputToDb` when scheduling the task.
+
+```php
+// in app/Console/Kernel.php
+
+protected function schedule(Schedule $schedule)
+{
+   $schedule->command('your-command')->daily()->storeOutputToDb();
+}
+```
+
 ### Getting notified when a scheduled task doesn't finish in time
 
 This package can sync your schedule with the [Oh Dear](https://ohdear.app) cron check. Oh Dear will send you a notification whenever a scheduled task does not finish on time.
