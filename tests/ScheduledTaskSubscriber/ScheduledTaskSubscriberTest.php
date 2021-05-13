@@ -5,6 +5,7 @@ namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
 use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\File;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
@@ -25,6 +26,15 @@ class ScheduledTaskSubscriberTest extends TestCase
         TestKernel::registerScheduledTasks(function (Schedule $schedule) {
             $schedule->call(fn () => 1 + 1)->everyMinute()->monitorName('dummy-task');
         });
+
+        File::copy(__DIR__.'/../stubs/artisan', base_path('artisan'));
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        File::delete(base_path('artisan'));
     }
 
     /** @test */
@@ -96,6 +106,8 @@ class ScheduledTaskSubscriberTest extends TestCase
     /** @test */
     public function it_will_mark_a_task_as_failed_when_it_throws_an_exception()
     {
+        File::delete(base_path('artisan'));
+
         TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
             $schedule->command(FailingCommand::class)->everyMinute();
         });
@@ -152,5 +164,44 @@ class ScheduledTaskSubscriberTest extends TestCase
         $this->artisan('schedule:run')->assertExitCode(0);
 
         Bus::assertDispatched(PingOhDearJob::class);
+    }
+
+    /** @test */
+    public function it_stores_the_command_output_to_db()
+    {
+        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+            $schedule
+                ->command('help')
+                ->everyMinute()
+                ->storeOutputToDb()
+                ->monitorName('dummy-task');
+        });
+
+        $this->artisan(SyncCommand::class)->assertExitCode(0);
+        $this->artisan('schedule:run')->assertExitCode(0);
+
+        $task = MonitoredScheduledTask::findByName('dummy-task');
+        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
+
+        $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
+    }
+
+    /** @test */
+    public function it_does_not_store_the_command_output_to_db()
+    {
+        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+            $schedule
+                ->command('help')
+                ->everyMinute()
+                ->monitorName('dummy-task');
+        });
+
+        $this->artisan(SyncCommand::class)->assertExitCode(0);
+        $this->artisan('schedule:run')->assertExitCode(0);
+
+        $task = MonitoredScheduledTask::findByName('dummy-task');
+        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
+
+        $this->assertNull($logItem->meta['output']);
     }
 }

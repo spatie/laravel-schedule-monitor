@@ -94,6 +94,7 @@ class MonitoredScheduledTask extends Model
             'runtime' => $event->task->runInBackground ? 0 : $event->runtime,
             'exit_code' => $event->task->exitCode,
             'memory' => $event->task->runInBackground ? 0 : memory_get_usage(true),
+            'output' => $this->getEventTaskOutput($event),
         ]);
 
         $this->update(['last_finished_at' => now()]);
@@ -174,5 +175,31 @@ class MonitoredScheduledTask extends Model
         return $this->logItems()->create([
             'type' => $type,
         ]);
+    }
+
+    /**
+     * @param ScheduledTaskFailed|ScheduledTaskFinished $event
+     */
+    protected function getEventTaskOutput($event): ?string
+    {
+        if (! ($event->task->storeOutputToDb ?? false)) {
+            return null;
+        }
+
+        if (is_null($event->task->output)) {
+            return null;
+        }
+
+        if ($event->task->output === $event->task->getDefaultOutput()) {
+            return null;
+        }
+
+        if (! is_file($event->task->output)) {
+            return null;
+        }
+
+        $output = file_get_contents($event->task->output);
+
+        return $output ?: null;
     }
 }
