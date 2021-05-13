@@ -105,6 +105,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
         SchedulerEvent::macro('storeOutputToDb', function () {
             $this->storeOutputToDb = true;
+            /** @psalm-suppress UndefinedMethod */
             $this->ensureOutputIsBeingCaptured();
 
             return $this;
