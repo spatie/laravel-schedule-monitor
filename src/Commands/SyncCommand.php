@@ -25,7 +25,6 @@ class SyncCommand extends Command
 
         $monitoredScheduledTasksCount = app(MonitoredScheduledTaskContract::class)::count();
 
-        dd($monitoredScheduledTasksCount);
         $this->info('');
         $this->info('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
         $this->info('');
