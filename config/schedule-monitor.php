@@ -14,6 +14,11 @@ return [
      */
     'date_format' => 'Y-m-d H:i:s',
 
+    'models' => [
+        'monitored_scheduled_task' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTask::class,
+        'monitored_scheduled_log_item' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem::class,
+    ],
+
     /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.

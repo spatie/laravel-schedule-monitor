@@ -13,6 +13,8 @@ use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Commands\VerifyCommand;
 use Spatie\ScheduleMonitor\EventHandlers\BackgroundCommandListener;
 use Spatie\ScheduleMonitor\EventHandlers\ScheduledTaskEventSubscriber;
+use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
+use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledLogItem as MonitoredScheduledLogItemContract;
 
 class ScheduleMonitorServiceProvider extends ServiceProvider
 {
@@ -23,12 +25,27 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
             ->registerCommands()
             ->configureOhDearApi()
             ->registerEventHandlers()
-            ->registerSchedulerEventMacros();
+            ->registerSchedulerEventMacros()
+            ->registerModelBindings();
     }
 
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/schedule-monitor.php', 'schedule-monitor');
+    }
+
+    protected function registerModelBindings()
+    {
+        $config = $this->app->config['schedule-monitor.models'];
+
+        if (! $config) {
+            return;
+        }
+
+        $this->app->bind(MonitoredScheduledTaskContract::class, $config['monitored_scheduled_task']);
+        $this->app->bind(MonitoredScheduledLogItemContract::class, $config['monitored_scheduled_log_item']);
+
+        return $this;
     }
 
     protected function registerPublishables(): self

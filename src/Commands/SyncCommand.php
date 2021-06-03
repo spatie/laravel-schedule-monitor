@@ -6,9 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
+use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
 
 class SyncCommand extends Command
 {
@@ -19,12 +19,13 @@ class SyncCommand extends Command
     public function handle()
     {
         $this->info('Start syncing schedule...' . PHP_EOL);
-
         $this
-            ->syncScheduledTasksWithDatabase()
-            ->syncMonitoredScheduledTaskWithOhDear();
+        ->syncScheduledTasksWithDatabase()
+        ->syncMonitoredScheduledTaskWithOhDear();
 
-        $monitoredScheduledTasksCount = MonitoredScheduledTask::count();
+        $monitoredScheduledTasksCount = app(MonitoredScheduledTaskContract::class)::count();
+
+        dd($monitoredScheduledTasksCount);
         $this->info('');
         $this->info('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
         $this->info('');
@@ -38,7 +39,7 @@ class SyncCommand extends Command
         $monitoredScheduledTasks = ScheduledTasks::createForSchedule()
             ->uniqueTasks()
             ->map(function (Task $task) {
-                return MonitoredScheduledTask::updateOrCreate(
+                return app(MonitoredScheduledTaskContract::class)::updateOrCreate(
                     ['name' => $task->name()],
                     [
                         'type' => $task->type(),
@@ -49,7 +50,7 @@ class SyncCommand extends Command
                 );
             });
 
-        MonitoredScheduledTask::query()
+        app(MonitoredScheduledTaskContract::class)::query()
             ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
             ->delete();
 
@@ -72,10 +73,10 @@ class SyncCommand extends Command
 
         $this->comment('Start syncing schedule with Oh Dear...');
 
-        $monitoredScheduledTasks = MonitoredScheduledTask::get();
+        $monitoredScheduledTasks = app(MonitoredScheduledTaskContract::class)::get();
 
         $cronChecks = $monitoredScheduledTasks
-            ->map(function (MonitoredScheduledTask $monitoredScheduledTask) {
+            ->map(function (MonitoredScheduledTaskContract $monitoredScheduledTask) {
                 return [
                     'name' => $monitoredScheduledTask->name,
                     'type' => 'cron',
@@ -93,7 +94,7 @@ class SyncCommand extends Command
         collect($cronChecks)
             ->each(
                 function (CronCheck $cronCheck) {
-                    if (! $monitoredScheduledTask = MonitoredScheduledTask::findForCronCheck($cronCheck)) {
+                    if (! $monitoredScheduledTask = app(MonitoredScheduledTaskContract::class)::findForCronCheck($cronCheck)) {
                         return;
                     }
 

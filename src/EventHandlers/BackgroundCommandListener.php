@@ -6,7 +6,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
 
 class BackgroundCommandListener
 {
@@ -22,7 +22,7 @@ class BackgroundCommandListener
                 $task
                     ->then(
                         function () use ($task) {
-                            if (! $monitoredTask = MonitoredScheduledTask::findForTask($task)) {
+                            if (! $monitoredTask = app(MonitoredScheduledTaskContract)::findForTask($task)) {
                                 return;
                             }
 
