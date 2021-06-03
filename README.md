@@ -59,6 +59,20 @@ return [
      */
     'date_format' => 'Y-m-d H:i:s',
 
+    'models' => [
+        /*
+         * The model you want to use as a MonitoredScheduledTask model needs to implement the
+         * `Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask` contract.
+         */
+        'monitored_scheduled_task' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTask::class,
+
+        /*
+         * The model you want to use as a MonitoredScheduledTaskLogItem model needs to implement the
+         * `Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTaskLogItem` contract.
+         */
+        'monitored_scheduled_log_item' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem::class,
+    ],
+
     /*
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
