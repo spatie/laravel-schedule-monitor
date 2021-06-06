@@ -83,7 +83,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
     protected function configureOhDearApi(): self
     {
-        if (!class_exists(OhDear::class)) {
+        if (! class_exists(OhDear::class)) {
             return $this;
         }
 
