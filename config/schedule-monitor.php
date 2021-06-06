@@ -16,14 +16,14 @@ return [
 
     'models' => [
         /*
-         * The model you want to use as a MonitoredScheduledTask model needs to implement the
-         * `Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask` contract.
+         * The model you want to use as a MonitoredScheduledTask model needs to extend the
+         * `Spatie\ScheduleMonitor\Models\MonitoredScheduledTask` Model.
          */
         'monitored_scheduled_task' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTask::class,
 
         /*
-         * The model you want to use as a MonitoredScheduledTaskLogItem model needs to implement the
-         * `Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTaskLogItem` contract.
+         * The model you want to use as a MonitoredScheduledTaskLogItem model needs to extend the
+         * `Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem` Model.
          */
         'monitored_scheduled_log_item' => Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem::class,
     ],

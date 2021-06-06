@@ -8,7 +8,7 @@ use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 class SyncCommand extends Command
 {
@@ -23,7 +23,7 @@ class SyncCommand extends Command
             ->syncScheduledTasksWithDatabase()
             ->syncMonitoredScheduledTaskWithOhDear();
 
-        $monitoredScheduledTasksCount = app(MonitoredScheduledTaskContract::class)::count();
+        $monitoredScheduledTasksCount = app(MonitoredScheduledTask::class)::count();
 
         $this->info('');
         $this->info('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
@@ -38,7 +38,7 @@ class SyncCommand extends Command
         $monitoredScheduledTasks = ScheduledTasks::createForSchedule()
             ->uniqueTasks()
             ->map(function (Task $task) {
-                return app(MonitoredScheduledTaskContract::class)::updateOrCreate(
+                return app(MonitoredScheduledTask::class)::updateOrCreate(
                     ['name' => $task->name()],
                     [
                         'type' => $task->type(),
@@ -49,7 +49,7 @@ class SyncCommand extends Command
                 );
             });
 
-        app(MonitoredScheduledTaskContract::class)::query()
+        app(MonitoredScheduledTask::class)::query()
             ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
             ->delete();
 
@@ -72,10 +72,10 @@ class SyncCommand extends Command
 
         $this->comment('Start syncing schedule with Oh Dear...');
 
-        $monitoredScheduledTasks = app(MonitoredScheduledTaskContract::class)::get();
+        $monitoredScheduledTasks = app(MonitoredScheduledTask::class)::get();
 
         $cronChecks = $monitoredScheduledTasks
-            ->map(function (MonitoredScheduledTaskContract $monitoredScheduledTask) {
+            ->map(function (MonitoredScheduledTask $monitoredScheduledTask) {
                 return [
                     'name' => $monitoredScheduledTask->name,
                     'type' => 'cron',
@@ -93,7 +93,7 @@ class SyncCommand extends Command
         collect($cronChecks)
             ->each(
                 function (CronCheck $cronCheck) {
-                    if (! $monitoredScheduledTask = app(MonitoredScheduledTaskContract::class)::findForCronCheck($cronCheck)) {
+                    if (! $monitoredScheduledTask = app(MonitoredScheduledTask::class)::findForCronCheck($cronCheck)) {
                         return;
                     }
 

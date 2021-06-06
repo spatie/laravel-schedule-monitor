@@ -4,10 +4,9 @@ namespace Spatie\ScheduleMonitor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledLogItem as MonitoredScheduledLogItemContract;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
-class MonitoredScheduledTaskLogItem extends Model implements MonitoredScheduledLogItemContract
+class MonitoredScheduledTaskLogItem extends Model
 {
     public $guarded = [];
 
@@ -22,7 +21,7 @@ class MonitoredScheduledTaskLogItem extends Model implements MonitoredScheduledL
 
     public function monitoredScheduledTask(): BelongsTo
     {
-        return $this->belongsTo(app(MonitoredScheduledTaskContract::class));
+        return $this->belongsTo(app(MonitoredScheduledTask::class), 'monitored_scheduled_task_id');
     }
 
     public function updateMeta(array $values): self

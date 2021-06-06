@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 abstract class Task
 {
@@ -17,7 +17,7 @@ abstract class Task
 
     protected string $uniqueId;
 
-    protected ?MonitoredScheduledTaskContract $monitoredScheduledTask = null;
+    protected ?MonitoredScheduledTask $monitoredScheduledTask = null;
 
     abstract public static function canHandleEvent(Event $event): bool;
 
@@ -32,7 +32,7 @@ abstract class Task
         $this->uniqueId = (string)Str::uuid();
 
         if (! empty($this->name())) {
-            $this->monitoredScheduledTask = app(MonitoredScheduledTaskContract::class)::findByName($this->name());
+            $this->monitoredScheduledTask = app(MonitoredScheduledTask::class)::findByName($this->name());
         }
     }
 

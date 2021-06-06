@@ -12,11 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledTask as MonitoredScheduledTaskContract;
-use Spatie\ScheduleMonitor\Contracts\MonitoredScheduledLogItem as MonitoredScheduledLogItemContract;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
 
-class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskContract
+class MonitoredScheduledTask extends Model
 {
     public $guarded = [];
 
@@ -32,12 +30,12 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
 
     public function logItems(): HasMany
     {
-        return $this->hasMany(config('schedule-monitor.models.monitored_scheduled_log_item'))->orderByDesc('id');
+        return $this->hasMany(config('schedule-monitor.models.monitored_scheduled_log_item'), 'monitored_scheduled_task_id')->orderByDesc('id');
     }
 
     public static function findByName(string $name): ?self
     {
-        return app(MonitoredScheduledTaskContract::class)::where('name', $name)->first();
+        return app(MonitoredScheduledTask::class)::where('name', $name)->first();
     }
 
     public static function findForTask(Event $event): ?self
@@ -48,12 +46,12 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
             return null;
         }
 
-        return app(MonitoredScheduledTaskContract::class)::findByName($task->name());
+        return app(MonitoredScheduledTask::class)::findByName($task->name());
     }
 
     public static function findForCronCheck(CronCheck $cronCheck): ?self
     {
-        return app(MonitoredScheduledTaskContract::class)::findByName($cronCheck->name);
+        return app(MonitoredScheduledTask::class)::findByName($cronCheck->name);
     }
 
     public function markAsRegisteredOnOhDear(): self
@@ -67,7 +65,7 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
 
     public function markAsStarting(ScheduledTaskStarting $event): self
     {
-        $logItem = $this->createLogItem(app(MonitoredScheduledLogItemContract::class)::TYPE_STARTING);
+        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_STARTING);
 
         $logItem->updateMeta([
             'memory' => memory_get_usage(true),
@@ -90,7 +88,7 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
             return $this->markAsFailed($event);
         }
 
-        $logItem = $this->createLogItem(app(MonitoredScheduledLogItemContract::class)::TYPE_FINISHED);
+        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_FINISHED);
 
         $logItem->updateMeta([
             'runtime' => $event->task->runInBackground ? 0 : $event->runtime,
@@ -122,7 +120,7 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
      */
     public function markAsFailed($event): self
     {
-        $logItem = $this->createLogItem(app(MonitoredScheduledLogItemContract::class)::TYPE_FAILED);
+        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_FAILED);
 
         if ($event instanceof ScheduledTaskFailed) {
             $logItem->updateMeta([
@@ -147,7 +145,7 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
 
     public function markAsSkipped(ScheduledTaskSkipped $event): self
     {
-        $this->createLogItem(app(MonitoredScheduledLogItemContract::class)::TYPE_SKIPPED);
+        $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_SKIPPED);
 
         $this->update(['last_skipped_at' => now()]);
 
@@ -161,8 +159,8 @@ class MonitoredScheduledTask extends Model implements MonitoredScheduledTaskCont
         }
 
         if (! in_array($logItem->type, [
-            app(MonitoredScheduledLogItemContract::class)::TYPE_FAILED,
-            app(MonitoredScheduledLogItemContract::class)::TYPE_FINISHED,
+            app(MonitoredScheduledTaskLogItem::class)::TYPE_FAILED,
+            app(MonitoredScheduledTaskLogItem::class)::TYPE_FINISHED,
         ], true)) {
             return $this;
         }
