@@ -59,7 +59,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/schedule-monitor.php' => config_path('schedule-monitor.php'),
             ], 'config');
 
-            if (!class_exists('CreateScheduleMonitorTables')) {
+            if (! class_exists('CreateScheduleMonitorTables')) {
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_schedule_monitor_tables.php'),
                 ], 'migrations');
