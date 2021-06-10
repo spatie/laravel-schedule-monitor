@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.0 - 2021-06-10
+
+- enable custom models
+
 ## 2.3.0 - 2021-05-13
 
 - add `storeOutputInDb`
