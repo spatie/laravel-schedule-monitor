@@ -13,9 +13,12 @@ use Illuminate\Support\Str;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
+use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
 
 class MonitoredScheduledTask extends Model
 {
+    use UsesScheduleMonitoringModels;
+
     public $guarded = [];
 
     protected $casts = [
@@ -30,28 +33,40 @@ class MonitoredScheduledTask extends Model
 
     public function logItems(): HasMany
     {
-        return $this->hasMany(config('schedule-monitor.models.monitored_scheduled_log_item'), 'monitored_scheduled_task_id')->orderByDesc('id');
+        return $this->hasMany($this->getMonitoredScheduleTaskLogItemModel(), 'monitored_scheduled_task_id')->orderByDesc('id');
     }
 
     public static function findByName(string $name): ?self
     {
-        return app(MonitoredScheduledTask::class)::where('name', $name)->first();
+        $monitoredScheduledTask = new static();
+
+        return $monitoredScheduledTask
+            ->getMonitoredScheduleTaskModel()
+            ->where('name', $name)
+            ->first();
     }
 
     public static function findForTask(Event $event): ?self
     {
         $task = ScheduledTaskFactory::createForEvent($event);
+        $monitoredScheduledTask = new static();
 
         if (empty($task->name())) {
             return null;
         }
 
-        return app(MonitoredScheduledTask::class)::findByName($task->name());
+        return $monitoredScheduledTask
+            ->getMonitoredScheduleTaskModel()
+            ->findByName($task->name());
     }
 
     public static function findForCronCheck(CronCheck $cronCheck): ?self
     {
-        return app(MonitoredScheduledTask::class)::findByName($cronCheck->name);
+        $monitoredScheduledTask = new static();
+
+        return $monitoredScheduledTask
+            ->getMonitoredScheduleTaskModel()
+            ->findByName($cronCheck->name);
     }
 
     public function markAsRegisteredOnOhDear(): self
@@ -65,7 +80,7 @@ class MonitoredScheduledTask extends Model
 
     public function markAsStarting(ScheduledTaskStarting $event): self
     {
-        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_STARTING);
+        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_STARTING);
 
         $logItem->updateMeta([
             'memory' => memory_get_usage(true),
@@ -84,11 +99,11 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if ($event->task->exitCode !== 0 && ! is_null($event->task->exitCode)) {
+        if ($event->task->exitCode !== 0 && !is_null($event->task->exitCode)) {
             return $this->markAsFailed($event);
         }
 
-        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_FINISHED);
+        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FINISHED);
 
         $logItem->updateMeta([
             'runtime' => $event->task->runInBackground ? 0 : $event->runtime,
@@ -106,7 +121,7 @@ class MonitoredScheduledTask extends Model
 
     public function eventConcernsBackgroundTaskThatCompletedInForeground(ScheduledTaskFinished $event): bool
     {
-        if (! $event->task->runInBackground) {
+        if (!$event->task->runInBackground) {
             return false;
         }
 
@@ -120,7 +135,7 @@ class MonitoredScheduledTask extends Model
      */
     public function markAsFailed($event): self
     {
-        $logItem = $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_FAILED);
+        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED);
 
         if ($event instanceof ScheduledTaskFailed) {
             $logItem->updateMeta([
@@ -145,7 +160,7 @@ class MonitoredScheduledTask extends Model
 
     public function markAsSkipped(ScheduledTaskSkipped $event): self
     {
-        $this->createLogItem(app(MonitoredScheduledTaskLogItem::class)::TYPE_SKIPPED);
+        $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_SKIPPED);
 
         $this->update(['last_skipped_at' => now()]);
 
@@ -158,9 +173,9 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if (! in_array($logItem->type, [
-            app(MonitoredScheduledTaskLogItem::class)::TYPE_FAILED,
-            app(MonitoredScheduledTaskLogItem::class)::TYPE_FINISHED,
+        if (!in_array($logItem->type, [
+            $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED,
+            $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FINISHED,
         ], true)) {
             return $this;
         }
@@ -182,7 +197,7 @@ class MonitoredScheduledTask extends Model
      */
     public function getEventTaskOutput($event): ?string
     {
-        if (! ($event->task->storeOutputInDb ?? false)) {
+        if (!($event->task->storeOutputInDb ?? false)) {
             return null;
         }
 
@@ -194,7 +209,7 @@ class MonitoredScheduledTask extends Model
             return null;
         }
 
-        if (! is_file($event->task->output)) {
+        if (!is_file($event->task->output)) {
             return null;
         }
 
