@@ -13,8 +13,7 @@ class UsesScheduleMonitoringModelsTest extends TestCase
     /** @test */
     public function it_can_resolve_schedule_monitoring_models()
     {
-        $model = new class
-        {
+        $model = new class() {
             use UsesScheduleMonitoringModels;
         };
 
