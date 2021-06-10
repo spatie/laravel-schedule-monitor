@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
-use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 class MonitoredScheduledTask extends Model
 {

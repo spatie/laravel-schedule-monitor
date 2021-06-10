@@ -44,8 +44,8 @@ class TestCase extends Orchestra
         config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
         config()->set('schedule-monitor.oh_dear.site_id', 1);
 
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
+        config()->set('database.default', 'sqlite');
+        config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             'database' => ':memory:',
             'prefix' => '',

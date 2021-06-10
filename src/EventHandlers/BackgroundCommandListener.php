@@ -6,7 +6,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
-use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 class BackgroundCommandListener
 {

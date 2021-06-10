@@ -7,6 +7,8 @@ use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use OhDear\PhpSdk\OhDear;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ScheduleMonitor\Commands\CleanLogCommand;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
@@ -17,22 +19,29 @@ use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
-class ScheduleMonitorServiceProvider extends ServiceProvider
+class ScheduleMonitorServiceProvider extends PackageServiceProvider
 {
-    public function boot()
+    public function configurePackage(Package $package): void
+    {
+        $package
+            ->name('laravel-schedule-monitor')
+            ->hasConfigFile()
+            ->hasMigrations('create_schedule_monitor_tables')
+            ->hasCommands([
+                CleanLogCommand::class,
+                ListCommand::class,
+                SyncCommand::class,
+                VerifyCommand::class,
+            ]);
+    }
+
+    public function packageBooted()
     {
         $this
-            ->registerPublishables()
-            ->registerCommands()
             ->configureOhDearApi()
             ->registerEventHandlers()
             ->registerSchedulerEventMacros()
             ->registerModelBindings();
-    }
-
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../config/schedule-monitor.php', 'schedule-monitor');
     }
 
     protected function registerModelBindings()
@@ -48,35 +57,6 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
         $this->protectAgainstInvalidClassDefinition(MonitoredScheduledTask::class, app($config['monitored_scheduled_task']));
         $this->protectAgainstInvalidClassDefinition(MonitoredScheduledTaskLogItem::class, app($config['monitored_scheduled_log_item']));
-
-        return $this;
-    }
-
-    protected function registerPublishables(): self
-    {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/schedule-monitor.php' => config_path('schedule-monitor.php'),
-            ], 'config');
-
-            if (! class_exists('CreateScheduleMonitorTables')) {
-                $this->publishes([
-                    __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_schedule_monitor_tables.php'),
-                ], 'migrations');
-            }
-        }
-
-        return $this;
-    }
-
-    protected function registerCommands(): self
-    {
-        $this->commands([
-            CleanLogCommand::class,
-            ListCommand::class,
-            SyncCommand::class,
-            VerifyCommand::class,
-        ]);
 
         return $this;
     }
@@ -135,7 +115,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function protectAgainstInvalidClassDefinition($packageClass, $providedModel)
+    protected function protectAgainstInvalidClassDefinition($packageClass, $providedModel): void
     {
         if (! ($providedModel instanceof $packageClass)) {
             $providedClass = get_class($providedModel);
@@ -143,4 +123,5 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
             throw new InvalidClassException("The provided class name {$providedClass} does not extend the required package class {$packageClass}.");
         }
     }
+
 }

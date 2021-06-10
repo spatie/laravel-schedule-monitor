@@ -7,7 +7,7 @@ use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskSkipped;
 use Illuminate\Console\Events\ScheduledTaskStarting;
 use Illuminate\Contracts\Events\Dispatcher;
-use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 class ScheduledTaskEventSubscriber
 {
