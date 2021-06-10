@@ -14,8 +14,8 @@ use Spatie\ScheduleMonitor\Commands\VerifyCommand;
 use Spatie\ScheduleMonitor\EventHandlers\BackgroundCommandListener;
 use Spatie\ScheduleMonitor\EventHandlers\ScheduledTaskEventSubscriber;
 use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class ScheduleMonitorServiceProvider extends ServiceProvider
 {
@@ -59,7 +59,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/schedule-monitor.php' => config_path('schedule-monitor.php'),
             ], 'config');
 
-            if (! class_exists('CreateScheduleMonitorTables')) {
+            if (!class_exists('CreateScheduleMonitorTables')) {
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_schedule_monitor_tables.php'),
                 ], 'migrations');
@@ -83,7 +83,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
     protected function configureOhDearApi(): self
     {
-        if (! class_exists(OhDear::class)) {
+        if (!class_exists(OhDear::class)) {
             return $this;
         }
 
