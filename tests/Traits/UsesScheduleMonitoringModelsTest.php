@@ -2,7 +2,6 @@
 
 namespace Spatie\ScheduleMonitor\Tests\Traits;
 
-use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Tests\TestCase;

@@ -4,7 +4,6 @@ namespace Spatie\ScheduleMonitor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
 
 class MonitoredScheduledTaskLogItem extends Model

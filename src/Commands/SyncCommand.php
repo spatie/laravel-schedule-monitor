@@ -61,13 +61,13 @@ class SyncCommand extends Command
 
     protected function syncMonitoredScheduledTaskWithOhDear(): self
     {
-        if (!class_exists(OhDear::class)) {
+        if (! class_exists(OhDear::class)) {
             return $this;
         }
 
         $siteId = config('schedule-monitor.oh_dear.site_id');
 
-        if (!$siteId) {
+        if (! $siteId) {
             $this->warn('Not syncing schedule with Oh Dear because not `site_id` is not set in the `oh-dear` config file. Learn how to set this up at https://ohdear.app/TODO-add-link.');
 
             return $this;
@@ -96,7 +96,7 @@ class SyncCommand extends Command
         collect($cronChecks)
             ->each(
                 function (CronCheck $cronCheck) {
-                    if (!$monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findForCronCheck($cronCheck)) {
+                    if (! $monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findForCronCheck($cronCheck)) {
                         return;
                     }
 

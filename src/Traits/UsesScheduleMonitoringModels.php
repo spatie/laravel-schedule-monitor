@@ -2,8 +2,8 @@
 
 namespace Spatie\ScheduleMonitor\Traits;
 
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 trait UsesScheduleMonitoringModels
 {

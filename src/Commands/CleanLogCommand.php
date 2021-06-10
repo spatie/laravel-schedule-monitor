@@ -4,7 +4,6 @@ namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
 
 class CleanLogCommand extends Command

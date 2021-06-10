@@ -99,7 +99,7 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if ($event->task->exitCode !== 0 && !is_null($event->task->exitCode)) {
+        if ($event->task->exitCode !== 0 && ! is_null($event->task->exitCode)) {
             return $this->markAsFailed($event);
         }
 
@@ -121,7 +121,7 @@ class MonitoredScheduledTask extends Model
 
     public function eventConcernsBackgroundTaskThatCompletedInForeground(ScheduledTaskFinished $event): bool
     {
-        if (!$event->task->runInBackground) {
+        if (! $event->task->runInBackground) {
             return false;
         }
 
@@ -173,7 +173,7 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        if (!in_array($logItem->type, [
+        if (! in_array($logItem->type, [
             $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED,
             $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FINISHED,
         ], true)) {
@@ -197,7 +197,7 @@ class MonitoredScheduledTask extends Model
      */
     public function getEventTaskOutput($event): ?string
     {
-        if (!($event->task->storeOutputInDb ?? false)) {
+        if (! ($event->task->storeOutputInDb ?? false)) {
             return null;
         }
 
@@ -209,7 +209,7 @@ class MonitoredScheduledTask extends Model
             return null;
         }
 
-        if (!is_file($event->task->output)) {
+        if (! is_file($event->task->output)) {
             return null;
         }
 

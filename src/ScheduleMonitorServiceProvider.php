@@ -39,7 +39,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
     {
         $config = $this->app->config['schedule-monitor.models'];
 
-        if (!$config) {
+        if (! $config) {
             return;
         }
 
@@ -59,7 +59,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/schedule-monitor.php' => config_path('schedule-monitor.php'),
             ], 'config');
 
-            if (!class_exists('CreateScheduleMonitorTables')) {
+            if (! class_exists('CreateScheduleMonitorTables')) {
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_schedule_monitor_tables.php'),
                 ], 'migrations');
@@ -83,7 +83,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
     protected function configureOhDearApi(): self
     {
-        if (!class_exists(OhDear::class)) {
+        if (! class_exists(OhDear::class)) {
             return $this;
         }
 
@@ -137,7 +137,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
     protected function protectAgainstInvalidClassDefinition($packageClass, $providedModel)
     {
-        if (!($providedModel instanceof $packageClass)) {
+        if (! ($providedModel instanceof $packageClass)) {
             $providedClass = get_class($providedModel);
 
             throw new InvalidClassException("The provided class name {$providedClass} does not extend the required package class {$packageClass}.");

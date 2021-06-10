@@ -34,7 +34,7 @@ abstract class Task
 
         $this->uniqueId = (string)Str::uuid();
 
-        if (!empty($this->name())) {
+        if (! empty($this->name())) {
             $this->monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findByName($this->name());
         }
     }
@@ -51,25 +51,25 @@ abstract class Task
 
     public function shouldMonitor(): bool
     {
-        if (!isset($this->event->doNotMonitor)) {
+        if (! isset($this->event->doNotMonitor)) {
             return true;
         }
 
-        return !$this->event->doNotMonitor;
+        return ! $this->event->doNotMonitor;
     }
 
     public function isBeingMonitored(): bool
     {
-        return !is_null($this->monitoredScheduledTask);
+        return ! is_null($this->monitoredScheduledTask);
     }
 
     public function isBeingMonitoredAtOhDear(): bool
     {
-        if (!$this->isBeingMonitored()) {
+        if (! $this->isBeingMonitored()) {
             return false;
         }
 
-        return !empty($this->monitoredScheduledTask->ping_url);
+        return ! empty($this->monitoredScheduledTask->ping_url);
     }
 
     public function previousRunAt(): CarbonInterface
@@ -117,7 +117,7 @@ abstract class Task
 
     public function lastRunFinishedTooLate(): bool
     {
-        if (!$this->isBeingMonitored()) {
+        if (! $this->isBeingMonitored()) {
             return false;
         }
 
@@ -134,15 +134,15 @@ abstract class Task
 
     public function lastRunFailed(): bool
     {
-        if (!$this->isBeingMonitored()) {
+        if (! $this->isBeingMonitored()) {
             return false;
         }
 
-        if (!$lastRunFailedAt = $this->lastRunFailedAt()) {
+        if (! $lastRunFailedAt = $this->lastRunFailedAt()) {
             return false;
         }
 
-        if (!$lastRunStartedAt = $this->lastRunStartedAt()) {
+        if (! $lastRunStartedAt = $this->lastRunStartedAt()) {
             return true;
         }
 

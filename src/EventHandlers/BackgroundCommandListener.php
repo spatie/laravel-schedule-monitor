@@ -6,7 +6,6 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
 
 class BackgroundCommandListener
@@ -25,7 +24,7 @@ class BackgroundCommandListener
                 $task
                     ->then(
                         function () use ($task) {
-                            if (!$monitoredTask = $this->getMonitoredScheduleTaskModel()->findForTask($task)) {
+                            if (! $monitoredTask = $this->getMonitoredScheduleTaskModel()->findForTask($task)) {
                                 return;
                             }
 
