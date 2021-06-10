@@ -4,8 +4,8 @@ namespace Spatie\ScheduleMonitor\Tests\Traits;
 
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
-use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Tests\TestCase;
 
 class UsesScheduleMonitoringModelsTest extends TestCase
 {
