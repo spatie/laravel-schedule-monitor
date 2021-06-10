@@ -1,6 +1,6 @@
 <?php
 
-use \Faker\Generator;
+use Faker\Generator;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 

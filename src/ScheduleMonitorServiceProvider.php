@@ -13,6 +13,9 @@ use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Commands\VerifyCommand;
 use Spatie\ScheduleMonitor\EventHandlers\BackgroundCommandListener;
 use Spatie\ScheduleMonitor\EventHandlers\ScheduledTaskEventSubscriber;
+use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class ScheduleMonitorServiceProvider extends ServiceProvider
 {
@@ -23,12 +26,30 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
             ->registerCommands()
             ->configureOhDearApi()
             ->registerEventHandlers()
-            ->registerSchedulerEventMacros();
+            ->registerSchedulerEventMacros()
+            ->registerModelBindings();
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/schedule-monitor.php', 'schedule-monitor');
+        $this->mergeConfigFrom(__DIR__ . '/../config/schedule-monitor.php', 'schedule-monitor');
+    }
+
+    protected function registerModelBindings()
+    {
+        $config = $this->app->config['schedule-monitor.models'];
+
+        if (!$config) {
+            return;
+        }
+
+        $this->app->bind(MonitoredScheduledTask::class, $config['monitored_scheduled_task']);
+        $this->app->bind(MonitoredScheduledTaskLogItem::class, $config['monitored_scheduled_log_item']);
+
+        $this->protectAgainstInvalidClassDefinition(MonitoredScheduledTask::class, app($config['monitored_scheduled_task']));
+        $this->protectAgainstInvalidClassDefinition(MonitoredScheduledTaskLogItem::class, app($config['monitored_scheduled_log_item']));
+
+        return $this;
     }
 
     protected function registerPublishables(): self
@@ -38,7 +59,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/schedule-monitor.php' => config_path('schedule-monitor.php'),
             ], 'config');
 
-            if (! class_exists('CreateScheduleMonitorTables')) {
+            if (!class_exists('CreateScheduleMonitorTables')) {
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_schedule_monitor_tables.php'),
                 ], 'migrations');
@@ -62,7 +83,7 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
 
     protected function configureOhDearApi(): self
     {
-        if (! class_exists(OhDear::class)) {
+        if (!class_exists(OhDear::class)) {
             return $this;
         }
 
@@ -112,5 +133,14 @@ class ScheduleMonitorServiceProvider extends ServiceProvider
         });
 
         return $this;
+    }
+
+    protected function protectAgainstInvalidClassDefinition($packageClass, $providedModel)
+    {
+        if (!($providedModel instanceof $packageClass)) {
+            $providedClass = get_class($providedModel);
+
+            throw new InvalidClassException("The provided class name {$providedClass} does not extend the required package class {$packageClass}.");
+        }
     }
 }

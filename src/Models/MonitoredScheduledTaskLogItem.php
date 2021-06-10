@@ -4,9 +4,13 @@ namespace Spatie\ScheduleMonitor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Traits\UsesScheduleMonitoringModels;
 
 class MonitoredScheduledTaskLogItem extends Model
 {
+    use UsesScheduleMonitoringModels;
+
     public $guarded = [];
 
     public const TYPE_STARTING = 'starting';
@@ -20,7 +24,7 @@ class MonitoredScheduledTaskLogItem extends Model
 
     public function monitoredScheduledTask(): BelongsTo
     {
-        return $this->belongsTo(MonitoredScheduledTask::class);
+        return $this->belongsTo($this->getMonitoredScheduleTaskModel(), 'monitored_scheduled_task_id');
     }
 
     public function updateMeta(array $values): self
