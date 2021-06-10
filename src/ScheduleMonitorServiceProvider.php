@@ -5,7 +5,6 @@ namespace Spatie\ScheduleMonitor;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider;
 use OhDear\PhpSdk\OhDear;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -123,5 +122,4 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
             throw new InvalidClassException("The provided class name {$providedClass} does not extend the required package class {$packageClass}.");
         }
     }
-
 }

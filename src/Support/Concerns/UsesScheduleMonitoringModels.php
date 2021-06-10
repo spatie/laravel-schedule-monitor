@@ -2,9 +2,9 @@
 
 namespace Spatie\ScheduleMonitor\Support\Concerns;
 
+use function app;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
-use function app;
 
 trait UsesScheduleMonitoringModels
 {

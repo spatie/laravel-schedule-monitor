@@ -7,9 +7,9 @@ use Illuminate\Support\Str;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
-use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 class SyncCommand extends Command
 {
