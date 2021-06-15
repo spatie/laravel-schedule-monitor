@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.1 - 2021-06-15
+
+- update user API token url (#50)
+
 ## 2.4.0 - 2021-06-10
 
 - enable custom models
