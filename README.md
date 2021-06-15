@@ -83,7 +83,7 @@ return [
         /*
          * You can generate an API token at the Oh Dear user settings screen
          *
-         * https://ohdear.app/user-settings/api
+         * https://ohdear.app/user/api-tokens
          */
         'api_token' => env('OH_DEAR_API_TOKEN', ''),
 
