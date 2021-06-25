@@ -6,7 +6,7 @@
 
 This package will monitor your Laravel schedule. It will write an entry to a log table in the db each time a schedule tasks starts, end, fails or is skipped. Using the `list` command you can check when the scheduled tasks have been executed.
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/list-with-failure.png)
 
 This package can also sync your schedule with [Oh Dear](https://ohdear.app). Oh Dear will send you a notification whenever a scheduled task doesn't run on time or fails.
 
@@ -136,11 +136,11 @@ In a non-production environment you should manually run `schedule-monitor:sync`.
 
 To monitor your schedule you should first run `schedule-monitor:sync`. This command will take a look at your schedule and create an entry for each task in the `monitored_scheduled_tasks` table.
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/sync.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/sync.png)
 
 To view all monitored scheduled tasks, you can run `schedule-monitor:list`. This command will list all monitored scheduled tasks. It will show you when a scheduled task has last started, finished, or failed.
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/list.png)
 
 The package will write an entry to the `monitored_scheduled_task_log_items` table in the db each time a schedule tasks starts, end, fails or is skipped. Take a look at the contest of that table if you want to know when and how scheduled tasks did execute. The log items also hold other interesting metrics like memory usage, execution time, and more.
 
@@ -168,7 +168,7 @@ When you change the name of task, the schedule monitor will remove all log items
 
 When the package detects that the last run of a scheduled task did not run in time, the `schedule-monitor` list will display that task using a red background color. In this screenshot the task named `your-command` ran too late.
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-with-failure.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/list-with-failure.png)
 
 The package will determine that a task ran too late if it was not finished at the time it was supposed to run + the grace time. You can think of the grace time as the number of minutes that a task under normal circumstances needs to finish. By default, the package grants a grace time of 5 minutes to each task.
 
@@ -227,7 +227,7 @@ Next you, need to make sure the `api_token` and `site_id` keys of the `schedule-
 php artisan schedule-monitor:verify
 ```
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/verify.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/verify.png)
 
 To sync your schedule with Oh Dear run this command:
 
@@ -235,11 +235,11 @@ To sync your schedule with Oh Dear run this command:
 php artisan schedule-monitor:sync
 ```
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/sync-oh-dear.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/sync-oh-dear.png)
 
 After that, the `list` command should show that all the scheduled tasks in your app are registered on Oh Dear.
 
-![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/master/docs/list-oh-dear.png)
+![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/list-oh-dear.png)
 
 To keep scheduled jobs as short as possible, Oh Dear will be pinged via queued jobs. To ensure speedy delivery to Oh Dear, and to avoid false positive notifications, we highly recommend creating a dedicated queue for these jobs. You can put the name of that queue in the `queue` key of the config file.
 
