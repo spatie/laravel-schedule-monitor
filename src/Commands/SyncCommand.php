@@ -68,7 +68,7 @@ class SyncCommand extends Command
         $siteId = config('schedule-monitor.oh_dear.site_id');
 
         if (! $siteId) {
-            $this->warn('Not syncing schedule with Oh Dear because not `site_id` is not set in the `oh-dear` config file. Learn how to set this up at https://ohdear.app/TODO-add-link.');
+            $this->warn('Not syncing schedule with Oh Dear because not `site_id` is not set in the `oh-dear` config file. Learn how to set this up at https://ohdear.app/docs/general/cron-job-monitoring/php#cron-monitoring-in-laravel-php');
 
             return $this;
         }
