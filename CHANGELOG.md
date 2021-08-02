@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.3 - 2021-08-02
+
+- automatically retry ping if OhDear had downtime (#54)
+
 ## 2.4.2 - 2021-07-22
 
 - add link to docs
