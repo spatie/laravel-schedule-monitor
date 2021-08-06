@@ -44,7 +44,7 @@ class VerifyCommand extends Command
     protected function verifyApiToken(array $ohDearConfig): self
     {
         if (empty($ohDearConfig['api_token'])) {
-            throw new Exception('No API token found. Make sure you added an API token to the `api_token` key of the `server-monitor` config file. You can generate a new token here: https://ohdear.app/user-settings/api');
+            throw new Exception('No API token found. Make sure you added an API token to the `api_token` key of the `server-monitor` config file. You can generate a new token here: https://ohdear.app/user/api-tokens');
         }
 
         $this->comment('Oh Dear API token found.');
