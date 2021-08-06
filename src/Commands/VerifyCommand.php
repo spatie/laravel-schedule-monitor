@@ -44,7 +44,7 @@ class VerifyCommand extends Command
     protected function verifyApiToken(array $ohDearConfig): self
     {
         if (empty($ohDearConfig['api_token'])) {
-            throw new Exception('No API token found. Make sure you added an API token to the `api_token` key of the `server-monitor` config file. You can generate a new token here: https://ohdear.app/user-settings/api');
+            throw new Exception('No API token found. Make sure you added an API token to the `api_token` key of the `schedule-monitor` config file. You can generate a new token here: https://ohdear.app/user/api-tokens');
         }
 
         $this->comment('Oh Dear API token found.');
@@ -55,7 +55,7 @@ class VerifyCommand extends Command
     protected function verifySiteId(array $ohDearConfig): self
     {
         if (empty($ohDearConfig['site_id'])) {
-            throw new Exception('No site id found. Make sure you added an site id to the `site_id` key of the `server-monitor` config file. You can found your site id on the settings page of a site on Oh Dear.');
+            throw new Exception('No site id found. Make sure you added an site id to the `site_id` key of the `schedule-monitor` config file. You can found your site id on the settings page of a site on Oh Dear.');
         }
 
         $this->comment('Oh Dear site id found.');
