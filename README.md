@@ -31,7 +31,7 @@ composer require spatie/laravel-schedule-monitor
 You must publish and run migrations:
 
 ```bash
-php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="schedule-monitor-migrations"
 php artisan migrate
 ```
 
@@ -39,7 +39,7 @@ php artisan migrate
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider" --tag="schedule-monitor-config"
 ```
 
 This is the contents of the published config file:
