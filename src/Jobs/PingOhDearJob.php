@@ -2,7 +2,6 @@
 
 namespace Spatie\ScheduleMonitor\Jobs;
 
-use Carbon\Carbon;
 use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
