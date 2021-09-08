@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.4 - 2021-09-07
+
+- add `retryUntil` for PingOhdearJobs (#63)
+
 ## 2.4.3 - 2021-08-02
 
 - automatically retry ping if OhDear had downtime (#54)
