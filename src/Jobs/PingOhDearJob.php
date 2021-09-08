@@ -2,6 +2,8 @@
 
 namespace Spatie\ScheduleMonitor\Jobs;
 
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -41,5 +43,10 @@ class PingOhDearJob implements ShouldQueue
         $response->throw();
 
         $this->logItem->monitoredScheduledTask->update(['last_pinged_at' => now()]);
+    }
+
+    public function retryUntil(): DateTime
+    {
+        return now()->addMinutes(config('schedule-monitor.oh_dear.retry_job_for_minutes', 10));
     }
 }
