@@ -54,5 +54,11 @@ return [
          * via a queued job. Here you can specify the name of the queue you wish to use.
          */
         'queue' => env('OH_DEAR_QUEUE'),
+
+        /*
+         * `PingOhDearJob`s will automatically be skipped if they've been queued for
+         * longer than the time configured here.
+         */
+        'retry_job_for_minutes' => 10,
     ],
 ];
