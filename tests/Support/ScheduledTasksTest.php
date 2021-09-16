@@ -3,7 +3,6 @@
 namespace Spatie\ScheduleMonitor\Tests\Support;
 
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Facades\Config;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 use Spatie\ScheduleMonitor\Tests\TestCase;
@@ -45,7 +44,7 @@ class ScheduledTasksTest extends TestCase
     {
         TestKernel::registerScheduledTasks(function (Schedule $schedule) {
             $schedule->command('dummy')->environments('testing'); // current
-            $schedule->command('other-dummy')->environments('production'); 
+            $schedule->command('other-dummy')->environments('production');
         });
 
         $scheduledTasks = ScheduledTasks::createForSchedule();
