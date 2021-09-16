@@ -25,6 +25,9 @@ class ScheduledTasks
         $this->schedule = $schedule;
 
         $this->tasks = collect($this->schedule->events())
+            ->filter(
+                fn (Event $event): bool => $event->runsInEnvironment(config('app.env'))
+            )
             ->map(
                 fn (Event $event): Task => ScheduledTaskFactory::createForEvent($event)
             );
