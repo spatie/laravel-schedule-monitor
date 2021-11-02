@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.6 - 2021-11-02
+
+- Make sure retryUntil is returning a DateTime (#66)
+
 ## 2.4.5 - 2021-09-16
 
 - take environments property into account for scheduled tasks (#64)
