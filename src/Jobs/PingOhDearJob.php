@@ -46,6 +46,6 @@ class PingOhDearJob implements ShouldQueue
 
     public function retryUntil(): DateTime
     {
-        return now()->addMinutes(config('schedule-monitor.oh_dear.retry_job_for_minutes', 10));
+        return now()->addMinutes(config('schedule-monitor.oh_dear.retry_job_for_minutes', 10))->toDateTime();
     }
 }
