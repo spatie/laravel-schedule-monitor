@@ -18,7 +18,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "illuminate/bus": "^8.0",
-        "lorisleiva/cron-translator": "^0.2.0",
+        "lorisleiva/cron-translator": "^0.3.0",
         "nesbot/carbon": "^2.41.3",
         "spatie/laravel-package-tools": "^1.9"
     },
