@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.7 - 2021-11-17
+
+## What's Changed
+
+- Update lorisleiva/cron-translator to version 0.3 by @bilfeldt in https://github.com/spatie/laravel-schedule-monitor/pull/67
+
+## New Contributors
+
+- @bilfeldt made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/67
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/2.4.6...2.4.7
+
 ## 2.4.6 - 2021-11-02
 
 - Make sure retryUntil is returning a DateTime (#66)
