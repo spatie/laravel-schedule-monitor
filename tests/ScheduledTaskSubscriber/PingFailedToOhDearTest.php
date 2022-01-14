@@ -29,7 +29,7 @@ class PingFailedToOhDearTest extends TestCase
             'failure_message' => 'failure',
         ];
 
-        $this->monitoredScheduledTaskLogItem = factory(MonitoredScheduledTaskLogItem::class)->create([
+        $this->monitoredScheduledTaskLogItem = MonitoredScheduledTaskLogItem::factory()->create([
             'type' => MonitoredScheduledTaskLogItem::TYPE_FAILED,
             'meta' => $this->meta,
         ]);

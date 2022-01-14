@@ -31,7 +31,7 @@ class PingFinishedToOhDearTest extends TestCase
             'memory' => 12345,
         ];
 
-        $this->monitoredScheduledTaskLogItem = factory(MonitoredScheduledTaskLogItem::class)->create([
+        $this->monitoredScheduledTaskLogItem = MonitoredScheduledTaskLogItem::factory()->create([
             'type' => MonitoredScheduledTaskLogItem::TYPE_FINISHED,
             'meta' => $this->meta,
         ]);

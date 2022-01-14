@@ -7,6 +7,7 @@ use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskSkipped;
 use Illuminate\Console\Events\ScheduledTaskStarting;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
 class MonitoredScheduledTask extends Model
 {
     use UsesScheduleMonitoringModels;
+    use HasFactory;
 
     public $guarded = [];
 

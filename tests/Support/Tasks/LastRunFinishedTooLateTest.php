@@ -27,7 +27,7 @@ class LastRunFinishedTooLateTest extends TestCase
             ->hourly()
             ->graceTimeInMinutes(5);
 
-        $this->monitoredScheduledTask = factory(MonitoredScheduledTask::class)->create([
+        $this->monitoredScheduledTask = MonitoredScheduledTask::factory()->create([
             'name' => 'foo:bar',
         ]);
     }
