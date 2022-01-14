@@ -13,7 +13,7 @@ class MonitoredScheduledTaskLogItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'monitored_scheduled_task_id' => factory(MonitoredScheduledTask::class),
+            'monitored_scheduled_task_id' => MonitoredScheduledTask::factory(),
             'type' => $this->faker->randomElement([
                 MonitoredScheduledTaskLogItem::TYPE_STARTING,
                 MonitoredScheduledTaskLogItem::TYPE_FINISHED,

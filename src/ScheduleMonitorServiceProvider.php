@@ -27,7 +27,6 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigrations('create_schedule_monitor_tables')
             ->hasCommands([
-                CleanLogCommand::class,
                 ListCommand::class,
                 SyncCommand::class,
                 VerifyCommand::class,
