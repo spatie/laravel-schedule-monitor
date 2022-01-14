@@ -4,9 +4,10 @@ namespace Spatie\ScheduleMonitor\Tests\TestClasses;
 
 use Closure;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as IlluminateKernel;
 use Orchestra\Testbench\Console\Kernel;
 
-class TestKernel extends Kernel
+class TestKernel extends IlluminateKernel
 {
     protected static array $registeredScheduleCommands = [];
 

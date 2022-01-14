@@ -4,6 +4,7 @@ namespace Spatie\ScheduleMonitor\Tests;
 
 use CreateScheduleMonitorTables;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use OhDear\PhpSdk\OhDear;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider;
@@ -18,13 +19,22 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
+        config()->set('database.default', 'sqlite');
+        config()->set('database.connections.sqlite', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
         TestKernel::clearScheduledCommands();
 
         $this->ohDear = new FakeOhDear();
 
         $this->app->bind(OhDear::class, fn () => $this->ohDear);
 
-        $this->withFactories(__DIR__.'/database/factories');
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'Spatie\\ScheduleMonitor\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
+        );
     }
 
     protected function getPackageProviders($app)
@@ -41,15 +51,15 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
-        config()->set('schedule-monitor.oh_dear.site_id', 1);
-
         config()->set('database.default', 'sqlite');
         config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+        config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
+        config()->set('schedule-monitor.oh_dear.site_id', 1);
 
         include_once __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub';
         (new CreateScheduleMonitorTables())->up();

@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "illuminate/bus": "^8.71",
+        "illuminate/bus": "^8.71|^9.0",
         "lorisleiva/cron-translator": "^0.3.0",
         "nesbot/carbon": "^2.41.3",
         "spatie/laravel-package-tools": "^1.9"
@@ -25,11 +25,10 @@
     "require-dev": {
         "laravel/legacy-factories": "^1.0.4",
         "ohdearapp/ohdear-php-sdk": "^3.0",
-        "orchestra/testbench": "^6.20",
+        "orchestra/testbench": "^6.20|^7.0",
         "phpunit/phpunit": "^9.4",
         "spatie/phpunit-snapshot-assertions": "^4.2",
         "spatie/test-time": "^1.2",
-        "vimeo/psalm": "^4.0",
         "mockery/mockery": "^1.4"
     },
     "suggest": {
@@ -37,7 +36,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\ScheduleMonitor\\": "src"
+            "Spatie\\ScheduleMonitor\\": "src",
+            "Spatie\\ScheduleMonitor\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
