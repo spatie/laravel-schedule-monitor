@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.0.0 - 2022-01-14
+
+- Support Laravel 9
+
 ## 2.4.7 - 2021-11-17
 
 ## What's Changed
