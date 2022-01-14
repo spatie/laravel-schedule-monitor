@@ -110,7 +110,7 @@ class SyncCommandTest extends TestCase
     /** @test **/
     public function it_will_remove_old_tasks_from_the_database()
     {
-        factory(MonitoredScheduledTask::class)->create(['name' => 'old-task']);
+        MonitoredScheduledTask::factory()->create(['name' => 'old-task']);
         $this->assertCount(1, MonitoredScheduledTask::get());
 
         TestKernel::registerScheduledTasks(function (Schedule $schedule) {
@@ -159,7 +159,7 @@ class SyncCommandTest extends TestCase
     /** @test */
     public function it_will_remove_tasks_from_the_db_that_should_not_be_monitored_anymore()
     {
-        factory(MonitoredScheduledTask::class)->create(['name' => 'not-monitored']);
+        MonitoredScheduledTask::factory()->create(['name' => 'not-monitored']);
         $this->assertCount(1, MonitoredScheduledTask::get());
 
         TestKernel::registerScheduledTasks(function (Schedule $schedule) {
@@ -173,7 +173,7 @@ class SyncCommandTest extends TestCase
     /** @test */
     public function it_will_update_tasks_that_have_their_schedule_updated()
     {
-        $monitoredScheduledTask = factory(MonitoredScheduledTask::class)->create([
+        $monitoredScheduledTask = MonitoredScheduledTask::factory()->create([
             'name' => 'dummy',
             'cron_expression' => '* * * * *',
         ]);

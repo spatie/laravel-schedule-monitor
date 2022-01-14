@@ -26,6 +26,9 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
+        config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
+        config()->set('schedule-monitor.oh_dear.site_id', 1);
+
         TestKernel::clearScheduledCommands();
 
         $this->ohDear = new FakeOhDear();

@@ -24,7 +24,7 @@ class LastRunFailedTest extends TestCase
 
         $this->event = $this->app->make(Schedule::class)->command('foo:bar');
 
-        $this->monitoredScheduledTask = factory(MonitoredScheduledTask::class)->create([
+        $this->monitoredScheduledTask = MonitoredScheduledTask::factory()->create([
             'name' => 'foo:bar',
         ]);
     }

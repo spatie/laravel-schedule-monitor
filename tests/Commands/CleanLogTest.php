@@ -3,6 +3,7 @@
 namespace Spatie\ScheduleMonitor\Tests\Commands;
 
 use Spatie\ScheduleMonitor\Commands\CleanLogCommand;
+use Spatie\ScheduleMonitor\Database\Factories\MonitoredScheduledTaskLogItemFactory;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
@@ -23,7 +24,7 @@ class CleanLogTest extends TestCase
     public function by_default_it_will_delete_all_log_items_older_than_30_days()
     {
         foreach (range(1, 70) as $i) {
-            factory(MonitoredScheduledTaskLogItem::class)->create([
+            MonitoredScheduledTaskLogItem::factory()->create([
                 'created_at' => now(),
             ]);
 

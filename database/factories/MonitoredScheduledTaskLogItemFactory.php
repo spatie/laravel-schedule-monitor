@@ -2,7 +2,6 @@
 
 namespace Spatie\ScheduleMonitor\Database\Factories;
 
-use Closure;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
@@ -26,10 +25,12 @@ class MonitoredScheduledTaskLogItemFactory extends Factory
 
     public function configure()
     {
-        $this->afterMaking(function(MonitoredScheduledTaskLogItem $logItem) {
+        return $this->afterMaking(function(MonitoredScheduledTaskLogItem $logItem) {
             $scheduledTask = $logItem->monitoredScheduledTask;
             $scheduledTask->ping_url = 'https://ping.ohdear.app';
             $scheduledTask->save();
+
+            return $logItem;
         });
     }
 }

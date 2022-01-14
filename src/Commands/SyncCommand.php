@@ -21,6 +21,7 @@ class SyncCommand extends Command
 
     public function handle()
     {
+
         $this->info('Start syncing schedule...' . PHP_EOL);
         $this
             ->syncScheduledTasksWithDatabase()
@@ -61,6 +62,7 @@ class SyncCommand extends Command
 
     protected function syncMonitoredScheduledTaskWithOhDear(): self
     {
+
         if (! class_exists(OhDear::class)) {
             return $this;
         }
