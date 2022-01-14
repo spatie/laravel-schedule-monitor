@@ -76,7 +76,7 @@ class MonitoredTasksTable extends ScheduledTasksTable
         }
     }
 
-    public function getLastRunFinishedAt(Task $task)
+    public function getLastRunFinishedAt(Task $task): string
     {
         $dateFormat = config('schedule-monitor.date_format');
 

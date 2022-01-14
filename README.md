@@ -50,6 +50,9 @@ return [
      * The schedule monitor will log each start, finish and failure of all scheduled jobs.
      * After a while the `monitored_scheduled_task_log_items` might become big.
      * Here you can specify the amount of days log items should be kept.
+     *
+     * Use Laravel's pruning command to delete old `MonitoredScheduledTaskLogItem` models.
+     * More info: https://laravel.com/docs/9.x/eloquent#mass-assignment
      */
     'delete_log_items_older_than_days' => 30,
 
@@ -99,13 +102,21 @@ return [
          * via a queued job. Here you can specify the name of the queue you wish to use.
          */
         'queue' => env('OH_DEAR_QUEUE'),
+
+        /*
+         * `PingOhDearJob`s will automatically be skipped if they've been queued for
+         * longer than the time configured here.
+         */
+        'retry_job_for_minutes' => 10,
     ],
 ];
 ```
 
 #### Cleaning the database
 
-You must register the `schedule-monitor:clean` tasks in your console kernel. This command will clean up old records from the schedule monitor log table.
+The schedule monitor will log each start, finish and failure of all scheduled jobs.  After a while the `monitored_scheduled_task_log_items` might become big.
+
+Use [Laravel's model pruning feature](https://laravel.com/docs/9.x/eloquent#mass-assignment) , you can delete old `MonitoredScheduledTaskLogItem` models. Models older than the amount of days configured in the `delete_log_items_older_than_days` in the `schedule-monitor` config file, will be deleted.
 
 ```php
 // app/Console/Kernel.php
@@ -114,8 +125,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('schedule-monitor:sync')->dailyAt('04:56');
-        $schedule->command('schedule-monitor:clean')->daily();
+        $schedule->command('model:prune')->daily();
     }
 }
 ```
