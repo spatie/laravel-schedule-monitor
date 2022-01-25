@@ -26,6 +26,8 @@ You can install the package via composer:
 composer require spatie/laravel-schedule-monitor
 ```
 
+If you need Laravel 8 support, you can install v2 of the package using `composer require spatie/laravel-schedule-monitor:^2`.
+
 #### Preparing the database
 
 You must publish and run migrations:
