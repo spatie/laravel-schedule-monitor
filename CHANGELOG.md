@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.0.1 - 2022-02-13
+
+## What's Changed
+
+- Fix return type by @SamuelNitsche in https://github.com/spatie/laravel-schedule-monitor/pull/70
+
+## New Contributors
+
+- @SamuelNitsche made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/70
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.0...3.0.1
+
 ## 3.0.0 - 2022-01-14
 
 - Support Laravel 9
