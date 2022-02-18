@@ -129,7 +129,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily()
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
     }
 }
 ```
