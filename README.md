@@ -123,11 +123,13 @@ Use [Laravel's model pruning feature](https://laravel.com/docs/9.x/eloquent#mass
 ```php
 // app/Console/Kernel.php
 
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
+
 class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('model:prune')->daily();
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
     }
 }
 ```
