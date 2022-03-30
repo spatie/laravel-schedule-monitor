@@ -290,7 +290,6 @@ These services can notify you when scheduled tasks do not run properly:
 
 - [Oh Dear](https://ohdear.app)
 - [thenping.me](https://thenping.me)
-- [Cronbox](https://cronbox.app)
 - [Healthchecks.io](https://healthchecks.io)
 - [Cronitor](https://cronitor.io)
 - [Cronhub](https://cronhub.io/)
