@@ -3,9 +3,7 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
-use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-
 
 it('can get the unique and duplicate tasks from the schedule', function () {
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {

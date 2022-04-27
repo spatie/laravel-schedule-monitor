@@ -6,10 +6,8 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\ClosureTask;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\CommandTask;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\JobTask;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\ShellTask;
-use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\TestTime\TestTime;
-
 
 it('will return a command task for a scheduled command task', function () {
     $event = app()->make(Schedule::class)->command('foo:bar');
