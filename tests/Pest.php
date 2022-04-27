@@ -2,4 +2,4 @@
 
 use Spatie\ScheduleMonitor\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+uses(\Spatie\ScheduleMonitor\Tests\TestCase::class)->in('__DIR__', 'ScheduledTaskSubscriber', 'Support', 'Traits');

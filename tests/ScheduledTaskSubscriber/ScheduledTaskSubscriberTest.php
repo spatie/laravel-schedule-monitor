@@ -12,7 +12,6 @@ use Spatie\ScheduleMonitor\Tests\TestClasses\FailingCommand;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Spatie\TestTime\TestTime;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     Bus::fake();

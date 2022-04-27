@@ -10,7 +10,6 @@ use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\TestTime\TestTime;
 
-uses(TestCase::class);
 
 it('will return a command task for a scheduled command task', function () {
     $event = app()->make(Schedule::class)->command('foo:bar');

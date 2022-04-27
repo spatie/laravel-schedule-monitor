@@ -6,7 +6,6 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 
-uses(TestCase::class);
 
 it('can get the unique and duplicate tasks from the schedule', function () {
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {

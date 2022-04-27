@@ -8,7 +8,6 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\TestTime\TestTime;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     TestTime::freeze('H:i:s', '00:00:00');
