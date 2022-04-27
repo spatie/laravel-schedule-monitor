@@ -20,7 +20,6 @@
         "illuminate/bus": "^9.0",
         "lorisleiva/cron-translator": "^0.3.0",
         "nesbot/carbon": "^2.41.3",
-        "pestphp/pest": "^1.21",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
