@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\File;

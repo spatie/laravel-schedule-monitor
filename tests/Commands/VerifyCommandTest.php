@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use Spatie\ScheduleMonitor\Commands\VerifyCommand;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 
