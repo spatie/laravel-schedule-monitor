@@ -27,7 +27,7 @@ it('can sync the schedule with the db and oh dear', function () {
     $this->artisan(SyncCommand::class);
 
     $monitoredScheduledTasks = MonitoredScheduledTask::get();
-    $this->assertCount(4, $monitoredScheduledTasks);
+    expect($monitoredScheduledTasks)->toHaveCount(4);
 
     $this->assertDatabaseHas('monitored_scheduled_tasks', [
         'name' => 'dummy',
@@ -92,14 +92,14 @@ it('will not monitor commands without a name', function () {
     $this->artisan(SyncCommand::class);
 
     $monitoredScheduledTasks = MonitoredScheduledTask::get();
-    $this->assertCount(0, $monitoredScheduledTasks);
+    expect($monitoredScheduledTasks)->toHaveCount(0);
 
-    $this->assertEquals([], $this->ohDear->getSyncedCronCheckAttributes());
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
 });
 
 it('will remove old tasks from the database', function () {
     MonitoredScheduledTask::factory()->create(['name' => 'old-task']);
-    $this->assertCount(1, MonitoredScheduledTask::get());
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
 
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
         $schedule->command('new')->everyMinute();
@@ -107,9 +107,9 @@ it('will remove old tasks from the database', function () {
 
     $this->artisan(SyncCommand::class);
 
-    $this->assertCount(1, MonitoredScheduledTask::get());
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
 
-    $this->assertEquals('new', MonitoredScheduledTask::first()->name);
+    expect(MonitoredScheduledTask::first()->name)->toEqual('new');
 });
 
 it('can use custom grace time', function () {
@@ -125,7 +125,7 @@ it('can use custom grace time', function () {
 
     $syncedCronChecks = $this->ohDear->getSyncedCronCheckAttributes();
 
-    $this->assertEquals(15, $syncedCronChecks[0]['grace_time_in_minutes']);
+    expect($syncedCronChecks[0]['grace_time_in_minutes'])->toEqual(15);
 });
 
 it('will not monitor tasks that should not be monitored', function () {
@@ -135,21 +135,21 @@ it('will not monitor tasks that should not be monitored', function () {
 
     $this->artisan(SyncCommand::class);
 
-    $this->assertCount(0, MonitoredScheduledTask::get());
+    expect(MonitoredScheduledTask::get())->toHaveCount(0);
 
-    $this->assertEquals([], $this->ohDear->getSyncedCronCheckAttributes());
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
 });
 
 it('will remove tasks from the db that should not be monitored anymore', function () {
     MonitoredScheduledTask::factory()->create(['name' => 'not-monitored']);
-    $this->assertCount(1, MonitoredScheduledTask::get());
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
 
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
         $schedule->command('not-monitored')->everyMinute()->doNotMonitor();
     });
     $this->artisan(SyncCommand::class);
 
-    $this->assertCount(0, MonitoredScheduledTask::get());
+    expect(MonitoredScheduledTask::get())->toHaveCount(0);
 });
 
 it('will update tasks that have their schedule updated', function () {
@@ -163,8 +163,8 @@ it('will update tasks that have their schedule updated', function () {
     });
     $this->artisan(SyncCommand::class);
 
-    $this->assertCount(1, MonitoredScheduledTask::get());
-    $this->assertEquals('0 0 * * *', $monitoredScheduledTask->refresh()->cron_expression);
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
+    expect($monitoredScheduledTask->refresh()->cron_expression)->toEqual('0 0 * * *');
 });
 
 it('will not sync with oh dear when no site id is set', function () {
@@ -174,6 +174,6 @@ it('will not sync with oh dear when no site id is set', function () {
         $schedule->command('dummy')->daily();
     });
     $this->artisan(SyncCommand::class);
-    $this->assertCount(1, MonitoredScheduledTask::get());
-    $this->assertEquals([], $this->ohDear->getSyncedCronCheckAttributes());
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
 });

@@ -24,34 +24,34 @@ beforeEach(function () {
 });
 
 test('a task will be consider too late if does not finish within the grace period', function () {
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(5);
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addSecond();
-    $this->assertTrue(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeTrue();
 });
 
 it('will reset the period', function () {
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(4);
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     $this->monitoredScheduledTask->update(['last_finished_at' => now()]);
 
     TestTime::addMinutes(10);
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(46); // now at 1:00;
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(5);
-    $this->assertFalse(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinute();
-    $this->assertTrue(task()->lastRunFinishedTooLate());
+    expect(task()->lastRunFinishedTooLate())->toBeTrue();
 });
 
 // Helpers

@@ -17,8 +17,8 @@ it('will return a command task for a scheduled command task', function () {
 
     $task = ScheduledTaskFactory::createForEvent($event);
 
-    $this->assertInstanceOf(CommandTask::class, $task);
-    $this->assertEquals('foo:bar', $task->name());
+    expect($task)->toBeInstanceOf(CommandTask::class);
+    expect($task->name())->toEqual('foo:bar');
 });
 
 it('will return a shell task for a scheduled shell task', function () {
@@ -26,8 +26,8 @@ it('will return a shell task for a scheduled shell task', function () {
 
     $task = ScheduledTaskFactory::createForEvent($event);
 
-    $this->assertInstanceOf(ShellTask::class, $task);
-    $this->assertEquals('a bash command', $task->name());
+    expect($task)->toBeInstanceOf(ShellTask::class);
+    expect($task->name())->toEqual('a bash command');
 });
 
 it('will return a job task for a scheduled job task', function () {
@@ -35,8 +35,8 @@ it('will return a job task for a scheduled job task', function () {
 
     $task = ScheduledTaskFactory::createForEvent($event);
 
-    $this->assertInstanceOf(JobTask::class, $task);
-    $this->assertEquals(TestJob::class, $task->name());
+    expect($task)->toBeInstanceOf(JobTask::class);
+    expect($task->name())->toEqual(TestJob::class);
 });
 
 it('will return a closure task for a scheduled closure task', function () {
@@ -46,8 +46,8 @@ it('will return a closure task for a scheduled closure task', function () {
 
     $task = ScheduledTaskFactory::createForEvent($event);
 
-    $this->assertInstanceOf(ClosureTask::class, $task);
-    $this->assertNull($task->name());
+    expect($task)->toBeInstanceOf(ClosureTask::class);
+    expect($task->name())->toBeNull();
 });
 
 test('the task name can be manually set', function () {
@@ -55,15 +55,15 @@ test('the task name can be manually set', function () {
 
     $task = ScheduledTaskFactory::createForEvent($event);
 
-    $this->assertEquals('my-custom-name', $task->name());
+    expect($task->name())->toEqual('my-custom-name');
 });
 
 test('a task can be marked as not to be monitored', function () {
     $event = app()->make(Schedule::class)->command('foo:bar');
-    $this->assertTrue(ScheduledTaskFactory::createForEvent($event)->shouldMonitor());
+    expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor())->toBeTrue();
 
     $event = app()->make(Schedule::class)->command('foo:bar')->doNotMonitor();
-    $this->assertFalse(ScheduledTaskFactory::createForEvent($event)->shouldMonitor());
+    expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor())->toBeFalse();
 });
 
 it('can handle timezones', function () {
@@ -73,11 +73,11 @@ it('can handle timezones', function () {
 
     $appTimezoneEvent = $schedule->command('foo:bar')->daily();
     $appTimezoneTask = ScheduledTaskFactory::createForEvent($appTimezoneEvent);
-    $this->assertEquals('UTC', $appTimezoneTask->timezone());
-    $this->assertEquals('2020-02-02 00:00:00', $appTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'));
+    expect($appTimezoneTask->timezone())->toEqual('UTC');
+    expect($appTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'))->toEqual('2020-02-02 00:00:00');
 
     $otherTimezoneEvent = $schedule->command('foo:bar')->daily()->timezone('Asia/Kolkata');
     $otherTimezoneTask = ScheduledTaskFactory::createForEvent($otherTimezoneEvent);
-    $this->assertEquals('Asia/Kolkata', $otherTimezoneTask->timezone());
-    $this->assertEquals('2020-02-01 18:30:00', $otherTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'));
+    expect($otherTimezoneTask->timezone())->toEqual('Asia/Kolkata');
+    expect($otherTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'))->toEqual('2020-02-01 18:30:00');
 });

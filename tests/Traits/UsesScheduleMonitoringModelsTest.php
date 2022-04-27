@@ -15,6 +15,6 @@ it('can resolve schedule monitoring models', function () {
     $monitorScheduleTask = $model->getMonitoredScheduleTaskModel();
     $monitorScheduleTaskLogItem = $model->getMonitoredScheduleTaskLogItemModel();
 
-    $this->assertInstanceOf(MonitoredScheduledTask::class, $monitorScheduleTask);
-    $this->assertInstanceOf(MonitoredScheduledTaskLogItem::class, $monitorScheduleTaskLogItem);
+    expect($monitorScheduleTask)->toBeInstanceOf(MonitoredScheduledTask::class);
+    expect($monitorScheduleTaskLogItem)->toBeInstanceOf(MonitoredScheduledTaskLogItem::class);
 });

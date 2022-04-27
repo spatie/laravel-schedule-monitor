@@ -42,7 +42,7 @@ it('can ping oh dear when a scheduled task finishes', function () {
             $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->ping_url . '/finished'
         );
 
-        $this->assertEquals($this->meta, $request->data());
+        expect($request->data())->toEqual($this->meta);
 
         return true;
     });

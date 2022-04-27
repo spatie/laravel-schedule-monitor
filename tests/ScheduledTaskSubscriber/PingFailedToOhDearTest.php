@@ -40,7 +40,7 @@ it('can ping oh dear when a scheduled task fails', function () {
             $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->ping_url . '/failed'
         );
 
-        $this->assertEquals($this->meta, $request->data());
+        expect($request->data())->toEqual($this->meta);
 
         return true;
     });

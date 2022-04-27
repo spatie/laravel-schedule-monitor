@@ -145,7 +145,7 @@ it('stores the command output to db', function () {
     $task = MonitoredScheduledTask::findByName('dummy-task');
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-    $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
+    expect($logItem->meta['output'] ?? '')->toContain('help for a command');
 });
 
 it('does not store the command output to db', function () {
@@ -162,5 +162,5 @@ it('does not store the command output to db', function () {
     $task = MonitoredScheduledTask::findByName('dummy-task');
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-    $this->assertNull($logItem->meta['output']);
+    expect($logItem->meta['output'])->toBeNull();
 });
