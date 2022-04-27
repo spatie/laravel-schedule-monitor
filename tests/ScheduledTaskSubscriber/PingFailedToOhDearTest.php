@@ -15,7 +15,7 @@ class PingFailedToOhDearTest extends TestCase
 
     private array $meta;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

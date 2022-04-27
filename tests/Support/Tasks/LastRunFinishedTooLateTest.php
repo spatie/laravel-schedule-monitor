@@ -16,7 +16,7 @@ class LastRunFinishedTooLateTest extends TestCase
 
     private MonitoredScheduledTask $monitoredScheduledTask;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
