@@ -13,6 +13,8 @@ class FailingCommand extends Command
 
     public function handle()
     {
+        $this->info('Starting failed command...');
+
         throw new Exception('failing');
     }
 }
