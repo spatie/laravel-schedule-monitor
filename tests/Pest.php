@@ -1,4 +1,6 @@
 <?php
 
+use Spatie\ScheduleMonitor\Tests\TestCase;
+use Spatie\Snapshots\MatchesSnapshots;
 
-uses(\Spatie\ScheduleMonitor\Tests\TestCase::class)->in('__DIR__', 'ScheduledTaskSubscriber', 'Support', 'Traits');
+uses(TestCase::class, MatchesSnapshots::class)->in(__DIR__);

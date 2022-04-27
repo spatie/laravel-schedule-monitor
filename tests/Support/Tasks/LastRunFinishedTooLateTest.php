@@ -20,38 +20,37 @@ beforeEach(function () {
 });
 
 test('a task will be consider too late if does not finish within the grace period', function () {
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(5);
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addSecond();
-    expect(task()->lastRunFinishedTooLate())->toBeTrue();
+    expect(createTask()->lastRunFinishedTooLate())->toBeTrue();
 });
 
 it('will reset the period', function () {
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(4);
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     $this->monitoredScheduledTask->update(['last_finished_at' => now()]);
 
     TestTime::addMinutes(10);
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(46); // now at 1:00;
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinutes(5);
-    expect(task()->lastRunFinishedTooLate())->toBeFalse();
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
     TestTime::addMinute();
-    expect(task()->lastRunFinishedTooLate())->toBeTrue();
+    expect(createTask()->lastRunFinishedTooLate())->toBeTrue();
 });
 
-// Helpers
-function task(): Task
+function createTask(): Task
 {
     return ScheduledTaskFactory::createForEvent(test()->event);
 }

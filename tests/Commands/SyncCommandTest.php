@@ -9,9 +9,6 @@ use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Spatie\Snapshots\MatchesSnapshots;
 use Spatie\TestTime\TestTime;
 
-uses(TestCase::class);
-uses(MatchesSnapshots::class);
-
 beforeEach(function () {
     TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
 });

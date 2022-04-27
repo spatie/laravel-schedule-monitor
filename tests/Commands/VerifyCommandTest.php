@@ -3,8 +3,6 @@
 use Spatie\ScheduleMonitor\Commands\VerifyCommand;
 use Spatie\ScheduleMonitor\Tests\TestCase;
 
-uses(TestCase::class);
-
 it('can verify the connection to oh dear', function () {
     $this->artisan(VerifyCommand::class)->assertExitCode(0);
 });

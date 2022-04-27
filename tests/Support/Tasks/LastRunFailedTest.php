@@ -46,7 +46,6 @@ it('will return false if it started after it failed', function () {
     expect(task()->lastRunFailed())->toBeFalse();
 });
 
-// Helpers
 function task(): Task
 {
     return ScheduledTaskFactory::createForEvent(test()->event);

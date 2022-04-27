@@ -24,12 +24,13 @@
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
+        "mockery/mockery": "^1.4",
         "ohdearapp/ohdear-php-sdk": "^3.0",
         "orchestra/testbench": "^7.0",
+        "pestphp/pest": "^1.20",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "spatie/phpunit-snapshot-assertions": "^4.2",
-        "spatie/test-time": "^1.2",
-        "mockery/mockery": "^1.4",
-        "pestphp/pest": "^1.20"
+        "spatie/test-time": "^1.2"
     },
     "suggest": {
         "ohdearapp/ohdear-php-sdk": "Needed to sync your schedule with Oh Dear"
