@@ -3,10 +3,8 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
-use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-use Spatie\Snapshots\MatchesSnapshots;
 use Spatie\TestTime\TestTime;
 
 beforeEach(function () {
