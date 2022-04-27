@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
+use function Pest\Laravel\artisan;
 
 it('can list scheduled tasks', function () {
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
@@ -16,5 +17,5 @@ it('can list scheduled tasks', function () {
         $schedule->job(new TestJob())->daily();
     });
 
-    $this->artisan(ListCommand::class)->assertSuccessful();
+    artisan(ListCommand::class)->assertSuccessful();
 });
