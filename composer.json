@@ -26,10 +26,10 @@
     "require-dev": {
         "ohdearapp/ohdear-php-sdk": "^3.0",
         "orchestra/testbench": "^7.0",
-        "phpunit/phpunit": "^9.4",
         "spatie/phpunit-snapshot-assertions": "^4.2",
         "spatie/test-time": "^1.2",
-        "mockery/mockery": "^1.4"
+        "mockery/mockery": "^1.4",
+        "pestphp/pest": "^1.20"
     },
     "suggest": {
         "ohdearapp/ohdear-php-sdk": "Needed to sync your schedule with Oh Dear"
