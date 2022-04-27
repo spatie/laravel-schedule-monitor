@@ -3,10 +3,10 @@
 namespace Spatie\ScheduleMonitor\Tests\Commands;
 
 use Illuminate\Console\Scheduling\Schedule;
+use function Pest\Laravel\artisan;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-use function Pest\Laravel\artisan;
 
 it('can list scheduled tasks', function () {
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
