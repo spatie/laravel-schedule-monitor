@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
-
 use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Bus;
@@ -15,178 +13,155 @@ use Spatie\ScheduleMonitor\Tests\TestClasses\FailingCommand;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Spatie\TestTime\TestTime;
 
-class ScheduledTaskSubscriberTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+uses(TestCase::class);
 
-        Bus::fake();
+beforeEach(function () {
+    Bus::fake();
 
-        TestKernel::registerScheduledTasks(function (Schedule $schedule) {
-            $schedule->call(fn () => 1 + 1)->everyMinute()->monitorName('dummy-task');
-        });
+    TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+        $schedule->call(fn () => 1 + 1)->everyMinute()->monitorName('dummy-task');
+    });
 
-        File::copy(__DIR__.'/../stubs/artisan', base_path('artisan'));
-    }
+    File::copy(__DIR__.'/../stubs/artisan', base_path('artisan'));
+});
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
+afterEach(function () {
+    File::delete(base_path('artisan'));
+});
 
-        File::delete(base_path('artisan'));
-    }
+it('will fire a job and create a log item when a monitored scheduled task finished', function () {
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-    /** @test */
-    public function it_will_fire_a_job_and_create_a_log_item_when_a_monitored_scheduled_task_finished()
-    {
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    Bus::assertDispatched(function (PingOhDearJob $job) {
+        $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
 
-        Bus::assertDispatched(function (PingOhDearJob $job) {
-            $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
+        return $monitoredScheduledTask->name === 'dummy-task';
+    });
 
-            return $monitoredScheduledTask->name === 'dummy-task';
-        });
+    $logTypes = MonitoredScheduledTask::findByName('dummy-task')->logItems->pluck('type')->toArray();
 
-        $logTypes = MonitoredScheduledTask::findByName('dummy-task')->logItems->pluck('type')->toArray();
+    $this->assertEquals([
+        MonitoredScheduledTaskLogItem::TYPE_FINISHED,
+        MonitoredScheduledTaskLogItem::TYPE_STARTING,
+    ], $logTypes);
+});
 
-        $this->assertEquals([
-            MonitoredScheduledTaskLogItem::TYPE_FINISHED,
-            MonitoredScheduledTaskLogItem::TYPE_STARTING,
-        ], $logTypes);
-    }
+it('will log skipped scheduled tasks', function () {
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule
+            ->call(fn () => TestTime::addSecond())
+            ->everyMinute()->skip(fn () => true)
+            ->monitorName('dummy-task');
+    });
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
 
-    /** @test */
-    public function it_will_log_skipped_scheduled_tasks()
-    {
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $schedule
-                ->call(fn () => TestTime::addSecond())
-                ->everyMinute()->skip(fn () => true)
-                ->monitorName('dummy-task');
-        });
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan('schedule:run')->assertExitCode(0);
+    $logTypes = MonitoredScheduledTask::findByName('dummy-task')->logItems->pluck('type')->toArray();
 
-        $logTypes = MonitoredScheduledTask::findByName('dummy-task')->logItems->pluck('type')->toArray();
+    $this->assertEquals([
+        MonitoredScheduledTaskLogItem::TYPE_SKIPPED,
+    ], $logTypes);
+});
 
-        $this->assertEquals([
-            MonitoredScheduledTaskLogItem::TYPE_SKIPPED,
-        ], $logTypes);
-    }
+it('will log failures of scheduled tasks', function () {
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule
+            ->call(function () {
+                throw new Exception("exception");
+            })
+            ->everyMinute()
+            ->monitorName('failing-task');
+    });
 
-    /** @test */
-    public function it_will_log_failures_of_scheduled_tasks()
-    {
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $schedule
-                ->call(function () {
-                    throw new Exception("exception");
-                })
-                ->everyMinute()
-                ->monitorName('failing-task');
-        });
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    $logTypes = MonitoredScheduledTask::findByName('failing-task')
+        ->logItems
+        ->pluck('type')
+        ->toArray();
 
-        $logTypes = MonitoredScheduledTask::findByName('failing-task')
-            ->logItems
-            ->pluck('type')
-            ->toArray();
+    $this->assertEquals([
+        MonitoredScheduledTaskLogItem::TYPE_FAILED,
+        MonitoredScheduledTaskLogItem::TYPE_STARTING,
+    ], $logTypes);
+});
 
-        $this->assertEquals([
-            MonitoredScheduledTaskLogItem::TYPE_FAILED,
-            MonitoredScheduledTaskLogItem::TYPE_STARTING,
-        ], $logTypes);
-    }
+it('will mark a task as failed when it throws an exception', function () {
+    File::delete(base_path('artisan'));
 
-    /** @test */
-    public function it_will_mark_a_task_as_failed_when_it_throws_an_exception()
-    {
-        File::delete(base_path('artisan'));
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule->command(FailingCommand::class)->everyMinute();
+    });
 
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $schedule->command(FailingCommand::class)->everyMinute();
-        });
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    $logTypes = MonitoredScheduledTask::findByName('failing-command')
+        ->logItems
+        ->pluck('type')
+        ->values()
+        ->toArray();
 
-        $logTypes = MonitoredScheduledTask::findByName('failing-command')
-            ->logItems
-            ->pluck('type')
-            ->values()
-            ->toArray();
+    $this->assertEquals([
+        MonitoredScheduledTaskLogItem::TYPE_FAILED,
+        MonitoredScheduledTaskLogItem::TYPE_STARTING,
+    ], $logTypes);
+});
 
-        $this->assertEquals([
-            MonitoredScheduledTaskLogItem::TYPE_FAILED,
-            MonitoredScheduledTaskLogItem::TYPE_STARTING,
-        ], $logTypes);
-    }
+it('will not fire a job when a scheduled task finished that is not monitored', function () {
+    // running the schedule without syncing to oh dear
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-    /** @test */
-    public function it_will_not_fire_a_job_when_a_scheduled_task_finished_that_is_not_monitored()
-    {
-        // running the schedule without syncing to oh dear
-        $this->artisan('schedule:run')->assertExitCode(0);
+    Bus::assertNotDispatched(PingOhDearJob::class);
+});
 
-        Bus::assertNotDispatched(PingOhDearJob::class);
-    }
+it('can use a specific queue to ping oh dear', function () {
+    Bus::fake();
 
-    /** @test */
-    public function it_can_use_a_specific_queue_to_ping_oh_dear()
-    {
-        Bus::fake();
+    config()->set('schedule-monitor.oh_dear.queue', 'custom-queue');
 
-        config()->set('schedule-monitor.oh_dear.queue', 'custom-queue');
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    Bus::assertDispatched(function (PingOhDearJob $job) {
+        return $job->queue === 'custom-queue';
+    });
+});
 
-        Bus::assertDispatched(function (PingOhDearJob $job) {
-            return $job->queue === 'custom-queue';
-        });
-    }
+it('stores the command output to db', function () {
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule
+            ->command('help')
+            ->everyMinute()
+            ->storeOutputInDb()
+            ->monitorName('dummy-task');
+    });
 
-    /** @test */
-    public function it_stores_the_command_output_to_db()
-    {
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $schedule
-                ->command('help')
-                ->everyMinute()
-                ->storeOutputInDb()
-                ->monitorName('dummy-task');
-        });
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    $task = MonitoredScheduledTask::findByName('dummy-task');
+    $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-        $task = MonitoredScheduledTask::findByName('dummy-task');
-        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
+    $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
+});
 
-        $this->assertStringContainsString('help for a command', $logItem->meta['output'] ?? '');
-    }
+it('does not store the command output to db', function () {
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule
+            ->command('help')
+            ->everyMinute()
+            ->monitorName('dummy-task');
+    });
 
-    /** @test */
-    public function it_does_not_store_the_command_output_to_db()
-    {
-        TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
-            $schedule
-                ->command('help')
-                ->everyMinute()
-                ->monitorName('dummy-task');
-        });
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
 
-        $this->artisan(SyncCommand::class)->assertExitCode(0);
-        $this->artisan('schedule:run')->assertExitCode(0);
+    $task = MonitoredScheduledTask::findByName('dummy-task');
+    $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
-        $task = MonitoredScheduledTask::findByName('dummy-task');
-        $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
-
-        $this->assertNull($logItem->meta['output']);
-    }
-}
+    $this->assertNull($logItem->meta['output']);
+});
