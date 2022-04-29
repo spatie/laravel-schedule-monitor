@@ -3,10 +3,6 @@
 namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\ScheduleMonitor\Commands\Tables\DuplicateTasksTable;
-use Spatie\ScheduleMonitor\Commands\Tables\MonitoredTasksTable;
-use Spatie\ScheduleMonitor\Commands\Tables\ReadyForMonitoringTasksTable;
-use Spatie\ScheduleMonitor\Commands\Tables\UnnamedTasksTable;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 use function Termwind\render;
@@ -31,14 +27,6 @@ class ListCommand extends Command
             'usingOhDear' => $this->usingOhDear(),
             'dateFormat' => $dateFormat,
         ]));
-        return;
-
-        (new MonitoredTasksTable($this))->render();
-        (new ReadyForMonitoringTasksTable($this))->render();
-        (new UnnamedTasksTable($this))->render();
-        (new DuplicateTasksTable($this))->render();
-
-        $this->line('');
     }
 
     protected function usingOhDear(): bool
