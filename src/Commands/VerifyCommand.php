@@ -5,6 +5,7 @@ namespace Spatie\ScheduleMonitor\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use OhDear\PhpSdk\OhDear;
+use function Termwind\render;
 
 class VerifyCommand extends Command
 {
@@ -16,8 +17,9 @@ class VerifyCommand extends Command
     {
         $ohDearConfig = config('schedule-monitor.oh_dear');
 
-        $this->info('Verifying if Oh Dear is configured correctly...');
-        $this->line('');
+        render(view('schedule-monitor::alert', [
+            'message' => 'Verifying if Oh Dear is configured correctly...',
+        ]));
 
         $this
             ->verifySdkInstalled()
@@ -25,9 +27,12 @@ class VerifyCommand extends Command
             ->verifySiteId($ohDearConfig)
             ->verifyConnection($ohDearConfig);
 
-        $this->line('');
-        $this->info('All ok!');
-        $this->info('Run `php artisan schedule-monitor:sync` to sync your scheduled tasks with Oh Dear.');
+        render(view('schedule-monitor::alert', [
+            'message' => <<<HTML
+                <b class="bg-green text-white px-1">All ok!</b> Run <b class="text-yellow">php artisan schedule-monitor:sync</b>
+                to sync your scheduled tasks with <b class="bg-red-700 text-white px-1">oh dear</b>.
+            HTML,
+        ]));
     }
 
     public function verifySdkInstalled(): self
@@ -36,7 +41,9 @@ class VerifyCommand extends Command
             throw new Exception("You must install the Oh Dear SDK in order to sync your schedule with Oh Dear. Run `composer require ohdearapp/ohdear-php-sdk`.");
         }
 
-        $this->comment('The Oh Dear SDK is installed.');
+        render(view('schedule-monitor::alert', [
+            'message' => 'The Oh Dear SDK is installed.',
+        ]));
 
         return $this;
     }
@@ -47,7 +54,9 @@ class VerifyCommand extends Command
             throw new Exception('No API token found. Make sure you added an API token to the `api_token` key of the `schedule-monitor` config file. You can generate a new token here: https://ohdear.app/user/api-tokens');
         }
 
-        $this->comment('Oh Dear API token found.');
+        render(view('schedule-monitor::alert', [
+            'message' => 'Oh Dear API token found.',
+        ]));
 
         return $this;
     }
@@ -58,7 +67,9 @@ class VerifyCommand extends Command
             throw new Exception('No site id found. Make sure you added an site id to the `site_id` key of the `schedule-monitor` config file. You can found your site id on the settings page of a site on Oh Dear.');
         }
 
-        $this->comment('Oh Dear site id found.');
+        render(view('schedule-monitor::alert', [
+            'message' => 'Oh Dear site id found.',
+        ]));
 
         return $this;
     }
@@ -69,7 +80,9 @@ class VerifyCommand extends Command
 
         $site = app(OhDear::class)->site($ohDearConfig['site_id']);
 
-        $this->comment("Successfully connected to Oh Dear. The configured site URL is: {$site->sortUrl}");
+        render(view('schedule-monitor::alert', [
+            'message' => "Successfully connected to Oh Dear. The configured site URL is: {$site->sortUrl}",
+        ]));
 
         return $this;
     }
