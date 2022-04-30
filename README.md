@@ -228,6 +228,20 @@ protected function schedule(Schedule $schedule)
 
 The output will be stored in the `monitored_scheduled_task_log_items` table, in the `output` key of the `meta` column.
 
+### Multitenancy
+
+If you're using [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy) you should add the `PingOhDearJob` to
+the `not_tenant_aware_jobs` array in `config/multitenancy.php`.
+
+```php
+'not_tenant_aware_jobs' => [
+    // ...
+    \Spatie\ScheduleMonitor\Jobs\PingOhDearJob::class,
+]
+```
+
+Without it, the `PingOhDearJob` will fail as no tenant will be set.
+
 ### Getting notified when a scheduled task doesn't finish in time
 
 This package can sync your schedule with the [Oh Dear](https://ohdear.app) cron check. Oh Dear will send you a notification whenever a scheduled task does not finish on time.
