@@ -3,7 +3,6 @@
 namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
@@ -24,7 +23,7 @@ class SyncCommand extends Command
     {
         render(view('schedule-monitor::alert', [
             'message' => 'Start syncing schedule...',
-            'class' => 'text-green'
+            'class' => 'text-green',
         ]));
 
         $this
