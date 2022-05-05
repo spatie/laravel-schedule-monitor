@@ -23,6 +23,7 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-schedule-monitor')
+            ->hasViews()
             ->hasConfigFile()
             ->hasMigrations('create_schedule_monitor_tables')
             ->hasCommands([

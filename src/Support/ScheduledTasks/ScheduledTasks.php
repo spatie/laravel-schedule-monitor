@@ -55,6 +55,18 @@ class ScheduledTasks
             ->values();
     }
 
+    public function readyForMonitoringTasks(): Collection
+    {
+        return $this->uniqueTasks()
+            ->reject(fn (Task $task) => $task->isBeingMonitored());
+    }
+
+    public function monitoredTasks(): Collection
+    {
+        return $this->uniqueTasks()
+            ->filter(fn (Task $task) => $task->isBeingMonitored());
+    }
+
     public function unmonitoredTasks(): Collection
     {
         return $this->tasks->reject(fn (Task $task) => $task->shouldMonitor());

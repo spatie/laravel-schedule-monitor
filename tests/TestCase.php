@@ -10,6 +10,8 @@ use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider;
 use Spatie\ScheduleMonitor\Tests\TestClasses\FakeOhDear;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
+use Symfony\Component\Console\Output\BufferedOutput;
+use function Termwind\renderUsing;
 
 class TestCase extends Orchestra
 {
@@ -38,6 +40,8 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             fn (string $modelName) => 'Spatie\\ScheduleMonitor\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
+
+        renderUsing(new BufferedOutput());
     }
 
     protected function getPackageProviders($app)
