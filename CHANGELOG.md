@@ -2,6 +2,22 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.0.2 - 2022-05-05
+
+## What's Changed
+
+- Update readme about model pruning by @patrickbrouwers in https://github.com/spatie/laravel-schedule-monitor/pull/71
+- PHPUnit to Pest Converter by @freekmurze in https://github.com/spatie/laravel-schedule-monitor/pull/73
+- chore: add multitenancy documentation by @ju5t in https://github.com/spatie/laravel-schedule-monitor/pull/75
+- Add Termwind to improve the Command Outputs. by @xiCO2k in https://github.com/spatie/laravel-schedule-monitor/pull/74
+
+## New Contributors
+
+- @ju5t made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/75
+- @xiCO2k made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/74
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.1...3.0.2
+
 ## 3.0.1 - 2022-02-13
 
 ## What's Changed
