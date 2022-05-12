@@ -20,7 +20,7 @@
         "illuminate/bus": "^9.0",
         "lorisleiva/cron-translator": "^0.3.0",
         "nesbot/carbon": "^2.41.3",
-        "nunomaduro/termwind": "^1.9",
+        "nunomaduro/termwind": "^1.10",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
