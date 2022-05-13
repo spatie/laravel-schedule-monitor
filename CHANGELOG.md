@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.0.3 - 2022-05-13
+
+## What's Changed
+
+- fix: Use `flex` and `content-repeat` on Termwind outputs. by @xiCO2k in https://github.com/spatie/laravel-schedule-monitor/pull/76
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.2...3.0.3
+
 ## 3.0.2 - 2022-05-05
 
 ## What's Changed
