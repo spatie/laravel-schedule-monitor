@@ -2,6 +2,58 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.0.3 - 2022-05-13
+
+## What's Changed
+
+- fix: Use `flex` and `content-repeat` on Termwind outputs. by @xiCO2k in https://github.com/spatie/laravel-schedule-monitor/pull/76
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.2...3.0.3
+
+## 3.0.2 - 2022-05-05
+
+## What's Changed
+
+- Update readme about model pruning by @patrickbrouwers in https://github.com/spatie/laravel-schedule-monitor/pull/71
+- PHPUnit to Pest Converter by @freekmurze in https://github.com/spatie/laravel-schedule-monitor/pull/73
+- chore: add multitenancy documentation by @ju5t in https://github.com/spatie/laravel-schedule-monitor/pull/75
+- Add Termwind to improve the Command Outputs. by @xiCO2k in https://github.com/spatie/laravel-schedule-monitor/pull/74
+
+## New Contributors
+
+- @ju5t made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/75
+- @xiCO2k made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/74
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.1...3.0.2
+
+## 3.0.1 - 2022-02-13
+
+## What's Changed
+
+- Fix return type by @SamuelNitsche in https://github.com/spatie/laravel-schedule-monitor/pull/70
+
+## New Contributors
+
+- @SamuelNitsche made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/70
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.0.0...3.0.1
+
+## 3.0.0 - 2022-01-14
+
+- Support Laravel 9
+
+## 2.4.7 - 2021-11-17
+
+## What's Changed
+
+- Update lorisleiva/cron-translator to version 0.3 by @bilfeldt in https://github.com/spatie/laravel-schedule-monitor/pull/67
+
+## New Contributors
+
+- @bilfeldt made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/67
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/2.4.6...2.4.7
+
 ## 2.4.6 - 2021-11-02
 
 - Make sure retryUntil is returning a DateTime (#66)

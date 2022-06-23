@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 # Monitor scheduled tasks in a Laravel app
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-schedule-monitor.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-schedule-monitor)
@@ -26,6 +29,8 @@ You can install the package via composer:
 composer require spatie/laravel-schedule-monitor
 ```
 
+If you need Laravel 8 support, you can install v2 of the package using `composer require spatie/laravel-schedule-monitor:^2`.
+
 #### Preparing the database
 
 You must publish and run migrations:
@@ -50,6 +55,9 @@ return [
      * The schedule monitor will log each start, finish and failure of all scheduled jobs.
      * After a while the `monitored_scheduled_task_log_items` might become big.
      * Here you can specify the amount of days log items should be kept.
+     *
+     * Use Laravel's pruning command to delete old `MonitoredScheduledTaskLogItem` models.
+     * More info: https://laravel.com/docs/9.x/eloquent#mass-assignment
      */
     'delete_log_items_older_than_days' => 30,
 
@@ -99,23 +107,32 @@ return [
          * via a queued job. Here you can specify the name of the queue you wish to use.
          */
         'queue' => env('OH_DEAR_QUEUE'),
+
+        /*
+         * `PingOhDearJob`s will automatically be skipped if they've been queued for
+         * longer than the time configured here.
+         */
+        'retry_job_for_minutes' => 10,
     ],
 ];
 ```
 
 #### Cleaning the database
 
-You must register the `schedule-monitor:clean` tasks in your console kernel. This command will clean up old records from the schedule monitor log table.
+The schedule monitor will log each start, finish and failure of all scheduled jobs.  After a while the `monitored_scheduled_task_log_items` might become big.
+
+Use [Laravel's model pruning feature](https://laravel.com/docs/9.x/eloquent#mass-assignment) , you can delete old `MonitoredScheduledTaskLogItem` models. Models older than the amount of days configured in the `delete_log_items_older_than_days` in the `schedule-monitor` config file, will be deleted.
 
 ```php
 // app/Console/Kernel.php
+
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('schedule-monitor:sync')->dailyAt('04:56');
-        $schedule->command('schedule-monitor:clean')->daily();
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
     }
 }
 ```
@@ -211,6 +228,20 @@ protected function schedule(Schedule $schedule)
 
 The output will be stored in the `monitored_scheduled_task_log_items` table, in the `output` key of the `meta` column.
 
+### Multitenancy
+
+If you're using [spatie/laravel-multitenancy](https://github.com/spatie/laravel-multitenancy) you should add the `PingOhDearJob` to
+the `not_tenant_aware_jobs` array in `config/multitenancy.php`.
+
+```php
+'not_tenant_aware_jobs' => [
+    // ...
+    \Spatie\ScheduleMonitor\Jobs\PingOhDearJob::class,
+]
+```
+
+Without it, the `PingOhDearJob` will fail as no tenant will be set.
+
 ### Getting notified when a scheduled task doesn't finish in time
 
 This package can sync your schedule with the [Oh Dear](https://ohdear.app) cron check. Oh Dear will send you a notification whenever a scheduled task does not finish on time.
@@ -273,7 +304,6 @@ These services can notify you when scheduled tasks do not run properly:
 
 - [Oh Dear](https://ohdear.app)
 - [thenping.me](https://thenping.me)
-- [Cronbox](https://cronbox.app)
 - [Healthchecks.io](https://healthchecks.io)
 - [Cronitor](https://cronitor.io)
 - [Cronhub](https://cronhub.io/)
@@ -293,11 +323,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Contributing
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
 ## Security
 
-If you discover any security related issues, please email freek@spatie.be instead of using the issue tracker.
+If you've found a bug regarding security please mail [security@spatie.be](mailto:security@spatie.be) instead of using the issue tracker.
 
 ## Credits
 

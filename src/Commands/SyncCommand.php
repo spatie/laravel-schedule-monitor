@@ -3,13 +3,13 @@
 namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
+use function Termwind\render;
 
 class SyncCommand extends Command
 {
@@ -21,22 +21,27 @@ class SyncCommand extends Command
 
     public function handle()
     {
-        $this->info('Start syncing schedule...' . PHP_EOL);
+        render(view('schedule-monitor::alert', [
+            'message' => 'Start syncing schedule...',
+            'class' => 'text-green',
+        ]));
+
         $this
             ->syncScheduledTasksWithDatabase()
             ->syncMonitoredScheduledTaskWithOhDear();
 
         $monitoredScheduledTasksCount = $this->getMonitoredScheduleTaskModel()->count();
 
-        $this->info('');
-        $this->info('All done! Now monitoring ' . $monitoredScheduledTasksCount . ' ' . Str::plural('scheduled task', $monitoredScheduledTasksCount) . '.');
-        $this->info('');
-        $this->info('Run `php artisan schedule-monitor:list` to see which jobs are now monitored.');
+        render(view('schedule-monitor::sync', [
+            'monitoredScheduledTasksCount' => $monitoredScheduledTasksCount,
+        ]));
     }
 
     protected function syncScheduledTasksWithDatabase(): self
     {
-        $this->comment('Start syncing schedule with database...');
+        render(view('schedule-monitor::alert', [
+            'message' => 'Start syncing schedule with database...',
+        ]));
 
         $monitoredScheduledTasks = ScheduledTasks::createForSchedule()
             ->uniqueTasks()
@@ -68,12 +73,25 @@ class SyncCommand extends Command
         $siteId = config('schedule-monitor.oh_dear.site_id');
 
         if (! $siteId) {
-            $this->warn('Not syncing schedule with Oh Dear because not `site_id` is not set in the `oh-dear` config file. Learn how to set this up at https://ohdear.app/docs/general/cron-job-monitoring/php#cron-monitoring-in-laravel-php');
+            render(view('schedule-monitor::alert', [
+                'message' => <<<HTML
+                    <div>
+                        Not syncing schedule with <b class="bg-red-700 text-white px-1">oh dear</b> because not <b class="bg-gray-500 px-1 text-white">site_id</b>
+                        is not set in the <b class="bg-gray-500 px-1 text-white">oh-dear</b> config file.
+                    </div>
+                    <div>
+                        Learn how to set this up at <a href="https://ohdear.app/docs/general/cron-job-monitoring/php#cron-monitoring-in-laravel-php">https://ohdear.app/docs/general/cron-job-monitoring/php#cron-monitoring-in-laravel-php</a>.
+                    </div>
+                HTML,
+                'class' => 'text-yellow',
+            ]));
 
             return $this;
         }
 
-        $this->comment('Start syncing schedule with Oh Dear...');
+        render(view('schedule-monitor::alert', [
+            'message' => 'Start syncing schedule with Oh Dear...',
+        ]));
 
         $monitoredScheduledTasks = $this->getMonitoredScheduleTaskModel()->get();
 
@@ -91,7 +109,11 @@ class SyncCommand extends Command
             ->toArray();
 
         $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
-        $this->comment('Successfully synced schedule with Oh Dear!');
+
+        render(view('schedule-monitor::alert', [
+            'message' => 'Successfully synced schedule with Oh Dear!',
+            'class' => 'text-green',
+        ]));
 
         collect($cronChecks)
             ->each(

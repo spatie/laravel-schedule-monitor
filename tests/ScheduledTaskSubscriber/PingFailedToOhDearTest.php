@@ -1,59 +1,44 @@
 <?php
 
-namespace Spatie\ScheduleMonitor\Tests\ScheduledTaskSubscriber;
-
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
-use Spatie\ScheduleMonitor\Tests\TestCase;
 use Spatie\TestTime\TestTime;
 
-class PingFailedToOhDearTest extends TestCase
-{
-    private MonitoredScheduledTaskLogItem $monitoredScheduledTaskLogItem;
+beforeEach(function () {
+    TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
 
-    private array $meta;
+    Http::fake([
+        'ping.ohdear.app/*' => Http::response('ok', 200),
+    ]);
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    $this->meta = [
+        'failure_message' => 'failure',
+    ];
 
-        TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
+    $this->monitoredScheduledTaskLogItem = MonitoredScheduledTaskLogItem::factory()->create([
+        'type' => MonitoredScheduledTaskLogItem::TYPE_FAILED,
+        'meta' => $this->meta,
+    ]);
+});
 
-        Http::fake([
-            'ping.ohdear.app/*' => Http::response('ok', 200),
-        ]);
+it('can ping oh dear when a scheduled task fails', function () {
+    dispatch(new PingOhDearJob($this->monitoredScheduledTaskLogItem));
 
-        $this->meta = [
-            'failure_message' => 'failure',
-        ];
+    $this->assertEquals(
+        $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->refresh()->last_pinged_at->format('Y-m-d H:i:s'),
+        now()->format('Y-m-d H:i:s'),
+    );
 
-        $this->monitoredScheduledTaskLogItem = factory(MonitoredScheduledTaskLogItem::class)->create([
-            'type' => MonitoredScheduledTaskLogItem::TYPE_FAILED,
-            'meta' => $this->meta,
-        ]);
-    }
-
-    /** @test */
-    public function it_can_ping_oh_dear_when_a_scheduled_task_fails()
-    {
-        dispatch(new PingOhDearJob($this->monitoredScheduledTaskLogItem));
-
+    Http::assertSent(function (Request $request) {
         $this->assertEquals(
-            $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->refresh()->last_pinged_at->format('Y-m-d H:i:s'),
-            now()->format('Y-m-d H:i:s'),
+            $request->url(),
+            $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->ping_url . '/failed'
         );
 
-        Http::assertSent(function (Request $request) {
-            $this->assertEquals(
-                $request->url(),
-                $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->ping_url . '/failed'
-            );
+        expect($request->data())->toEqual($this->meta);
 
-            $this->assertEquals($this->meta, $request->data());
-
-            return true;
-        });
-    }
-}
+        return true;
+    });
+});
