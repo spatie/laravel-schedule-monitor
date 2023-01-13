@@ -32,7 +32,13 @@ it('will fire a job and create a log item when a monitored scheduled task finish
     Bus::assertDispatched(function (PingOhDearJob $job) {
         $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
 
-        return $monitoredScheduledTask->name === 'dummy-task';
+        return $monitoredScheduledTask->name === 'dummy-task' && $job->logItem->type === MonitoredScheduledTaskLogItem::TYPE_STARTING;
+    });
+
+    Bus::assertDispatched(function (PingOhDearJob $job) {
+        $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
+
+        return $monitoredScheduledTask->name === 'dummy-task' && $job->logItem->type === MonitoredScheduledTaskLogItem::TYPE_FINISHED;
     });
 
     $logTypes = MonitoredScheduledTask::findByName('dummy-task')->logItems->pluck('type')->toArray();
@@ -61,7 +67,7 @@ it('will log skipped scheduled tasks', function () {
     ], $logTypes);
 });
 
-it('will log failures of scheduled tasks', function () {
+it('will fire a job and log failures of scheduled tasks', function () {
     TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
         $schedule
             ->call(function () {
@@ -73,6 +79,12 @@ it('will log failures of scheduled tasks', function () {
 
     $this->artisan(SyncCommand::class)->assertExitCode(0);
     $this->artisan('schedule:run')->assertExitCode(0);
+
+    Bus::assertDispatched(function (PingOhDearJob $job) {
+        $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
+
+        return $monitoredScheduledTask->name === 'failing-task' && $job->logItem->type === MonitoredScheduledTaskLogItem::TYPE_FAILED;
+    });
 
     $logTypes = MonitoredScheduledTask::findByName('failing-task')
         ->logItems

@@ -92,6 +92,8 @@ class MonitoredScheduledTask extends Model
             'last_started_at' => now(),
         ]);
 
+        $this->pingOhDear($logItem);
+
         return $this;
     }
 
@@ -176,6 +178,7 @@ class MonitoredScheduledTask extends Model
         }
 
         if (! in_array($logItem->type, [
+            $this->getMonitoredScheduleTaskLogItemModel()::TYPE_STARTING,
             $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED,
             $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FINISHED,
         ], true)) {
