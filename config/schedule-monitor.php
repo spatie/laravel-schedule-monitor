@@ -67,6 +67,6 @@ return [
         /*
          * Sends a starting ping
          */
-        'send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
+        'should_send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
     ],
 ];

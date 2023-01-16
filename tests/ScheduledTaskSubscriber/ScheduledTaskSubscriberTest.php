@@ -26,6 +26,8 @@ afterEach(function () {
 });
 
 it('will fire a job and create a log item when a monitored scheduled task finished', function () {
+    config()->set('schedule-monitor.oh_dear.should_send_starting_ping', true);
+
     $this->artisan(SyncCommand::class)->assertExitCode(0);
     $this->artisan('schedule:run')->assertExitCode(0);
 
@@ -47,6 +49,18 @@ it('will fire a job and create a log item when a monitored scheduled task finish
         MonitoredScheduledTaskLogItem::TYPE_FINISHED,
         MonitoredScheduledTaskLogItem::TYPE_STARTING,
     ], $logTypes);
+});
+
+it('will not not ping oh dear starting endpoint by default', function () {
+
+    $this->artisan(SyncCommand::class)->assertExitCode(0);
+    $this->artisan('schedule:run')->assertExitCode(0);
+
+    Bus::assertNotDispatched(function (PingOhDearJob $job) {
+        $monitoredScheduledTask = $job->logItem->monitoredScheduledTask;
+
+        return $monitoredScheduledTask->name === 'dummy-task' && $job->logItem->type === MonitoredScheduledTaskLogItem::TYPE_STARTING;
+    });
 });
 
 it('will log skipped scheduled tasks', function () {
