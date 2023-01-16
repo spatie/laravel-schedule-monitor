@@ -20,7 +20,7 @@ class FinishedPayload extends Payload
     public function data(): array
     {
         return Arr::only($this->logItem->meta ?? [], [
-            'runtime',
+            ...(config('schedule-monitor.oh_dear.should_send_starting_ping') ? [] : ['runtime']),
             'exit_code',
             'memory',
         ]);

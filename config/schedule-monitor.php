@@ -63,5 +63,10 @@ return [
          * longer than the time configured here.
          */
         'retry_job_for_minutes' => 10,
+
+        /*
+         * Sends a starting ping
+         */
+        'should_send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
     ],
 ];

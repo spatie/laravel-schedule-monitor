@@ -44,3 +44,23 @@ it('can ping oh dear when a scheduled task finishes', function () {
         return true;
     });
 });
+
+it('will not transmit runtime to ohdear when sending starting ping is enabled', function () {
+    config()->set('schedule-monitor.oh_dear.should_send_starting_ping', true);
+
+    dispatch(new PingOhDearJob($this->monitoredScheduledTaskLogItem));
+
+    Http::assertSent(function (Request $request) {
+        $this->assertEquals(
+            $request->url(),
+            $this->monitoredScheduledTaskLogItem->monitoredScheduledTask->ping_url . '/finished'
+        );
+
+        expect($request->data())->toEqual([
+            'exit_code' => 123,
+            'memory' => 12345,
+        ]);
+
+        return true;
+    });
+});
