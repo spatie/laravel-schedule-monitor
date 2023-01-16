@@ -65,8 +65,9 @@ return [
         'retry_job_for_minutes' => 10,
 
         /*
-         * Sends a starting ping
+         * Send the start of a scheduled job to Oh Dear. This is not needed
+         * for notifications to work correctly.
          */
-        'should_send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
+        'send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
     ],
 ];

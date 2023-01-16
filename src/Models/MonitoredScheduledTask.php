@@ -92,7 +92,7 @@ class MonitoredScheduledTask extends Model
             'last_started_at' => now(),
         ]);
 
-        if (config('schedule-monitor.oh_dear.should_send_starting_ping') === true) {
+        if (config('schedule-monitor.oh_dear.send_starting_ping') === true) {
             $this->pingOhDear($logItem);
         }
 

@@ -26,7 +26,7 @@ afterEach(function () {
 });
 
 it('will fire a job and create a log item when a monitored scheduled task finished', function () {
-    config()->set('schedule-monitor.oh_dear.should_send_starting_ping', true);
+    config()->set('schedule-monitor.oh_dear.send_starting_ping', true);
 
     $this->artisan(SyncCommand::class)->assertExitCode(0);
     $this->artisan('schedule:run')->assertExitCode(0);
