@@ -52,7 +52,6 @@ it('will fire a job and create a log item when a monitored scheduled task finish
 });
 
 it('will not not ping oh dear starting endpoint by default', function () {
-
     $this->artisan(SyncCommand::class)->assertExitCode(0);
     $this->artisan('schedule:run')->assertExitCode(0);
 
