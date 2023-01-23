@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.1.1 - 2023-01-23
+
+- support L10
+
 ## 3.0.4 - 2022-10-02
 
 - update deps
