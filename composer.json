@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/bus": "^9.0",
+        "illuminate/bus": "^9.0|^10.0",
         "lorisleiva/cron-translator": "^0.3.0|^0.4.0",
         "nesbot/carbon": "^2.63",
         "nunomaduro/termwind": "^1.10.1",
@@ -26,7 +26,7 @@
     "require-dev": {
         "mockery/mockery": "^1.4",
         "ohdearapp/ohdear-php-sdk": "^3.0",
-        "orchestra/testbench": "^7.0",
+        "orchestra/testbench": "^7.0|^8.0",
         "pestphp/pest": "^1.20",
         "pestphp/pest-plugin-laravel": "^1.2",
         "spatie/phpunit-snapshot-assertions": "^4.2",
