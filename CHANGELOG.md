@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.2.1 - 2023-02-01
+
+- fix silent by default
+
 ## 3.2.0 - 2023-02-01
 
 - silence jobs by default
