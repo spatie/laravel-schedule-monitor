@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.2.0 - 2023-02-01
+
+- silence jobs by default
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.1.1...3.2.0
+
 ## 3.1.1 - 2023-01-23
 
 - support L10
