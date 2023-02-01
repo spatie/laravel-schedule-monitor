@@ -74,7 +74,7 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
 
     protected function silenceOhDearJob(): self
     {
-        if (! config('schedule-monitor.oh_dear.silence_ping_oh_dear_job_in_horizon')) {
+        if (! config('schedule-monitor.oh_dear.silence_ping_oh_dear_job_in_horizon', true)) {
             return $this;
         }
 
