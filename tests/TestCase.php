@@ -21,6 +21,8 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
+
+
         config()->set('database.default', 'sqlite');
         config()->set('database.connections.sqlite', [
             'driver' => 'sqlite',

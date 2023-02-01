@@ -65,9 +65,17 @@ return [
         'retry_job_for_minutes' => 10,
 
         /*
+         * When set to true, we will automatically add the `PingOhDearJob` to Horizon's
+         * silenced jobs.
+         */
+        'silence_ping_oh_dear_job_in_horizon' => true,
+
+        /*
          * Send the start of a scheduled job to Oh Dear. This is not needed
          * for notifications to work correctly.
          */
         'send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
+
+
     ],
 ];
