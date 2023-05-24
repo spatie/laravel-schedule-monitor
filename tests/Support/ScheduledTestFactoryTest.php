@@ -61,6 +61,12 @@ test('a task can be marked as not to be monitored', function () {
 
     $event = app()->make(Schedule::class)->command('foo:bar')->doNotMonitor();
     expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor())->toBeFalse();
+
+    $event = app()->make(Schedule::class)->command('foo:bar')->doNotMonitor(true);
+    expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor())->toBeFalse();
+
+    $event = app()->make(Schedule::class)->command('foo:bar');
+    expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor(false))->toBeTrue();
 });
 
 it('can handle timezones', function () {
