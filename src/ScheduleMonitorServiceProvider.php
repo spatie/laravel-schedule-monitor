@@ -113,8 +113,8 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
             return $this;
         });
 
-        SchedulerEvent::macro('doNotMonitor', function () {
-            $this->doNotMonitor = true;
+        SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) {
+            $this->doNotMonitor = $bool;
 
             return $this;
         });
