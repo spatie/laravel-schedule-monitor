@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.3.0 - 2023-05-24
+
+### What's Changed
+
+- Add a boolean parameter to the doNotMonitor function by @bilfeldt in https://github.com/spatie/laravel-schedule-monitor/pull/88
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.2.1...3.3.0
+
 ## 3.2.1 - 2023-02-01
 
 - fix silent by default
