@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor;
 
+use AllowDynamicProperties;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
@@ -18,6 +19,7 @@ use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
+#[AllowDynamicProperties]
 class ScheduleMonitorServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
