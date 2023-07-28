@@ -146,7 +146,7 @@ This command is responsible for syncing your schedule with the database, and opt
 
 In a non-production environment you should manually run `schedule-monitor:sync`. You can verify if everything synced correctly using `schedule-monitor:list`.
 
-**Note:** Running the sync command will remove any other cron monitors that you've defined other than the application schedule.
+If you would like to use non-destructive syncs to Oh Dear so that you can monitor other cron tasks outside of Laravel, you can use the `--push` flag. This will only push new tasks to Oh Dear, rather than a full sync. Note that this will not remove any tasks from Oh Dear that are no longer in your schedule.
 
 ## Usage
 
