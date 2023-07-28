@@ -94,7 +94,7 @@ class SyncCommand extends Command
             'message' => 'Start syncing schedule with Oh Dear...',
         ]));
 
-        if($this->input('push')) {
+        if($this->option('push')) {
             $cronChecks = $this->pushMonitoredScheduledTaskToOhDear($siteId);
         } else {
             $cronChecks = $this->syncMonitoredScheduledTaskWithOhDear($siteId);
@@ -147,6 +147,8 @@ class SyncCommand extends Command
         $tasksToRegister = $this->getMonitoredScheduleTaskModel()
             ->whereNull('registered_on_oh_dear_at')
             ->get();
+
+            ray($tasksToRegister);
 
         $cronChecks = [];
         foreach($tasksToRegister as $taskToRegister) {
