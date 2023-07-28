@@ -94,11 +94,10 @@ class SyncCommand extends Command
             'message' => 'Start syncing schedule with Oh Dear...',
         ]));
 
-        if($this->option('push')) {
-            $cronChecks = $this->pushMonitoredScheduledTaskToOhDear($siteId);
-        } else {
-            $cronChecks = $this->syncMonitoredScheduledTaskWithOhDear($siteId);
-        }
+        $cronChecks = match($this->option('push')) {
+            true => $this->pushMonitoredScheduledTaskToOhDear($siteId),
+            default => $this->syncMonitoredScheduledTaskWithOhDear($siteId),
+        };
 
         render(view('schedule-monitor::alert', [
             'message' => 'Successfully synced schedule with Oh Dear!',
@@ -147,8 +146,6 @@ class SyncCommand extends Command
         $tasksToRegister = $this->getMonitoredScheduleTaskModel()
             ->whereNull('registered_on_oh_dear_at')
             ->get();
-
-            ray($tasksToRegister);
 
         $cronChecks = [];
         foreach($tasksToRegister as $taskToRegister) {
