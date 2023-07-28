@@ -146,6 +146,8 @@ This command is responsible for syncing your schedule with the database, and opt
 
 In a non-production environment you should manually run `schedule-monitor:sync`. You can verify if everything synced correctly using `schedule-monitor:list`.
 
+**Note:** Running the sync command will remove any other cron monitors that you've defined other than the application schedule.
+
 ## Usage
 
 To monitor your schedule you should first run `schedule-monitor:sync`. This command will take a look at your schedule and create an entry for each task in the `monitored_scheduled_tasks` table.
