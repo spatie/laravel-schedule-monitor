@@ -118,7 +118,7 @@ return [
 
 The schedule monitor will log each start, finish and failure of all scheduled jobs.  After a while the `monitored_scheduled_task_log_items` might become big.
 
-Use [Laravel's model pruning feature](https://laravel.com/docs/9.x/eloquent#mass-assignment) , you can delete old `MonitoredScheduledTaskLogItem` models. Models older than the amount of days configured in the `delete_log_items_older_than_days` in the `schedule-monitor` config file, will be deleted.
+Use [Laravel's model pruning feature](https://laravel.com/docs/9.x/eloquent#pruning-models) , you can delete old `MonitoredScheduledTaskLogItem` models. Models older than the amount of days configured in the `delete_log_items_older_than_days` in the `schedule-monitor` config file, will be deleted.
 
 ```php
 // app/Console/Kernel.php
