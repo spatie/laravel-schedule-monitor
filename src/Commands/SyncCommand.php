@@ -9,7 +9,6 @@ use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
-
 use function Termwind\render;
 
 class SyncCommand extends Command
