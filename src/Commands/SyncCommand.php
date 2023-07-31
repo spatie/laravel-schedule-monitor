@@ -9,13 +9,14 @@ use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
+
 use function Termwind\render;
 
 class SyncCommand extends Command
 {
     use UsesScheduleMonitoringModels;
 
-    public $signature = 'schedule-monitor:sync {--push}';
+    public $signature = 'schedule-monitor:sync {--keep-old}';
 
     public $description = 'Sync the schedule of the app with the schedule monitor';
 
@@ -27,8 +28,8 @@ class SyncCommand extends Command
         ]));
 
         $this
-            ->syncScheduledTasksWithDatabase()
-            ->sendMonitoredScheduledTasksToOhDear();
+            ->storeScheduledTasksInDatabase()
+            ->storeMonitoredScheduledTasksInOhDear();
 
         $monitoredScheduledTasksCount = $this->getMonitoredScheduleTaskModel()->count();
 
@@ -37,7 +38,7 @@ class SyncCommand extends Command
         ]));
     }
 
-    protected function syncScheduledTasksWithDatabase(): self
+    protected function storeScheduledTasksInDatabase(): self
     {
         render(view('schedule-monitor::alert', [
             'message' => 'Start syncing schedule with database...',
@@ -57,15 +58,16 @@ class SyncCommand extends Command
                 );
             });
 
-        $this->getMonitoredScheduleTaskModel()->query()
-            ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
-            ->delete();
+        if (! $this->option('keep-old')) {
+            $this->getMonitoredScheduleTaskModel()->query()
+                ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
+                ->delete();
+        }
 
         return $this;
     }
 
-
-    protected function sendMonitoredScheduledTasksToOhDear(): self
+    protected function storeMonitoredScheduledTasksInOhDear(): self
     {
         if (! class_exists(OhDear::class)) {
             return $this;
@@ -94,10 +96,9 @@ class SyncCommand extends Command
             'message' => 'Start syncing schedule with Oh Dear...',
         ]));
 
-        $cronChecks = match($this->option('push')) {
-            true => $this->pushMonitoredScheduledTaskToOhDear($siteId),
-            default => $this->syncMonitoredScheduledTaskWithOhDear($siteId),
-        };
+        $cronChecks = $this->option('keep-old')
+            ? $this->pushMonitoredScheduledTaskToOhDear($siteId)
+            : $this->syncMonitoredScheduledTaskWithOhDear($siteId);
 
         render(view('schedule-monitor::alert', [
             'message' => 'Successfully synced schedule with Oh Dear!',
@@ -142,13 +143,13 @@ class SyncCommand extends Command
     }
 
     protected function pushMonitoredScheduledTaskToOhDear(int $siteId): array
-    {               
+    {
         $tasksToRegister = $this->getMonitoredScheduleTaskModel()
             ->whereNull('registered_on_oh_dear_at')
             ->get();
 
         $cronChecks = [];
-        foreach($tasksToRegister as $taskToRegister) {
+        foreach ($tasksToRegister as $taskToRegister) {
             $cronChecks[] = app(OhDear::class)->createCronCheck(
                 siteId: $siteId,
                 name: $taskToRegister->name,
