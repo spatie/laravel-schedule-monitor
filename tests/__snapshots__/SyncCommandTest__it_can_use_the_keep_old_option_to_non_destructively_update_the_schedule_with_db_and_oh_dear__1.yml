@@ -1,0 +1,16 @@
+-
+    name: dummy-2
+    type: cron
+    cron_expression: '0 * * * *'
+    grace_time_in_minutes: 5
+    description: ''
+    server_timezone: UTC
+    ping_url: 'https://ping.ohdear.app/test-ping-url-dummy-2'
+-
+    name: dummy-3
+    type: cron
+    cron_expression: '0 0 * * *'
+    grace_time_in_minutes: 5
+    description: ''
+    server_timezone: UTC
+    ping_url: 'https://ping.ohdear.app/test-ping-url-dummy-3'

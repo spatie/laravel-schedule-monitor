@@ -15,7 +15,7 @@ class SyncCommand extends Command
 {
     use UsesScheduleMonitoringModels;
 
-    public $signature = 'schedule-monitor:sync';
+    public $signature = 'schedule-monitor:sync {--keep-old}';
 
     public $description = 'Sync the schedule of the app with the schedule monitor';
 
@@ -27,8 +27,8 @@ class SyncCommand extends Command
         ]));
 
         $this
-            ->syncScheduledTasksWithDatabase()
-            ->syncMonitoredScheduledTaskWithOhDear();
+            ->storeScheduledTasksInDatabase()
+            ->storeMonitoredScheduledTasksInOhDear();
 
         $monitoredScheduledTasksCount = $this->getMonitoredScheduleTaskModel()->count();
 
@@ -37,7 +37,7 @@ class SyncCommand extends Command
         ]));
     }
 
-    protected function syncScheduledTasksWithDatabase(): self
+    protected function storeScheduledTasksInDatabase(): self
     {
         render(view('schedule-monitor::alert', [
             'message' => 'Start syncing schedule with database...',
@@ -57,14 +57,16 @@ class SyncCommand extends Command
                 );
             });
 
-        $this->getMonitoredScheduleTaskModel()->query()
-            ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
-            ->delete();
+        if (! $this->option('keep-old')) {
+            $this->getMonitoredScheduleTaskModel()->query()
+                ->whereNotIn('id', $monitoredScheduledTasks->pluck('id'))
+                ->delete();
+        }
 
         return $this;
     }
 
-    protected function syncMonitoredScheduledTaskWithOhDear(): self
+    protected function storeMonitoredScheduledTasksInOhDear(): self
     {
         if (! class_exists(OhDear::class)) {
             return $this;
@@ -93,22 +95,9 @@ class SyncCommand extends Command
             'message' => 'Start syncing schedule with Oh Dear...',
         ]));
 
-        $monitoredScheduledTasks = $this->getMonitoredScheduleTaskModel()->get();
-
-        $cronChecks = $monitoredScheduledTasks
-            ->map(function (MonitoredScheduledTask $monitoredScheduledTask) {
-                return [
-                    'name' => $monitoredScheduledTask->name,
-                    'type' => 'cron',
-                    'cron_expression' => $monitoredScheduledTask->cron_expression,
-                    'grace_time_in_minutes' => $monitoredScheduledTask->grace_time_in_minutes,
-                    'server_timezone' => $monitoredScheduledTask->timezone,
-                    'description' => '',
-                ];
-            })
-            ->toArray();
-
-        $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
+        $cronChecks = $this->option('keep-old')
+            ? $this->pushMonitoredScheduledTaskToOhDear($siteId)
+            : $this->syncMonitoredScheduledTaskWithOhDear($siteId);
 
         render(view('schedule-monitor::alert', [
             'message' => 'Successfully synced schedule with Oh Dear!',
@@ -128,5 +117,48 @@ class SyncCommand extends Command
             );
 
         return $this;
+    }
+
+    protected function syncMonitoredScheduledTaskWithOhDear(int $siteId): array
+    {
+        $monitoredScheduledTasks = $this->getMonitoredScheduleTaskModel()->get();
+
+        $cronChecks = $monitoredScheduledTasks
+            ->map(function (MonitoredScheduledTask $monitoredScheduledTask) {
+                return [
+                    'name' => $monitoredScheduledTask->name,
+                    'type' => 'cron',
+                    'cron_expression' => $monitoredScheduledTask->cron_expression,
+                    'grace_time_in_minutes' => $monitoredScheduledTask->grace_time_in_minutes,
+                    'server_timezone' => $monitoredScheduledTask->timezone,
+                    'description' => '',
+                ];
+            })
+            ->toArray();
+
+        $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
+
+        return $cronChecks;
+    }
+
+    protected function pushMonitoredScheduledTaskToOhDear(int $siteId): array
+    {
+        $tasksToRegister = $this->getMonitoredScheduleTaskModel()
+            ->whereNull('registered_on_oh_dear_at')
+            ->get();
+
+        $cronChecks = [];
+        foreach ($tasksToRegister as $taskToRegister) {
+            $cronChecks[] = app(OhDear::class)->createCronCheck(
+                siteId: $siteId,
+                name: $taskToRegister->name,
+                cronExpression: $taskToRegister->cron_expression,
+                graceTimeInMinutes: $taskToRegister->grace_time_in_minutes,
+                description: '',
+                serverTimezone: $taskToRegister->timezone,
+            );
+        }
+
+        return $cronChecks;
     }
 }

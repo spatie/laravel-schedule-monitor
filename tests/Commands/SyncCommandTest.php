@@ -6,6 +6,7 @@ use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Spatie\TestTime\TestTime;
+use function Spatie\Snapshots\{assertMatchesSnapshot};
 
 beforeEach(function () {
     TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
@@ -76,7 +77,73 @@ it('can sync the schedule with the db and oh dear', function () {
         'timezone' => 'Asia/Kolkata',
     ]);
 
-    $this->assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
+    assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
+});
+
+it('can use the keep old option to non destructively update the schedule with db and oh dear', function () {
+    MonitoredScheduledTask::create([
+        'name' => 'dummy-1',
+        'type' => 'command',
+        'cron_expression' => '* * * * *',
+        'ping_url' => 'https://ping.ohdear.app/test-ping-url-dummy-1',
+        'registered_on_oh_dear_at' => now()->format('Y-m-d H:i:s'),
+        'grace_time_in_minutes' => 5,
+        'last_pinged_at' => null,
+        'last_started_at' => null,
+        'last_finished_at' => null,
+        'timezone' => 'UTC',
+    ]);
+
+    TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+        $schedule->command('dummy-2')->hourly();
+        $schedule->command('dummy-3')->daily();
+    });
+   
+    $this->artisan(SyncCommand::class, ['--keep-old' => true]);
+
+    $monitoredScheduledTasks = MonitoredScheduledTask::get();
+    expect($monitoredScheduledTasks)->toHaveCount(3);
+
+    $this->assertDatabaseHas('monitored_scheduled_tasks', [
+        'name' => 'dummy-1',
+        'type' => 'command',
+        'cron_expression' => '* * * * *',
+        'ping_url' => 'https://ping.ohdear.app/test-ping-url-dummy-1',
+        'registered_on_oh_dear_at' => now()->format('Y-m-d H:i:s'),
+        'grace_time_in_minutes' => 5,
+        'last_pinged_at' => null,
+        'last_started_at' => null,
+        'last_finished_at' => null,
+        'timezone' => 'UTC',
+    ]);
+
+    $this->assertDatabaseHas('monitored_scheduled_tasks', [
+        'name' => 'dummy-2',
+        'type' => 'command',
+        'cron_expression' => '0 * * * *',
+        'ping_url' => 'https://ping.ohdear.app/test-ping-url-dummy-2',
+        'registered_on_oh_dear_at' => now()->format('Y-m-d H:i:s'),
+        'grace_time_in_minutes' => 5,
+        'last_pinged_at' => null,
+        'last_started_at' => null,
+        'last_finished_at' => null,
+        'timezone' => 'UTC',
+    ]);
+
+    $this->assertDatabaseHas('monitored_scheduled_tasks', [
+        'name' => 'dummy-3',
+        'type' => 'command',
+        'cron_expression' => '0 0 * * *',
+        'ping_url' => 'https://ping.ohdear.app/test-ping-url-dummy-3',
+        'registered_on_oh_dear_at' => now()->format('Y-m-d H:i:s'),
+        'grace_time_in_minutes' => 5,
+        'last_pinged_at' => null,
+        'last_started_at' => null,
+        'last_finished_at' => null,
+        'timezone' => 'UTC',
+    ]);
+
+    assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
 });
 
 it('will not monitor commands without a name', function () {
