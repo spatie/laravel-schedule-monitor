@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.4.0 - 2023-08-01
+
+### What's Changed
+
+- Add note that syncing will remove other monitors by @keithbrink in https://github.com/spatie/laravel-schedule-monitor/pull/90
+- Fix anchor in link to Laravel docs by @limenet in https://github.com/spatie/laravel-schedule-monitor/pull/92
+- Non destructive sync option (keep-old) by @keithbrink in https://github.com/spatie/laravel-schedule-monitor/pull/91
+
+### New Contributors
+
+- @keithbrink made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/90
+- @limenet made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/92
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.3.0...3.4.0
+
 ## 3.3.0 - 2023-05-24
 
 ### What's Changed
