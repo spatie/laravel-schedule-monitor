@@ -5,8 +5,8 @@ use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-use Spatie\TestTime\TestTime;
 use function Spatie\Snapshots\{assertMatchesSnapshot};
+use Spatie\TestTime\TestTime;
 
 beforeEach(function () {
     TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
