@@ -139,7 +139,7 @@ class Kernel extends ConsoleKernel
 Every time you deploy your application, you should execute the `schedule-monitor:sync` command
 
 ```bash
-schedule-monitor:sync
+php artisan schedule-monitor:sync
 ```
 
 This command is responsible for syncing your schedule with the database, and optionally Oh Dear. We highly recommend adding this command to the script that deploys your production environment.
