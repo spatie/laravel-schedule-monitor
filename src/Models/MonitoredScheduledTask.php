@@ -154,6 +154,7 @@ class MonitoredScheduledTask extends Model
                 'runtime' => $event->runtime,
                 'exit_code' => $event->task->exitCode,
                 'memory' => memory_get_usage(true),
+                'output' => $this->getEventTaskOutput($event),
             ]);
         }
 
