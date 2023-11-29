@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.4.1 - 2023-11-29
+
+### What's Changed
+
+* Update README.md by @robjbrain in https://github.com/spatie/laravel-schedule-monitor/pull/96
+* Update MonitoredScheduledTask.php to get the failed response to be st… by @AKHIL-882 in https://github.com/spatie/laravel-schedule-monitor/pull/97
+
+### New Contributors
+
+* @robjbrain made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/96
+* @AKHIL-882 made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/97
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.4.0...3.4.1
+
 ## 3.4.0 - 2023-08-01
 
 ### What's Changed
