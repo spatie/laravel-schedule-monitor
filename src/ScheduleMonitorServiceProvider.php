@@ -20,6 +20,14 @@ use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class ScheduleMonitorServiceProvider extends PackageServiceProvider
 {
+    private string $monitorName;
+
+    private int $graceTimeInMinutes;
+
+    private bool $doNotMonitor;
+
+    private bool $storeOutputInDb;
+
     public function configurePackage(Package $package): void
     {
         $package
