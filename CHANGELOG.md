@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.4.2 - 2023-12-14
+
+### What's Changed
+
+* fix: PHP warning about creation of dynamic properties by @Pr3d4dor in https://github.com/spatie/laravel-schedule-monitor/pull/98
+
+### New Contributors
+
+* @Pr3d4dor made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/98
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.4.1...3.4.2
+
 ## 3.4.1 - 2023-11-29
 
 ### What's Changed
