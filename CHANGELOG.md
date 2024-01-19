@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.4.3 - 2024-01-19
+
+### What's Changed
+
+* Update nunomaduro/termwind to 2.0 by @yoeriboven in https://github.com/spatie/laravel-schedule-monitor/pull/99
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.4.2...3.4.3
+
 ## 3.4.2 - 2023-12-14
 
 ### What's Changed
