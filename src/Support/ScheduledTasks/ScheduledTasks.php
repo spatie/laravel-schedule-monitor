@@ -42,6 +42,12 @@ class ScheduledTasks
             ->values();
     }
 
+    public function monitoredAtOhDear()
+    {
+        return $this->uniqueTasks()
+            ->filter(fn (Task $task) => $task->shouldMonitorAtOhDear());
+    }
+
     public function duplicateTasks(): Collection
     {
         $uniqueTasksIds = $this->uniqueTasks()
