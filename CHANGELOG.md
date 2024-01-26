@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.5.0 - 2024-01-26
+
+### What's Changed
+
+* Allow tasks to be monitored but not synced with oh dear by @oddvalue in https://github.com/spatie/laravel-schedule-monitor/pull/102
+
+### New Contributors
+
+* @oddvalue made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/102
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.4.3...3.5.0
+
 ## 3.4.3 - 2024-01-19
 
 ### What's Changed
