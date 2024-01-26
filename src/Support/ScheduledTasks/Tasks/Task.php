@@ -63,9 +63,22 @@ abstract class Task
         return ! is_null($this->monitoredScheduledTask);
     }
 
+    public function shouldMonitorAtOhDear(): bool
+    {
+        if (! isset($this->event->doNotMonitorAtOhDear)) {
+            return true;
+        }
+
+        return ! $this->event->doNotMonitorAtOhDear;
+    }
+
     public function isBeingMonitoredAtOhDear(): bool
     {
         if (! $this->isBeingMonitored()) {
+            return false;
+        }
+
+        if (! $this->shouldMonitorAtOhDear()) {
             return false;
         }
 

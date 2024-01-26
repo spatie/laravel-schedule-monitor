@@ -287,6 +287,19 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
+### Disabling Oh Dear for individual tasks
+
+If you want to have a task monitored by the schedule monitor, but not by Oh Dear, you can tack on `doMonitorAtOhDear` to your scheduled tasks.
+
+```php
+// in app/Console/Kernel.php
+
+protected function schedule(Schedule $schedule)
+{
+   $schedule->command('your-command')->daily()->doNotMonitorAtOhDear();
+}
+```
+
 ## Unsupported methods
 
 Currently, this package does not work for tasks that use these methods:

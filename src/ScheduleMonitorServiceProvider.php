@@ -26,6 +26,8 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
 
     private bool $doNotMonitor;
 
+    private bool $doNotMonitorAtOhDear;
+
     private bool $storeOutputInDb;
 
     public function configurePackage(Package $package): void
@@ -123,6 +125,12 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
 
         SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) {
             $this->doNotMonitor = $bool;
+
+            return $this;
+        });
+
+        SchedulerEvent::macro('doNotMonitorAtOhDear', function (bool $bool = true) {
+            $this->doNotMonitorAtOhDear = $bool;
 
             return $this;
         });

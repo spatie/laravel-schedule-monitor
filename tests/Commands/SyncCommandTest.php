@@ -98,7 +98,7 @@ it('can use the keep old option to non destructively update the schedule with db
         $schedule->command('dummy-2')->hourly();
         $schedule->command('dummy-3')->daily();
     });
-   
+
     $this->artisan(SyncCommand::class, ['--keep-old' => true]);
 
     $monitoredScheduledTasks = MonitoredScheduledTask::get();
@@ -237,5 +237,46 @@ it('will not sync with oh dear when no site id is set', function () {
     });
     $this->artisan(SyncCommand::class);
     expect(MonitoredScheduledTask::get())->toHaveCount(1);
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
+});
+
+it('will not sync tasks with oh dear that should not be', function () {
+    TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+        $schedule->command('dummy')->everyMinute()->doNotMonitorAtOhDear();
+    });
+
+    $this->artisan(SyncCommand::class);
+
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
+
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
+
+    expect(MonitoredScheduledTask::first()->ping_url)->toBeNull();
+});
+
+it('will not keep old ping_urls for tasks not being sent to oh dear', function () {
+    MonitoredScheduledTask::create([
+        'name' => 'dummy',
+        'type' => 'command',
+        'cron_expression' => '* * * * *',
+        'ping_url' => 'https://ping.ohdear.app/test-ping-url-dummy',
+        'registered_on_oh_dear_at' => now()->format('Y-m-d H:i:s'),
+        'grace_time_in_minutes' => 5,
+        'last_pinged_at' => null,
+        'last_started_at' => null,
+        'last_finished_at' => null,
+        'timezone' => 'UTC',
+    ]);
+
+    TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+        $schedule->command('dummy')->everyMinute()->doNotMonitorAtOhDear();
+    });
+
+    $this->artisan(SyncCommand::class);
+
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
+
+    expect(MonitoredScheduledTask::first()->ping_url)->toBeNull();
+
     expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
 });
