@@ -125,8 +125,8 @@ class SyncCommand extends Command
             ->whereIn(
                 'name',
                 ScheduledTasks::createForSchedule()
-                ->monitoredAtOhDear()
-                ->map->name()
+                    ->monitoredAtOhDear()
+                    ->map->name()
             )
             ->get();
 
@@ -155,8 +155,8 @@ class SyncCommand extends Command
             ->whereIn(
                 'name',
                 ScheduledTasks::createForSchedule()
-                ->monitoredAtOhDear()
-                ->map->name()
+                    ->monitoredAtOhDear()
+                    ->map->name()
             )
             ->get();
 
