@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.6.0 - 2024-02-28
+
+### What's Changed
+
+* New method runsInBackground() added in  Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task:class by @ravi289 in https://github.com/spatie/laravel-schedule-monitor/pull/105
+
+### New Contributors
+
+* @ravi289 made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/105
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.5.0...3.6.0
+
 ## 3.5.0 - 2024-01-26
 
 ### What's Changed
