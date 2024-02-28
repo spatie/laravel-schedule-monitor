@@ -185,4 +185,9 @@ abstract class Task
             return $this->cronExpression();
         }
     }
+
+    public function runsInBackground():bool
+    {
+        return $this->event->runInBackground;
+    }
 }
