@@ -136,10 +136,9 @@ abstract class Task
 
         $lastFinishedAt = $this->lastRunFinishedAt()
             ? $this->lastRunFinishedAt()
-            : $this->monitoredScheduledTask->created_at;
+            : $this->monitoredScheduledTask->created_at->subSecond();
 
-        $expectedNextRunStart = $this->nextRunAt($lastFinishedAt->subSecond());
-
+        $expectedNextRunStart = $this->nextRunAt($lastFinishedAt);
         $shouldHaveFinishedAt = $expectedNextRunStart->addMinutes($this->graceTimeInMinutes());
 
         return $shouldHaveFinishedAt->isPast();
