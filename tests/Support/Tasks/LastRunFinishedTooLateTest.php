@@ -29,6 +29,14 @@ test('a task will be consider too late if does not finish within the grace perio
     expect(createTask()->lastRunFinishedTooLate())->toBeTrue();
 });
 
+test('a task will be not consider too late if the last start and finished date are the same because the task executes pretty fast', function () {
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
+
+    $this->monitoredScheduledTask->update(['last_started_at' => now(), 'last_finished_at' => now()]);
+    TestTime::addMinutes(6);
+    expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
+});
+
 it('will reset the period', function () {
     expect(createTask()->lastRunFinishedTooLate())->toBeFalse();
 
