@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.7.1 - 2024-03-28
+
+### What's Changed
+
+* Fix wrong lastRunFinishedTooLate behaviour when lastStartedAt and lastFinishedAt are within a second because of a very fast task by @mathiasmoser in https://github.com/spatie/laravel-schedule-monitor/pull/109
+
+### New Contributors
+
+* @mathiasmoser made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/109
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.7.0...3.7.1
+
 ## 3.7.0 - 2024-03-02
 
 ### What's Changed
