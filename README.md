@@ -159,7 +159,7 @@ To view all monitored scheduled tasks, you can run `schedule-monitor:list`. This
 
 ![screenshot](https://github.com/spatie/laravel-schedule-monitor/blob/main/docs/list.png)
 
-The package will write an entry to the `monitored_scheduled_task_log_items` table in the db each time a schedule tasks starts, end, fails or is skipped. Take a look at the contest of that table if you want to know when and how scheduled tasks did execute. The log items also hold other interesting metrics like memory usage, execution time, and more.
+The package will write an entry to the `monitored_scheduled_task_log_items` table in the db each time a schedule tasks starts, end, fails or is skipped. Take a look at the contents of that table if you want to know when and how scheduled tasks did execute. The log items also hold other interesting metrics like memory usage, execution time, and more.
 
 ### Naming tasks
 
