@@ -76,6 +76,10 @@ return [
          */
         'send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
 
-
+        /**
+         * The amount of minutes a scheduled task is allowed to run before it is
+         * considered late.
+         */
+        'grace_time_in_minutes' => 5,
     ],
 ];

@@ -163,7 +163,7 @@ abstract class Task
 
     public function graceTimeInMinutes()
     {
-        return $this->event->graceTimeInMinutes ?? 5;
+        return $this->event->graceTimeInMinutes ?? config('schedule-monitor.oh_dear.grace_time_in_minutes', 5);
     }
 
     public function cronExpression(): string
