@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.8.0 - 2024-06-17
+
+### What's Changed
+
+* Update README.md typo by @acip in https://github.com/spatie/laravel-schedule-monitor/pull/111
+* Make `graceTimeInMinutes` configurable by @faustbrian in https://github.com/spatie/laravel-schedule-monitor/pull/112
+
+### New Contributors
+
+* @acip made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/111
+* @faustbrian made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/112
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.7.1...3.8.0
+
 ## 3.7.1 - 2024-03-28
 
 ### What's Changed
