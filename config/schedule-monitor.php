@@ -7,7 +7,7 @@ return [
      * Here you can specify the amount of days log items should be kept.
      *
      * Use Laravel's pruning command to delete old `MonitoredScheduledTaskLogItem` models.
-     * More info: https://laravel.com/docs/9.x/eloquent#mass-assignment
+     * More info: https://laravel.com/docs/11.x/eloquent#pruning-models
      */
     'delete_log_items_older_than_days' => 30,
 
