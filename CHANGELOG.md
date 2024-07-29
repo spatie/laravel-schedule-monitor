@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.8.1 - 2024-07-29
+
+### What's Changed
+
+* Fix prune link in config file comment by @pelmered in https://github.com/spatie/laravel-schedule-monitor/pull/113
+
+### New Contributors
+
+* @pelmered made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/113
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.8.0...3.8.1
+
 ## 3.8.0 - 2024-06-17
 
 ### What's Changed
