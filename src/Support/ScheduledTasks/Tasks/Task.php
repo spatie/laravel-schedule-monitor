@@ -10,11 +10,13 @@ use Illuminate\Support\Str;
 use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringConfigurationsRepository;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 abstract class Task
 {
     use UsesScheduleMonitoringModels;
+    use UsesScheduleMonitoringConfigurationsRepository;
 
     protected Event $event;
 
@@ -46,16 +48,19 @@ abstract class Task
 
     public function name(): ?string
     {
-        return $this->event->monitorName ?? $this->defaultName();
+        return $this->getScheduleMonitoringConfigurationsRepository()->getMonitorName($this->event)
+            ?? $this->defaultName();
     }
 
     public function shouldMonitor(): bool
     {
-        if (! isset($this->event->doNotMonitor)) {
+        $doNotMonitor = $this->getScheduleMonitoringConfigurationsRepository()
+            ->getDoNotMonitor($this->event);
+        if (! isset($doNotMonitor)) {
             return true;
         }
 
-        return ! $this->event->doNotMonitor;
+        return ! $doNotMonitor;
     }
 
     public function isBeingMonitored(): bool
@@ -65,11 +70,13 @@ abstract class Task
 
     public function shouldMonitorAtOhDear(): bool
     {
-        if (! isset($this->event->doNotMonitorAtOhDear)) {
+        $doNotMonitorAtOhDear = $this->getScheduleMonitoringConfigurationsRepository()
+            ->getDoNotMonitorAtOhDear($this->event);
+        if (! isset($doNotMonitorAtOhDear)) {
             return true;
         }
 
-        return ! $this->event->doNotMonitorAtOhDear;
+        return ! $doNotMonitorAtOhDear;
     }
 
     public function isBeingMonitoredAtOhDear(): bool
@@ -163,7 +170,8 @@ abstract class Task
 
     public function graceTimeInMinutes()
     {
-        return $this->event->graceTimeInMinutes ?? config('schedule-monitor.oh_dear.grace_time_in_minutes', 5);
+        return $this->getScheduleMonitoringConfigurationsRepository()->getGraceTimeInMinutes($this->event)
+            ?? config('schedule-monitor.oh_dear.grace_time_in_minutes', 5);
     }
 
     public function cronExpression(): string

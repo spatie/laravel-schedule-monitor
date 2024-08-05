@@ -111,32 +111,40 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
 
     protected function registerSchedulerEventMacros(): self
     {
-        SchedulerEvent::macro('monitorName', function (string $monitorName) {
-            $this->monitorName = $monitorName;
+        $this->app->singleton(
+            Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository::class,
+            static fn () => new Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository(),
+        );
+
+        /** @var Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository $scheduleMonitoringConfigurationsRepository */
+        $scheduleMonitoringConfigurationsRepository = $this->app->make(Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository::class);
+
+        SchedulerEvent::macro('monitorName', function (string $monitorName) use ($scheduleMonitoringConfigurationsRepository) {
+            $scheduleMonitoringConfigurationsRepository->setMonitorName($this, $monitorName);
 
             return $this;
         });
 
-        SchedulerEvent::macro('graceTimeInMinutes', function (int $graceTimeInMinutes) {
-            $this->graceTimeInMinutes = $graceTimeInMinutes;
+        SchedulerEvent::macro('graceTimeInMinutes', function (int $graceTimeInMinutes) use ($scheduleMonitoringConfigurationsRepository) {
+            $scheduleMonitoringConfigurationsRepository->setGraceTimeInMinutes($this, $graceTimeInMinutes);
 
             return $this;
         });
 
-        SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) {
-            $this->doNotMonitor = $bool;
+        SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) use ($scheduleMonitoringConfigurationsRepository) {
+            $scheduleMonitoringConfigurationsRepository->setDoNotMonitor($this, $bool);
 
             return $this;
         });
 
-        SchedulerEvent::macro('doNotMonitorAtOhDear', function (bool $bool = true) {
-            $this->doNotMonitorAtOhDear = $bool;
+        SchedulerEvent::macro('doNotMonitorAtOhDear', function (bool $bool = true) use ($scheduleMonitoringConfigurationsRepository) {
+            $scheduleMonitoringConfigurationsRepository->setDoNotMonitorAtOhDear($this, $bool);
 
             return $this;
         });
 
-        SchedulerEvent::macro('storeOutputInDb', function () {
-            $this->storeOutputInDb = true;
+        SchedulerEvent::macro('storeOutputInDb', function () use ($scheduleMonitoringConfigurationsRepository) {
+            $scheduleMonitoringConfigurationsRepository->setStoreOutputInDb($this, true);
             /** @psalm-suppress UndefinedMethod */
             $this->ensureOutputIsBeingCaptured();
 
