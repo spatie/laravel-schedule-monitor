@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.8.2 - 2024-12-16
+
+### What's Changed
+
+* don't write to horizon config when not available by @Propaganistas in https://github.com/spatie/laravel-schedule-monitor/pull/116
+
+### New Contributors
+
+* @Propaganistas made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/116
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.8.1...3.8.2
+
 ## 3.8.1 - 2024-07-29
 
 ### What's Changed
