@@ -1,7 +1,6 @@
 <?php
 
 namespace Spatie\ScheduleMonitor;
-
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
