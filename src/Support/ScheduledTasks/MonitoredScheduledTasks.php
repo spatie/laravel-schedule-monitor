@@ -2,9 +2,22 @@
 
 namespace Spatie\ScheduleMonitor\Support\ScheduledTasks;
 
-class ScheduleMonitoringConfigurationsRepository
+class MonitoredScheduledTasks
 {
-    private array $store = [];
+    /**
+     * Multidimensional array to hold values grouped by class, instance id and property.
+     *
+     * Example:
+     *
+     * ```
+     * [ '\Illuminate\Console\Scheduling\Event' => 'obj_234' => [ 'propertyName' => 'some_value' ]]]
+     * ```
+     *
+     * @see self::makeKey()
+     *
+     * @var array<string,array<string,array<string,mixed>>>
+     */
+    protected array $store = [];
 
     public function setMonitorName(object $target, string $monitorName): void
     {
@@ -57,17 +70,17 @@ class ScheduleMonitoringConfigurationsRepository
     }
 
 
-    private function setProperty(object $target, string $key, mixed $value): void
+    protected function setProperty(object $target, string $key, mixed $value): void
     {
         data_set($this->store, $this->makeKey($target, $key), $value);
     }
 
-    private function getProperty(object $target, string $key): mixed
+    protected function getProperty(object $target, string $key): mixed
     {
         return data_get($this->store, $this->makeKey($target, $key));
     }
 
-    private function makeKey(object $target, string $key): array
+    protected function makeKey(object $target, string $key): array
     {
         return [
             $target::class,

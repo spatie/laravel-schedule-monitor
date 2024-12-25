@@ -16,6 +16,7 @@ use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
+use Spatie\ScheduleMonitor\Support\ScheduledTasks\MonitoredScheduledTasks;
 
 class ScheduleMonitorServiceProvider extends PackageServiceProvider
 {
@@ -111,39 +112,39 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
     protected function registerSchedulerEventMacros(): self
     {
         $this->app->singleton(
-            Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository::class,
-            static fn () => new Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository(),
+            MonitoredScheduledTasks::class,
+            fn () => new MonitoredScheduledTasks(),
         );
 
-        /** @var Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository $scheduleMonitoringConfigurationsRepository */
-        $scheduleMonitoringConfigurationsRepository = $this->app->make(Support\ScheduledTasks\ScheduleMonitoringConfigurationsRepository::class);
+        /** @var MonitoredScheduledTasks $monitoredScheduledTasks */
+        $monitoredScheduledTasks = $this->app->make(MonitoredScheduledTasks::class);
 
-        SchedulerEvent::macro('monitorName', function (string $monitorName) use ($scheduleMonitoringConfigurationsRepository) {
-            $scheduleMonitoringConfigurationsRepository->setMonitorName($this, $monitorName);
-
-            return $this;
-        });
-
-        SchedulerEvent::macro('graceTimeInMinutes', function (int $graceTimeInMinutes) use ($scheduleMonitoringConfigurationsRepository) {
-            $scheduleMonitoringConfigurationsRepository->setGraceTimeInMinutes($this, $graceTimeInMinutes);
+        SchedulerEvent::macro('monitorName', function (string $monitorName) use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setMonitorName($this, $monitorName);
 
             return $this;
         });
 
-        SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) use ($scheduleMonitoringConfigurationsRepository) {
-            $scheduleMonitoringConfigurationsRepository->setDoNotMonitor($this, $bool);
+        SchedulerEvent::macro('graceTimeInMinutes', function (int $graceTimeInMinutes) use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setGraceTimeInMinutes($this, $graceTimeInMinutes);
 
             return $this;
         });
 
-        SchedulerEvent::macro('doNotMonitorAtOhDear', function (bool $bool = true) use ($scheduleMonitoringConfigurationsRepository) {
-            $scheduleMonitoringConfigurationsRepository->setDoNotMonitorAtOhDear($this, $bool);
+        SchedulerEvent::macro('doNotMonitor', function (bool $bool = true) use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setDoNotMonitor($this, $bool);
 
             return $this;
         });
 
-        SchedulerEvent::macro('storeOutputInDb', function () use ($scheduleMonitoringConfigurationsRepository) {
-            $scheduleMonitoringConfigurationsRepository->setStoreOutputInDb($this, true);
+        SchedulerEvent::macro('doNotMonitorAtOhDear', function (bool $bool = true) use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setDoNotMonitorAtOhDear($this, $bool);
+
+            return $this;
+        });
+
+        SchedulerEvent::macro('storeOutputInDb', function () use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setStoreOutputInDb($this, true);
             /** @psalm-suppress UndefinedMethod */
             $this->ensureOutputIsBeingCaptured();
 

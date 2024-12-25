@@ -10,13 +10,13 @@ use Illuminate\Support\Str;
 use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
-use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringConfigurationsRepository;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesMonitoredScheduledTasks;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 
 abstract class Task
 {
     use UsesScheduleMonitoringModels;
-    use UsesScheduleMonitoringConfigurationsRepository;
+    use UsesMonitoredScheduledTasks;
 
     protected Event $event;
 
