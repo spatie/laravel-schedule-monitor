@@ -5,7 +5,7 @@ use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-use function Spatie\Snapshots\{assertMatchesSnapshot};
+use function Spatie\Snapshots\assertMatchesSnapshot;
 use Spatie\TestTime\TestTime;
 
 beforeEach(function () {

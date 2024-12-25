@@ -4,6 +4,7 @@ namespace Spatie\ScheduleMonitor;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
+use Laravel\Horizon\Horizon;
 use OhDear\PhpSdk\OhDear;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -85,6 +86,10 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
     protected function silenceOhDearJob(): self
     {
         if (! config('schedule-monitor.oh_dear.silence_ping_oh_dear_job_in_horizon', true)) {
+            return $this;
+        }
+
+        if (! class_exists(Horizon::class)) {
             return $this;
         }
 
