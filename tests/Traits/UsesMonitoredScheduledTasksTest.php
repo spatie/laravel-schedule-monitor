@@ -8,7 +8,7 @@ it('can resolve schedule monitoring configurations repository', function () {
         use UsesMonitoredScheduledTasks;
     };
 
-    $repository = $concern->getScheduleMonitoringConfigurationsRepository();
+    $repository = $concern->getMonitoredScheduledTasks();
 
     expect($repository)->toBeInstanceOf(MonitoredScheduledTasks::class);
 });

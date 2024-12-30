@@ -148,8 +148,8 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
             return $this;
         });
 
-        SchedulerEvent::macro('storeOutputInDb', function () use ($monitoredScheduledTasks) {
-            $monitoredScheduledTasks->setStoreOutputInDb($this, true);
+        SchedulerEvent::macro('storeOutputInDb', function (bool $bool = true) use ($monitoredScheduledTasks) {
+            $monitoredScheduledTasks->setStoreOutputInDb($this, $bool);
             /** @psalm-suppress UndefinedMethod */
             $this->ensureOutputIsBeingCaptured();
 

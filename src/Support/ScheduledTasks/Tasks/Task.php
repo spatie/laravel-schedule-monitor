@@ -48,13 +48,13 @@ abstract class Task
 
     public function name(): ?string
     {
-        return $this->getScheduleMonitoringConfigurationsRepository()->getMonitorName($this->event)
+        return $this->getMonitoredScheduledTasks()->getMonitorName($this->event)
             ?? $this->defaultName();
     }
 
     public function shouldMonitor(): bool
     {
-        $doNotMonitor = $this->getScheduleMonitoringConfigurationsRepository()
+        $doNotMonitor = $this->getMonitoredScheduledTasks()
             ->getDoNotMonitor($this->event);
         if (! isset($doNotMonitor)) {
             return true;
@@ -70,7 +70,7 @@ abstract class Task
 
     public function shouldMonitorAtOhDear(): bool
     {
-        $doNotMonitorAtOhDear = $this->getScheduleMonitoringConfigurationsRepository()
+        $doNotMonitorAtOhDear = $this->getMonitoredScheduledTasks()
             ->getDoNotMonitorAtOhDear($this->event);
         if (! isset($doNotMonitorAtOhDear)) {
             return true;
@@ -170,7 +170,7 @@ abstract class Task
 
     public function graceTimeInMinutes()
     {
-        return $this->getScheduleMonitoringConfigurationsRepository()->getGraceTimeInMinutes($this->event)
+        return $this->getMonitoredScheduledTasks()->getGraceTimeInMinutes($this->event)
             ?? config('schedule-monitor.oh_dear.grace_time_in_minutes', 5);
     }
 

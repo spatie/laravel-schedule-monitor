@@ -6,7 +6,7 @@ use Spatie\ScheduleMonitor\Support\ScheduledTasks\MonitoredScheduledTasks;
 
 trait UsesMonitoredScheduledTasks
 {
-    public function getScheduleMonitoringConfigurationsRepository(): MonitoredScheduledTasks
+    public function getMonitoredScheduledTasks(): MonitoredScheduledTasks
     {
         return app(MonitoredScheduledTasks::class);
     }
