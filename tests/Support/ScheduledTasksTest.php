@@ -34,7 +34,7 @@ it('can get the unique and duplicate tasks from the schedule', function () {
 
 it('can get only the tasks that run in the current environment from the schedule', function () {
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
-        $schedule->command('dummy')->environments('testing'); // current
+        $schedule->command('dummy')->environments(config('app.env', 'testing')); // current
         $schedule->command('other-dummy')->environments('production');
     });
 
