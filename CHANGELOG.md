@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.9.0 - 2025-01-06
+
+### What's Changed
+
+* Store schedule monitoring configurations in its own singleton by @m-bymike in https://github.com/spatie/laravel-schedule-monitor/pull/114
+
+### New Contributors
+
+* @m-bymike made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/114
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.8.2...3.9.0
+
 ## 3.8.2 - 2024-12-16
 
 ### What's Changed
