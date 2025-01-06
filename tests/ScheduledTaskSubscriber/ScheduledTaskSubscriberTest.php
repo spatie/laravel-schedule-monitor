@@ -90,6 +90,7 @@ it('will fire a job and log failures of scheduled tasks', function () {
             ->monitorName('failing-task');
     });
 
+
     $this->artisan(SyncCommand::class)->assertExitCode(0);
     $this->artisan('schedule:run')->assertExitCode(0);
 

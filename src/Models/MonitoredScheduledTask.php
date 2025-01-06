@@ -13,12 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
+use Spatie\ScheduleMonitor\Support\Concerns\UsesMonitoredScheduledTasks;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
 
 class MonitoredScheduledTask extends Model
 {
     use UsesScheduleMonitoringModels;
+    use UsesMonitoredScheduledTasks;
     use HasFactory;
 
     public $guarded = [];
@@ -205,7 +207,7 @@ class MonitoredScheduledTask extends Model
      */
     public function getEventTaskOutput($event): ?string
     {
-        if (! ($event->task->storeOutputInDb ?? false)) {
+        if (! ($this->getMonitoredScheduledTasks()->getStoreOutputInDb($event->task) ?? false)) {
             return null;
         }
 
