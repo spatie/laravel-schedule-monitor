@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.9.2 - 2025-01-17
+
+### What's Changed
+
+* Use explicit nullable type is Task::nextRunAt by @bastien-phi in https://github.com/spatie/laravel-schedule-monitor/pull/117
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.9.1...3.9.2
+
 ## 3.9.1 - 2025-01-17
 
 ### What's Changed
