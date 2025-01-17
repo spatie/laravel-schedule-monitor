@@ -94,14 +94,14 @@ abstract class Task
 
     public function previousRunAt(): CarbonInterface
     {
-        $dateTime = CronExpression::factory($this->cronExpression())->getPreviousRunDate(now());
+        $dateTime = (new CronExpression($this->cronExpression()))->getPreviousRunDate(now());
 
         return Date::instance($dateTime);
     }
 
     public function nextRunAt(CarbonInterface $now = null): CarbonInterface
     {
-        $dateTime = CronExpression::factory($this->cronExpression())->getNextRunDate(
+        $dateTime = (new CronExpression($this->cronExpression()))->getNextRunDate(
             $now ?? now(),
             0,
             false,
