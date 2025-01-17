@@ -99,7 +99,7 @@ abstract class Task
         return Date::instance($dateTime);
     }
 
-    public function nextRunAt(CarbonInterface $now = null): CarbonInterface
+    public function nextRunAt(?CarbonInterface $now = null): CarbonInterface
     {
         $dateTime = (new CronExpression($this->cronExpression()))->getNextRunDate(
             $now ?? now(),
