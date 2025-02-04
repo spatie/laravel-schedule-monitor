@@ -46,7 +46,7 @@ class FakeOhDear extends OhDear
             'server_timezone' => $serverTimezone,
         ];
 
-        $attributes['ping_url'] = 'https://ping.ohdear.app/test-ping-url-' . urlencode($attributes['name']);
+        $attributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url') . '/test-ping-url-' . urlencode($attributes['name']);
 
         $this->syncedCronCheckAttributes[] = $attributes;
 
@@ -74,7 +74,7 @@ class FakeSite extends Site
 
         return collect($cronCheckAttributes)
             ->map(function (array $singleCronCheckAttributes) {
-                $singleCronCheckAttributes['ping_url'] = 'https://ping.ohdear.app/test-ping-url-' . urlencode($singleCronCheckAttributes['name']);
+                $singleCronCheckAttributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url') . '/test-ping-url-' . urlencode($singleCronCheckAttributes['name']);
 
                 return new CronCheck($singleCronCheckAttributes, $this->fakeOhDear);
             })

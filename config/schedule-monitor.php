@@ -81,5 +81,10 @@ return [
          * considered late.
          */
         'grace_time_in_minutes' => 5,
+
+        /**
+         * Which endpoint to ping on Oh Dear.
+         */
+        'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL', 'https://ping.ohdear.app'),
     ],
 ];

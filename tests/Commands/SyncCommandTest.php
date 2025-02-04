@@ -280,3 +280,19 @@ it('will not keep old ping_urls for tasks not being sent to oh dear', function (
 
     expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([]);
 });
+
+it('will support custom ping endpoint urls in ohdear when specified in the config', function () {
+    expect(MonitoredScheduledTask::get())->toHaveCount(0);
+
+    config()->set('schedule-monitor.oh_dear.endpoint_url', 'https://custom-ping.ohdear.app');
+
+    TestKernel::registerScheduledTasks(function (Schedule $schedule) {
+        $schedule->command('dummy')->everyMinute();
+    });
+
+    $this->artisan(SyncCommand::class);
+
+    expect(MonitoredScheduledTask::get())->toHaveCount(1);
+
+    expect(MonitoredScheduledTask::first()->ping_url)->toBeString('https://custom-ping.ohdear.app/test-ping-url-dummy');
+});
