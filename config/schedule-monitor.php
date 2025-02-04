@@ -35,7 +35,7 @@ return [
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
      *
-     * More info: https://ohdear.app/cron-checks
+     * More info: https://ohdear.app/docs/features/cron-job-monitoring
      */
     'oh_dear' => [
         /*
