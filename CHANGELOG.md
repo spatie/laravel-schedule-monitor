@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.10.0 - 2025-02-05
+
+### What's Changed
+
+* Add support for a custom ping endpoint in Oh Dear by @mattiasgeniar in https://github.com/spatie/laravel-schedule-monitor/pull/119
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.9.2...3.10.0
+
 ## 3.9.2 - 2025-01-17
 
 ### What's Changed
