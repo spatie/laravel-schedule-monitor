@@ -27,7 +27,8 @@ class MonitoredScheduledTaskLogItemFactory extends Factory
     {
         return $this->afterMaking(function(MonitoredScheduledTaskLogItem $logItem) {
             $scheduledTask = $logItem->monitoredScheduledTask;
-            $scheduledTask->ping_url = 'https://ping.ohdear.app';
+
+            $scheduledTask->ping_url = config('schedule-monitor.oh_dear.endpoint_url', 'https://ping.ohdear.app');
             $scheduledTask->save();
 
             return $logItem;

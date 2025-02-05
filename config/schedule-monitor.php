@@ -35,7 +35,7 @@ return [
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
      *
-     * More info: https://ohdear.app/cron-checks
+     * More info: https://ohdear.app/docs/features/cron-job-monitoring
      */
     'oh_dear' => [
         /*
@@ -81,5 +81,10 @@ return [
          * considered late.
          */
         'grace_time_in_minutes' => 5,
+
+        /**
+         * Which endpoint to ping on Oh Dear.
+         */
+        'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL', 'https://ping.ohdear.app'),
     ],
 ];
