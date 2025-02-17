@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 2.4.8 - 2025-02-17
+
+### What's Changed
+
+* Update MonitoredScheduledTask.php to get the failed response to be st… by @675076143 in https://github.com/spatie/laravel-schedule-monitor/pull/121
+
+### New Contributors
+
+* @675076143 made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/121
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/2.4.7...2.4.8
+
 ## 3.10.0 - 2025-02-05
 
 ### What's Changed
