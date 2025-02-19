@@ -5,7 +5,8 @@
     grace_time_in_minutes: 5
     description: ''
     server_timezone: UTC
-    ping_url: 'https://ping.ohdear.app/test-ping-url-dummy-2'
+    uuid: test-uuid-5
+    ping_url: 'https://ping.ohdear.app/test-uuid-5'
 -
     name: dummy-3
     type: cron
@@ -13,4 +14,5 @@
     grace_time_in_minutes: 5
     description: ''
     server_timezone: UTC
-    ping_url: 'https://ping.ohdear.app/test-ping-url-dummy-3'
+    uuid: test-uuid-6
+    ping_url: 'https://ping.ohdear.app/test-uuid-6'
