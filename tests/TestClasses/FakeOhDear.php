@@ -2,10 +2,10 @@
 
 namespace Spatie\ScheduleMonitor\Tests\TestClasses;
 
+use Illuminate\Support\Str;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use OhDear\PhpSdk\Resources\Site;
-use Illuminate\Support\Str;
 
 class FakeOhDear extends OhDear
 {
