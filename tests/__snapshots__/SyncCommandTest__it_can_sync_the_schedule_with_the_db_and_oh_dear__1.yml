@@ -5,6 +5,8 @@
     grace_time_in_minutes: 5
     server_timezone: UTC
     description: ''
+    uuid: test-uuid-9
+    ping_url: 'https://ping.ohdear.app/test-uuid-9'
 -
     name: execute
     type: cron
@@ -12,6 +14,8 @@
     grace_time_in_minutes: 5
     server_timezone: UTC
     description: ''
+    uuid: test-uuid-10
+    ping_url: 'https://ping.ohdear.app/test-uuid-10'
 -
     name: my-closure
     type: cron
@@ -19,6 +23,8 @@
     grace_time_in_minutes: 5
     server_timezone: UTC
     description: ''
+    uuid: test-uuid-11
+    ping_url: 'https://ping.ohdear.app/test-uuid-11'
 -
     name: Spatie\ScheduleMonitor\Tests\TestClasses\TestJob
     type: cron
@@ -26,3 +32,5 @@
     grace_time_in_minutes: 5
     server_timezone: Asia/Kolkata
     description: ''
+    uuid: test-uuid-12
+    ping_url: 'https://ping.ohdear.app/test-uuid-12'

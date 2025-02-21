@@ -85,6 +85,11 @@ return [
         /**
          * Which endpoint to ping on Oh Dear.
          */
-        'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL', 'https://ping.ohdear.app'),
+        'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL'),
+
+        /**
+         * The URL of the Oh Dear API.
+         */
+        'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
     ],
 ];

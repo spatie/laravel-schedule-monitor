@@ -5,6 +5,7 @@ namespace Spatie\ScheduleMonitor\Tests\TestClasses;
 use OhDear\PhpSdk\OhDear;
 use OhDear\PhpSdk\Resources\CronCheck;
 use OhDear\PhpSdk\Resources\Site;
+use Illuminate\Support\Str;
 
 class FakeOhDear extends OhDear
 {
@@ -46,7 +47,8 @@ class FakeOhDear extends OhDear
             'server_timezone' => $serverTimezone,
         ];
 
-        $attributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url', 'https://ping.ohdear.app') . '/test-ping-url-' . urlencode($attributes['name']);
+        $attributes['uuid'] = (string) Str::uuid();
+        $attributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url', 'https://ping.ohdear.app') . '/' . $attributes['uuid'];
 
         $this->syncedCronCheckAttributes[] = $attributes;
 
@@ -70,12 +72,18 @@ class FakeSite extends Site
 
     public function syncCronChecks(array $cronCheckAttributes): array
     {
-        $this->fakeOhDear->setSyncedCronCheckAttributes($cronCheckAttributes);
-
-        return collect($cronCheckAttributes)
+        $cronCheckAttributes = collect($cronCheckAttributes)
             ->map(function (array $singleCronCheckAttributes) {
-                $singleCronCheckAttributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url', 'https://ping.ohdear.app') . '/test-ping-url-' . urlencode($singleCronCheckAttributes['name']);
+                $singleCronCheckAttributes['uuid'] = (string) Str::uuid();
+                $singleCronCheckAttributes['ping_url'] = config('schedule-monitor.oh_dear.endpoint_url', 'https://ping.ohdear.app') . '/' . $singleCronCheckAttributes['uuid'];
 
+                return $singleCronCheckAttributes;
+            });
+
+        $this->fakeOhDear->setSyncedCronCheckAttributes($cronCheckAttributes->all());
+
+        return $cronCheckAttributes
+            ->map(function (array $singleCronCheckAttributes) {
                 return new CronCheck($singleCronCheckAttributes, $this->fakeOhDear);
             })
             ->toArray();
