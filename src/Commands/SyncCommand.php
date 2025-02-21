@@ -111,18 +111,21 @@ class SyncCommand extends Command
                         return;
                     }
 
-                    $url = $cronCheck->pingUrl;
-
-                    if ($userDefinedEndpoint = config('schedule-monitor.oh_dear.endpoint_url')) {
-                        $url = rtrim($userDefinedEndpoint, '/') . '/' . $cronCheck->uuid;
-                    }
-
-                    $monitoredScheduledTask->update(['ping_url' => $url]);
+                    $monitoredScheduledTask->update(['ping_url' => $this->pingUrl($cronCheck)]);
                     $monitoredScheduledTask->markAsRegisteredOnOhDear();
                 }
             );
 
         return $this;
+    }
+
+    protected function pingUrl(CronCheck $cronCheck): string
+    {
+        if ($userDefinedEndpoint = config('schedule-monitor.oh_dear.endpoint_url')) {
+            return rtrim($userDefinedEndpoint, '/') . '/' . $cronCheck->uuid;
+        }
+
+        return $cronCheck->pingUrl;
     }
 
     protected function syncMonitoredScheduledTaskWithOhDear(int $siteId): array
