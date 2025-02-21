@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.10.3 - 2025-02-21
+
+### What's Changed
+
+* set default oh dear api url by @resohead in https://github.com/spatie/laravel-schedule-monitor/pull/125
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.10.2...3.10.3
+
 ## 3.10.2 - 2025-02-21
 
 ### What's Changed
