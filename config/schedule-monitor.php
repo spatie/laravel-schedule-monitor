@@ -52,11 +52,6 @@ return [
          */
         'site_id' => env('OH_DEAR_SITE_ID'),
 
-        /**
-         * The URL of the Oh Dear API.
-         */
-        'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
-
         /*
          * To keep scheduled jobs as short as possible, Oh Dear will be pinged
          * via a queued job. Here you can specify the name of the queue you wish to use.
@@ -91,5 +86,10 @@ return [
          * Which endpoint to ping on Oh Dear.
          */
         'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL'),
+
+        /**
+         * The URL of the Oh Dear API.
+         */
+        'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
     ],
 ];
