@@ -14,7 +14,7 @@ beforeEach(function () {
 
 it('can sync the schedule with the db and oh dear', function () {
 
-    createUuidRange(12);
+    useFakeUuids();
 
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
         $schedule->command('dummy')->everyMinute();
@@ -84,7 +84,7 @@ it('can sync the schedule with the db and oh dear', function () {
 });
 
 it('can use the keep old option to non destructively update the schedule with db and oh dear', function () {
-    createUuidRange(6);
+    useFakeUuids();
 
     MonitoredScheduledTask::create([
         'name' => 'dummy-1',
