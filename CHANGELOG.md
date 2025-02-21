@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 3.10.1 - 2025-02-21
+
+### What's Changed
+
+* Laravel 12.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-schedule-monitor/pull/122
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/3.10.0...3.10.1
+
 ## 2.4.8 - 2025-02-17
 
 ### What's Changed
