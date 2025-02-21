@@ -78,7 +78,7 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
         $this->app->bind(OhDear::class, function () {
             $apiToken = config('schedule-monitor.oh_dear.api_token');
 
-            return new OhDear($apiToken, config('schedule-monitor.oh_dear.api_url'));
+            return new OhDear($apiToken, config('schedule-monitor.oh_dear.api_url', 'https://ohdear.app/api/'));
         });
 
         return $this;
