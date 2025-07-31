@@ -92,11 +92,11 @@ return [
         'api_token' => env('OH_DEAR_API_TOKEN', ''),
 
         /*
-         *  The id of the site you want to sync the schedule with.
+         *  The id of the monitor you want to sync the schedule with.
          *
-         * You'll find this id on the settings page of a site at Oh Dear.
+         * You'll find this id on the settings page of a monitor at Oh Dear.
          */
-        'site_id' => env('OH_DEAR_SITE_ID'),
+        'monitor_id' => env('OH_DEAR_MONITOR_ID'),
 
         /*
          * To keep scheduled jobs as short as possible, Oh Dear will be pinged
@@ -252,7 +252,7 @@ To get started you will first need to install the Oh Dear SDK.
 composer require ohdearapp/ohdear-php-sdk
 ```
 
-Next you, need to make sure the `api_token` and `site_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear site id. To verify that these values hold correct values you can run this command.
+Next you, need to make sure the `api_token` and `monitor_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear monitor id. To verify that these values hold correct values you can run this command.
 
 ```bash
 php artisan schedule-monitor:verify

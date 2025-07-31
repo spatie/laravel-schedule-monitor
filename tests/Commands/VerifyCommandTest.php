@@ -15,7 +15,7 @@ it('will throw an exception if the api token is not set', function () {
 });
 
 it('will throw an exception if the site id is not set', function () {
-    config()->set('schedule-monitor.oh_dear.site_id', null);
+    config()->set('schedule-monitor.oh_dear.monitor_id', null);
 
     $this->expectException(Exception::class);
 

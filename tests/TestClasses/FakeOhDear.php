@@ -15,7 +15,7 @@ class FakeOhDear extends OhDear
     {
     }
 
-    public function site(int $siteId): Site
+    public function site(int $monitorId): Site
     {
         return new FakeSite($this);
     }
@@ -31,7 +31,7 @@ class FakeOhDear extends OhDear
     }
 
     public function createCronCheck(
-        int $siteId,
+        int $monitorId,
         string $name,
         string $cronExpression,
         int $graceTimeInMinutes,

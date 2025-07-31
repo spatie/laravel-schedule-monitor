@@ -31,7 +31,7 @@ class TestCase extends Orchestra
         ]);
 
         config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
-        config()->set('schedule-monitor.oh_dear.site_id', 1);
+        config()->set('schedule-monitor.oh_dear.monitor_id', 1);
 
         TestKernel::clearScheduledCommands();
 
@@ -68,7 +68,7 @@ class TestCase extends Orchestra
         ]);
 
         config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
-        config()->set('schedule-monitor.oh_dear.site_id', 1);
+        config()->set('schedule-monitor.oh_dear.monitor_id', 1);
 
         include_once __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub';
         (new CreateScheduleMonitorTables())->up();

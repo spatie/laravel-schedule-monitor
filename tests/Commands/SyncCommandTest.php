@@ -235,7 +235,7 @@ it('will update tasks that have their schedule updated', function () {
 });
 
 it('will not sync with oh dear when no site id is set', function () {
-    config()->set('schedule-monitor.oh_dear.site_id', null);
+    config()->set('schedule-monitor.oh_dear.monitor_id', null);
 
     TestKernel::registerScheduledTasks(function (Schedule $schedule) {
         $schedule->command('dummy')->daily();
