@@ -6,7 +6,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
 use Laravel\Horizon\Horizon;
-use OhDear\PhpSdk\OhDear;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
@@ -71,10 +71,6 @@ class ScheduleMonitorServiceProvider extends PackageServiceProvider
 
     protected function configureOhDearApi(): self
     {
-        if (! class_exists(OhDear::class)) {
-            return $this;
-        }
-
         $this->app->bind(OhDear::class, function () {
             $apiToken = config('schedule-monitor.oh_dear.api_token');
 

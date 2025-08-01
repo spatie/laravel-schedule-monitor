@@ -4,7 +4,7 @@ namespace Spatie\ScheduleMonitor\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use OhDear\PhpSdk\OhDear;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use function Termwind\render;
 
 class VerifyCommand extends Command
@@ -78,7 +78,7 @@ class VerifyCommand extends Command
     {
         $this->comment('Trying to reach Oh Dear...');
 
-        $site = app(OhDear::class)->site($ohDearConfig['monitor_id']);
+        $site = app(OhDear::class)->Monitor($ohDearConfig['monitor_id']);
 
         render(view('schedule-monitor::alert', [
             'message' => "Successfully connected to Oh Dear. The configured site URL is: {$site->sortUrl}",

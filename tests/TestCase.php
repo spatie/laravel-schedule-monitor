@@ -5,7 +5,7 @@ namespace Spatie\ScheduleMonitor\Tests;
 use CreateScheduleMonitorTables;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use OhDear\PhpSdk\OhDear;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider;
 use Spatie\ScheduleMonitor\Tests\TestClasses\FakeOhDear;

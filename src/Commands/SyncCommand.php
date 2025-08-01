@@ -3,8 +3,8 @@
 namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
-use OhDear\PhpSdk\OhDear;
-use OhDear\PhpSdk\Resources\CronCheck;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
+use Spatie\ScheduleMonitor\Support\OhDear\CronCheck;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
@@ -152,7 +152,7 @@ class SyncCommand extends Command
             })
             ->toArray();
 
-        $cronChecks = app(OhDear::class)->site($monitorId)->syncCronChecks($cronChecks);
+        $cronChecks = app(OhDear::class)->Monitor($monitorId)->syncCronChecks($cronChecks);
 
         return $cronChecks;
     }
@@ -172,12 +172,12 @@ class SyncCommand extends Command
         $cronChecks = [];
         foreach ($tasksToRegister as $taskToRegister) {
             $cronChecks[] = app(OhDear::class)->createCronCheck(
-                siteId: $monitorId,
-                name: $taskToRegister->name,
-                cronExpression: $taskToRegister->cron_expression,
-                graceTimeInMinutes: $taskToRegister->grace_time_in_minutes,
-                description: '',
-                serverTimezone: $taskToRegister->timezone,
+                $monitorId,
+                $taskToRegister->name,
+                $taskToRegister->cron_expression,
+                $taskToRegister->grace_time_in_minutes,
+                '',
+                $taskToRegister->timezone,
             );
         }
 
