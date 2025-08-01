@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor\Support\OhDear;
 
+use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
@@ -64,7 +65,7 @@ class OhDear
 
             return $response->json();
         } catch (RequestException $e) {
-            throw new \Exception("Failed to GET {$endpoint}: " . $e->getMessage());
+            throw new Exception("Failed to GET {$endpoint}: " . $e->getMessage());
         }
     }
 
@@ -78,7 +79,7 @@ class OhDear
 
             return $response->json();
         } catch (RequestException $e) {
-            throw new \Exception("Failed to POST {$endpoint}: " . $e->getMessage());
+            throw new Exception("Failed to POST {$endpoint}: " . $e->getMessage());
         }
     }
 }
