@@ -6,7 +6,6 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Event as SchedulerEvent;
 use Illuminate\Support\Facades\Event;
 use Laravel\Horizon\Horizon;
-use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ScheduleMonitor\Commands\ListCommand;
@@ -18,6 +17,7 @@ use Spatie\ScheduleMonitor\Exceptions\InvalidClassException;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\MonitoredScheduledTasks;
 
 class ScheduleMonitorServiceProvider extends PackageServiceProvider

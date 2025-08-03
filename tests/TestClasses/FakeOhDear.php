@@ -3,9 +3,9 @@
 namespace Spatie\ScheduleMonitor\Tests\TestClasses;
 
 use Illuminate\Support\Str;
-use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\ScheduleMonitor\Support\OhDear\CronCheck;
 use Spatie\ScheduleMonitor\Support\OhDear\Monitor;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 
 class FakeOhDear extends OhDear
 {
