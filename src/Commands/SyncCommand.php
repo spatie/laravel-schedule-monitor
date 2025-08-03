@@ -68,10 +68,6 @@ class SyncCommand extends Command
 
     protected function storeMonitoredScheduledTasksInOhDear(): self
     {
-        if (! class_exists(OhDear::class)) {
-            return $this;
-        }
-
         $monitorId = config('schedule-monitor.oh_dear.monitor_id');
 
         if (! $monitorId) {
@@ -152,7 +148,7 @@ class SyncCommand extends Command
             })
             ->toArray();
 
-        $cronChecks = app(OhDear::class)->Monitor($monitorId)->syncCronChecks($cronChecks);
+        $cronChecks = app(OhDear::class)->syncCronChecks($monitorId, $cronChecks);
 
         return $cronChecks;
     }

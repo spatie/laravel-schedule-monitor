@@ -18,7 +18,7 @@ class FakeOhDear extends OhDear
         $this->baseUri = 'https://fake.ohdear.app/api';
     }
 
-    public function Monitor(int $monitorId): Monitor
+    public function monitor(int $monitorId): Monitor
     {
         return new FakeMonitor($this);
     }

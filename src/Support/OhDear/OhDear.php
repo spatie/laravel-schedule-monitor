@@ -19,7 +19,7 @@ class OhDear
         $this->baseUri = rtrim($baseUri, '/');
     }
 
-    public function Monitor(int $monitorId): Monitor
+    public function monitor(int $monitorId): Monitor
     {
         $monitorAttributes = $this->get("monitors/{$monitorId}");
 
@@ -73,12 +73,14 @@ class OhDear
     {
         try {
             $response = Http::withToken($this->apiToken)
+                ->acceptJson()
                 ->post("{$this->baseUri}/{$endpoint}", $data);
-
+            
             $response->throw();
 
+            
             return $response->json();
-        } catch (RequestException $e) {
+        } catch (RequestException $e) {;
             throw new Exception("Failed to POST {$endpoint}: " . $e->getMessage());
         }
     }
