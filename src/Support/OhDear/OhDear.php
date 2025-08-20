@@ -80,7 +80,9 @@ class OhDear
 
             
             return $response->json();
-        } catch (RequestException $e) {;
+        } catch (RequestException $e) {
+            ;
+
             throw new Exception("Failed to POST {$endpoint}: " . $e->getMessage());
         }
     }
