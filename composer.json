@@ -60,6 +60,9 @@
             "providers": [
                 "Spatie\\ScheduleMonitor\\ScheduleMonitorServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-ohdear-monitor": "4.0.x-dev"
         }
     },
     "minimum-stability": "dev",
