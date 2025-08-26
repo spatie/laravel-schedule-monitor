@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
-use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesMonitoredScheduledTasks;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Support\OhDear\CronCheck;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTaskFactory;
 
 class MonitoredScheduledTask extends Model

@@ -3,10 +3,10 @@
 namespace Spatie\ScheduleMonitor\Commands;
 
 use Illuminate\Console\Command;
-use OhDear\PhpSdk\OhDear;
-use OhDear\PhpSdk\Resources\CronCheck;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Support\Concerns\UsesScheduleMonitoringModels;
+use Spatie\ScheduleMonitor\Support\OhDear\CronCheck;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\ScheduledTasks;
 use Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks\Task;
 use function Termwind\render;
@@ -68,17 +68,13 @@ class SyncCommand extends Command
 
     protected function storeMonitoredScheduledTasksInOhDear(): self
     {
-        if (! class_exists(OhDear::class)) {
-            return $this;
-        }
+        $monitorId = config('schedule-monitor.oh_dear.monitor_id');
 
-        $siteId = config('schedule-monitor.oh_dear.site_id');
-
-        if (! $siteId) {
+        if (! $monitorId) {
             render(view('schedule-monitor::alert', [
                 'message' => <<<HTML
                     <div>
-                        Not syncing schedule with <b class="bg-red-700 text-white px-1">oh dear</b> because not <b class="bg-gray-500 px-1 text-white">site_id</b>
+                        Not syncing schedule with <b class="bg-red-700 text-white px-1">oh dear</b> because not <b class="bg-gray-500 px-1 text-white">monitor_id</b>
                         is not set in the <b class="bg-gray-500 px-1 text-white">oh-dear</b> config file.
                     </div>
                     <div>
@@ -96,8 +92,8 @@ class SyncCommand extends Command
         ]));
 
         $cronChecks = $this->option('keep-old')
-            ? $this->pushMonitoredScheduledTaskToOhDear($siteId)
-            : $this->syncMonitoredScheduledTaskWithOhDear($siteId);
+            ? $this->pushMonitoredScheduledTaskToOhDear($monitorId)
+            : $this->syncMonitoredScheduledTaskWithOhDear($monitorId);
 
         render(view('schedule-monitor::alert', [
             'message' => 'Successfully synced schedule with Oh Dear!',
@@ -128,7 +124,7 @@ class SyncCommand extends Command
         return $cronCheck->pingUrl;
     }
 
-    protected function syncMonitoredScheduledTaskWithOhDear(int $siteId): array
+    protected function syncMonitoredScheduledTaskWithOhDear(int $monitorId): array
     {
         $monitoredScheduledTasks = $this->getMonitoredScheduleTaskModel()
             ->whereIn(
@@ -152,12 +148,12 @@ class SyncCommand extends Command
             })
             ->toArray();
 
-        $cronChecks = app(OhDear::class)->site($siteId)->syncCronChecks($cronChecks);
+        $cronChecks = app(OhDear::class)->syncCronChecks($monitorId, $cronChecks);
 
         return $cronChecks;
     }
 
-    protected function pushMonitoredScheduledTaskToOhDear(int $siteId): array
+    protected function pushMonitoredScheduledTaskToOhDear(int $monitorId): array
     {
         $tasksToRegister = $this->getMonitoredScheduleTaskModel()
             ->whereNull('registered_on_oh_dear_at')
@@ -172,12 +168,12 @@ class SyncCommand extends Command
         $cronChecks = [];
         foreach ($tasksToRegister as $taskToRegister) {
             $cronChecks[] = app(OhDear::class)->createCronCheck(
-                siteId: $siteId,
-                name: $taskToRegister->name,
-                cronExpression: $taskToRegister->cron_expression,
-                graceTimeInMinutes: $taskToRegister->grace_time_in_minutes,
-                description: '',
-                serverTimezone: $taskToRegister->timezone,
+                $monitorId,
+                $taskToRegister->name,
+                $taskToRegister->cron_expression,
+                $taskToRegister->grace_time_in_minutes,
+                '',
+                $taskToRegister->timezone,
             );
         }
 

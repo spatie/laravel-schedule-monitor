@@ -25,16 +25,12 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.4",
-        "ohdearapp/ohdear-php-sdk": "^3.0",
         "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
         "pestphp/pest": "^1.20|^2.34|^3.7",
         "pestphp/pest-plugin-laravel": "^1.2|^2.3|^3.1",
         "spatie/pest-plugin-snapshots": "^1.1|^2.1",
         "spatie/phpunit-snapshot-assertions": "^4.2|^5.1",
         "spatie/test-time": "^1.2"
-    },
-    "suggest": {
-        "ohdearapp/ohdear-php-sdk": "Needed to sync your schedule with Oh Dear"
     },
     "autoload": {
         "psr-4": {
@@ -64,6 +60,9 @@
             "providers": [
                 "Spatie\\ScheduleMonitor\\ScheduleMonitorServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-ohdear-monitor": "4.0.x-dev"
         }
     },
     "minimum-stability": "dev",

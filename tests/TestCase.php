@@ -5,9 +5,9 @@ namespace Spatie\ScheduleMonitor\Tests;
 use CreateScheduleMonitorTables;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use OhDear\PhpSdk\OhDear;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\ScheduleMonitor\ScheduleMonitorServiceProvider;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 use Spatie\ScheduleMonitor\Tests\TestClasses\FakeOhDear;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -31,7 +31,7 @@ class TestCase extends Orchestra
         ]);
 
         config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
-        config()->set('schedule-monitor.oh_dear.site_id', 1);
+        config()->set('schedule-monitor.oh_dear.monitor_id', 1);
 
         TestKernel::clearScheduledCommands();
 
@@ -68,7 +68,7 @@ class TestCase extends Orchestra
         ]);
 
         config()->set('schedule-monitor.oh_dear.api_token', 'oh-dear-test-token');
-        config()->set('schedule-monitor.oh_dear.site_id', 1);
+        config()->set('schedule-monitor.oh_dear.monitor_id', 1);
 
         include_once __DIR__ . '/../database/migrations/create_schedule_monitor_tables.php.stub';
         (new CreateScheduleMonitorTables())->up();

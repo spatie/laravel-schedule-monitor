@@ -38,7 +38,7 @@ class ListCommand extends Command
             return false;
         }
 
-        if (empty(config('schedule-monitor.oh_dear.site_id'))) {
+        if (empty(config('schedule-monitor.oh_dear.monitor_id'))) {
             return false;
         }
 

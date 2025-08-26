@@ -3,9 +3,9 @@
 namespace Spatie\ScheduleMonitor\Tests\TestClasses;
 
 use Illuminate\Support\Str;
-use OhDear\PhpSdk\OhDear;
-use OhDear\PhpSdk\Resources\CronCheck;
-use OhDear\PhpSdk\Resources\Site;
+use Spatie\ScheduleMonitor\Support\OhDear\CronCheck;
+use Spatie\ScheduleMonitor\Support\OhDear\Monitor;
+use Spatie\ScheduleMonitor\Support\OhDear\OhDear;
 
 class FakeOhDear extends OhDear
 {
@@ -13,11 +13,14 @@ class FakeOhDear extends OhDear
 
     public function __construct()
     {
+        // Skip parent constructor for fake implementation
+        $this->apiToken = 'fake-token';
+        $this->baseUri = 'https://fake.ohdear.app/api';
     }
 
-    public function site(int $siteId): Site
+    public function monitor(int $monitorId): Monitor
     {
-        return new FakeSite($this);
+        return new FakeMonitor($this);
     }
 
     public function setSyncedCronCheckAttributes(array $cronCheckAttributes)
@@ -31,7 +34,7 @@ class FakeOhDear extends OhDear
     }
 
     public function createCronCheck(
-        int $siteId,
+        int $monitorId,
         string $name,
         string $cronExpression,
         int $graceTimeInMinutes,
@@ -56,7 +59,7 @@ class FakeOhDear extends OhDear
     }
 }
 
-class FakeSite extends Site
+class FakeMonitor extends Monitor
 {
     public FakeOhDear $fakeOhDear;
 
@@ -67,7 +70,7 @@ class FakeSite extends Site
         parent::__construct([
             'sort_url' => 'example.com',
             'checks' => [],
-        ]);
+        ], $fakeOhDear);
     }
 
     public function syncCronChecks(array $cronCheckAttributes): array

@@ -46,11 +46,11 @@ return [
         'api_token' => env('OH_DEAR_API_TOKEN', ''),
 
         /*
-         *  The id of the site you want to sync the schedule with.
+         *  The id of the monitor you want to sync the schedule with.
          *
-         * You'll find this id on the settings page of a site at Oh Dear.
+         * You'll find this id on the settings page of a monitor at Oh Dear.
          */
-        'site_id' => env('OH_DEAR_SITE_ID'),
+        'monitor_id' => env('OH_DEAR_MONITOR_ID'),
 
         /*
          * To keep scheduled jobs as short as possible, Oh Dear will be pinged
