@@ -19,11 +19,9 @@ class OhDear
         $this->baseUri = rtrim($baseUri, '/');
     }
 
-    public function monitor(int $monitorId): Monitor
+    public function monitor(int $monitorId): ?array
     {
-        $monitorAttributes = $this->get("monitors/{$monitorId}");
-
-        return new Monitor($monitorAttributes, $this);
+        return $this->get("monitors/{$monitorId}");
     }
 
     public function createCronCheck(
@@ -75,10 +73,10 @@ class OhDear
             $response = Http::withToken($this->apiToken)
                 ->acceptJson()
                 ->post("{$this->baseUri}/{$endpoint}", $data);
-            
+
             $response->throw();
 
-            
+
             return $response->json();
         } catch (RequestException $e) {
             ;
