@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 4.0.1 - 2025-08-27
+
+### What's Changed
+
+* Fix verify command by @freekmurze in https://github.com/spatie/laravel-schedule-monitor/pull/132
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/4.0.0...4.0.1
+
 ## 4.0.0 - 2025-08-26
 
 ### What's Changed
