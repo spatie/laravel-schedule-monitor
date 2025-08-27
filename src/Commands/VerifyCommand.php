@@ -81,7 +81,7 @@ class VerifyCommand extends Command
         $monitor = app(OhDear::class)->monitor($ohDearConfig['monitor_id']);
 
         render(view('schedule-monitor::alert', [
-            'message' => "Successfully connected to Oh Dear. The configured monitor URL is: {$monitor->sortUrl}",
+            'message' => "Successfully connected to Oh Dear. The configured monitor URL is: {$monitor['sort_url']}",
         ]));
 
         return $this;
