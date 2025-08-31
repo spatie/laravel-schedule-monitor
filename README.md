@@ -246,13 +246,7 @@ Without it, the `PingOhDearJob` will fail as no tenant will be set.
 
 This package can sync your schedule with the [Oh Dear](https://ohdear.app) cron check. Oh Dear will send you a notification whenever a scheduled task does not finish on time.
 
-To get started you will first need to install the Oh Dear SDK.
-
-```bash
-composer require ohdearapp/ohdear-php-sdk
-```
-
-Next you, need to make sure the `api_token` and `monitor_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear monitor id. To verify that these values hold correct values you can run this command.
+You eed to make sure the `api_token` and `monitor_id` keys of the `schedule-monitor` are filled with an API token, and an Oh Dear monitor id. To verify that these values hold correct values you can run this command.
 
 ```bash
 php artisan schedule-monitor:verify
