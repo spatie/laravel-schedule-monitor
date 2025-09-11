@@ -59,6 +59,11 @@ return [
         'queue' => env('OH_DEAR_QUEUE'),
 
         /*
+         * The job class that will be dispatched to ping Oh Dear.
+         */
+        'ping_oh_dear_job' => Spatie\ScheduleMonitor\Jobs\PingOhDearJob::class,
+
+        /*
          * `PingOhDearJob`s will automatically be skipped if they've been queued for
          * longer than the time configured here.
          */

@@ -294,6 +294,33 @@ protected function schedule(Schedule $schedule)
 }
 ```
 
+### Customizing the Oh Dear ping job
+
+By default, the package dispatches `Spatie\ScheduleMonitor\Jobs\PingOhDearJob` to send pings to Oh Dear. You can customize this job class.
+
+To use a custom job class, update the `ping_oh_dear_job` configuration in your `config/schedule-monitor.php` file:
+
+```php
+'oh_dear' => [
+    // ...
+    'ping_oh_dear_job' => \App\Jobs\CustomPingOhDearJob::class,
+],
+```
+
+Do make sure your custom job class extends `Spatie\ScheduleMonitor\Jobs\PingOhDearJob` to retain the original functionality. Here's an example of a custom job class:
+
+```php
+namespace App\Jobs;
+
+use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
+
+class CustomPingOhDearJob extends PingOhDearJob
+{
+    // your implementation
+}
+```
+
 ## Unsupported methods
 
 Currently, this package does not work for tasks that use these methods:
