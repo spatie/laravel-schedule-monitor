@@ -1,21 +1,12 @@
 <?php
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Client\Request;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
-use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Tests\TestClasses\CustomPingOhDearJob;
 use Spatie\TestTime\TestTime;
-
-
 
 beforeEach(function () {
     TestTime::freeze('Y-m-d H:i:s', '2020-01-01 00:00:00');
