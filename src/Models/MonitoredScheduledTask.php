@@ -190,7 +190,7 @@ class MonitoredScheduledTask extends Model
             return $this;
         }
 
-        $jobClass = config('schedule-monitor.oh_dear.ping_oh_dear_job', PingOhDearJob::class);
+        $jobClass = config('schedule-monitor.oh_dear.ping_oh_dear_job') ?: PingOhDearJob::class;
 
         dispatch(new $jobClass($logItem));
 
