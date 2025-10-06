@@ -53,7 +53,7 @@ return [
      * Here you can specify the amount of days log items should be kept.
      *
      * Use Laravel's pruning command to delete old `MonitoredScheduledTaskLogItem` models.
-     * More info: https://laravel.com/docs/9.x/eloquent#mass-assignment
+     * More info: https://laravel.com/docs/11.x/eloquent#pruning-models
      */
     'delete_log_items_older_than_days' => 30,
 
@@ -81,7 +81,7 @@ return [
      * Oh Dear can notify you via Mail, Slack, SMS, web hooks, ... when a
      * scheduled task does not run on time.
      *
-     * More info: https://ohdear.app/cron-checks
+     * More info: https://ohdear.app/docs/features/cron-job-monitoring
      */
     'oh_dear' => [
         /*
@@ -105,10 +105,43 @@ return [
         'queue' => env('OH_DEAR_QUEUE'),
 
         /*
+         * The job class that will be dispatched to ping Oh Dear.
+         */
+        'ping_oh_dear_job' => Spatie\ScheduleMonitor\Jobs\PingOhDearJob::class,
+
+        /*
          * `PingOhDearJob`s will automatically be skipped if they've been queued for
          * longer than the time configured here.
          */
         'retry_job_for_minutes' => 10,
+
+        /*
+         * When set to true, we will automatically add the `PingOhDearJob` to Horizon's
+         * silenced jobs.
+         */
+        'silence_ping_oh_dear_job_in_horizon' => true,
+
+        /*
+         * Send the start of a scheduled job to Oh Dear. This is not needed
+         * for notifications to work correctly.
+         */
+        'send_starting_ping' => env('OH_DEAR_SEND_STARTING_PING', false),
+
+        /**
+         * The amount of minutes a scheduled task is allowed to run before it is
+         * considered late.
+         */
+        'grace_time_in_minutes' => 5,
+
+        /**
+         * Which endpoint to ping on Oh Dear.
+         */
+        'endpoint_url' => env('OH_DEAR_PING_ENDPOINT_URL'),
+
+        /**
+         * The URL of the Oh Dear API.
+         */
+        'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
     ],
 ];
 ```
