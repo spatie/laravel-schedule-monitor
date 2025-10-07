@@ -8,7 +8,6 @@ use Spatie\ScheduleMonitor\Jobs\PingOhDearJob;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Tests\TestClasses\FailingCommand;
-use Spatie\ScheduleMonitor\Tests\TestClasses\SuccessCommand;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
 use Spatie\TestTime\TestTime;
 
@@ -322,7 +321,9 @@ it('extracts exception message from background task output', function () {
     File::ensureDirectoryExists(dirname($outputFile));
 
     // Simulate real Laravel exception output format
-    File::put($outputFile, <<<'OUTPUT'
+    File::put(
+        $outputFile,
+        <<<'OUTPUT'
 Starting failed command...
 
    RuntimeException
