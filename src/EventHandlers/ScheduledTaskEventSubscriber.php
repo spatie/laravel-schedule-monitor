@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor\EventHandlers;
 
+use Illuminate\Console\Events\ScheduledBackgroundTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskFailed;
 use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskSkipped;
@@ -33,6 +34,11 @@ class ScheduledTaskEventSubscriber
         $events->listen(
             ScheduledTaskSkipped::class,
             fn (ScheduledTaskSkipped $event) => optional($this->getMonitoredScheduleTaskModel()->findForTask($event->task))->markAsSkipped($event)
+        );
+
+        $events->listen(
+            ScheduledBackgroundTaskFinished::class,
+            fn (ScheduledBackgroundTaskFinished $event) => optional($this->getMonitoredScheduleTaskModel()->findForTask($event->task))->markAsBackgroundTaskFinished($event)
         );
     }
 }
