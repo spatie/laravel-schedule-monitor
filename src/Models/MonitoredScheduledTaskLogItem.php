@@ -33,7 +33,7 @@ class MonitoredScheduledTaskLogItem extends Model
 
     public function updateMeta(array $values): self
     {
-        $this->update(['meta' => $values]);
+        $this->update(['meta' => array_merge($this->meta ?? [], $values)]);
 
         return $this;
     }

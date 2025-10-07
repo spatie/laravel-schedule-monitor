@@ -2,6 +2,7 @@
 
 namespace Spatie\ScheduleMonitor\Models;
 
+use Illuminate\Console\Events\ScheduledBackgroundTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskFailed;
 use Illuminate\Console\Events\ScheduledTaskFinished;
 use Illuminate\Console\Events\ScheduledTaskSkipped;
@@ -143,11 +144,28 @@ class MonitoredScheduledTask extends Model
      */
     public function markAsFailed($event): self
     {
-        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED);
+        // Check if we already created a failed log for this exact task execution
+        // Both ScheduledTaskFinished and ScheduledTaskFailed reference the same task object
+        // when they fire for the same failure in Laravel 12
+        $logItem = null;
+
+        // Check if we've already marked this specific task object execution as failed
+        if (property_exists($event->task, '_scheduleMonitorFailedLogId')) {
+            $logItem = $this->logItems()->find($event->task->_scheduleMonitorFailedLogId);
+        }
+
+        // If no existing log found, create a new one and mark the task object
+        if (! $logItem) {
+            $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED);
+            // Store the log ID on the task object to prevent duplicate logs
+            $event->task->_scheduleMonitorFailedLogId = $logItem->id;
+        }
 
         if ($event instanceof ScheduledTaskFailed) {
             $logItem->updateMeta([
                 'failure_message' => Str::limit(optional($event->exception)->getMessage(), 255),
+                'exit_code' => $event->task->exitCode,
+                'exception_class' => $event->exception ? get_class($event->exception) : null,
             ]);
         }
 
@@ -174,6 +192,82 @@ class MonitoredScheduledTask extends Model
         $this->update(['last_skipped_at' => now()]);
 
         return $this;
+    }
+
+    public function markAsBackgroundTaskFinished($event): self
+    {
+        // For background tasks, exitCode is available in ScheduledBackgroundTaskFinished event
+        if ($event->task->exitCode === 0) {
+            return $this->markBackgroundTaskAsFinished($event);
+        }
+
+        return $this->markBackgroundTaskAsFailed($event);
+    }
+
+    protected function markBackgroundTaskAsFinished($event): self
+    {
+        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FINISHED);
+
+        $logItem->updateMeta([
+            'exit_code' => $event->task->exitCode,
+            'output' => $this->getBackgroundTaskOutput($event->task),
+        ]);
+
+        $this->update(['last_finished_at' => now()]);
+
+        $this->pingOhDear($logItem);
+
+        return $this;
+    }
+
+    protected function markBackgroundTaskAsFailed($event): self
+    {
+        $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED);
+
+        $output = $this->getBackgroundTaskOutput($event->task);
+
+        $meta = [
+            'exit_code' => $event->task->exitCode,
+            'output' => $output,
+        ];
+
+        // Try to extract exception message from output
+        if ($output && preg_match('/Exception: (.+?)(?:\n|$)/i', $output, $matches)) {
+            $meta['failure_message'] = Str::limit($matches[1], 255);
+        } elseif ($output && preg_match('/Error: (.+?)(?:\n|$)/i', $output, $matches)) {
+            $meta['failure_message'] = Str::limit($matches[1], 255);
+        } elseif ($output) {
+            // Use last non-empty line as failure message
+            $lines = array_filter(explode("\n", trim($output)));
+            $meta['failure_message'] = Str::limit(end($lines), 255);
+        }
+
+        $logItem->updateMeta($meta);
+
+        $this->update(['last_failed_at' => now()]);
+
+        $this->pingOhDear($logItem);
+
+        return $this;
+    }
+
+    protected function getBackgroundTaskOutput($task): ?string
+    {
+        if (is_null($task->output)) {
+            return null;
+        }
+
+        if ($task->output === $task->getDefaultOutput()) {
+            return null;
+        }
+
+        if (! is_file($task->output)) {
+            return null;
+        }
+
+        $output = file_get_contents($task->output);
+
+        return $output ?: null;
     }
 
     public function pingOhDear(MonitoredScheduledTaskLogItem $logItem): self
