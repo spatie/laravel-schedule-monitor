@@ -204,11 +204,8 @@ it('stores exception message in meta field for call() with exception', function 
     $task = MonitoredScheduledTask::findByName('failing-call-task');
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->first();
 
-    expect($logItem->meta)->toHaveKey('failure_message');
     expect($logItem->meta['failure_message'])->toContain('Call exception message');
-    expect($logItem->meta)->toHaveKey('exit_code');
     expect($logItem->meta['exit_code'])->toBe(1);
-    expect($logItem->meta)->toHaveKey('exception_class');
     expect($logItem->meta['exception_class'])->toBe(Exception::class);
 });
 
@@ -225,10 +222,7 @@ it('stores exception message in meta field for command() with exception', functi
     $task = MonitoredScheduledTask::findByName('failing-command');
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->first();
 
-    expect($logItem->meta)->toHaveKey('failure_message');
-    expect($logItem->meta)->toHaveKey('exit_code');
     expect($logItem->meta['exit_code'])->toBe(1);
-    expect($logItem->meta)->toHaveKey('runtime');
     expect($logItem->meta['runtime'])->toBeGreaterThan(0);
 
     // If exception was captured, expect actual exception message
@@ -261,9 +255,7 @@ it('handles ScheduledBackgroundTaskFinished for failed tasks', function () {
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->first();
 
     expect($logItem)->not->toBeNull();
-    expect($logItem->meta)->toHaveKey('exit_code');
     expect($logItem->meta['exit_code'])->toBe(1);
-    expect($logItem->meta)->toHaveKey('failure_message');
     expect($logItem->meta['failure_message'])->toContain('Background task failed');
     expect($task->last_failed_at)->not->toBeNull();
 
@@ -289,9 +281,7 @@ it('handles ScheduledBackgroundTaskFinished for successful tasks', function () {
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FINISHED)->first();
 
     expect($logItem)->not->toBeNull();
-    expect($logItem->meta)->toHaveKey('exit_code');
     expect($logItem->meta['exit_code'])->toBe(0);
-    expect($logItem->meta)->toHaveKey('output');
     expect($logItem->meta['output'])->toContain('Command executed successfully');
     expect($task->last_finished_at)->not->toBeNull();
 
@@ -318,7 +308,6 @@ it('does not create duplicate failed logs when both events fire', function () {
     $failedLog = $failedLogs->first();
     expect($failedLog->meta)->toHaveKey('failure_message');
     expect($failedLog->meta)->toHaveKey('runtime'); // From ScheduledTaskFinished
-    expect($failedLog->meta)->toHaveKey('exit_code');
     expect($failedLog->meta['exit_code'])->toBe(1);
 
     // Laravel 12+ may have exception_class from ScheduledTaskFailed event
@@ -358,7 +347,6 @@ OUTPUT
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->first();
 
     expect($logItem)->not->toBeNull();
-    expect($logItem->meta)->toHaveKey('failure_message');
     // The regex will pick up text from the output, even if not in perfect Exception: format
     expect($logItem->meta['failure_message'])->not->toBeEmpty();
 
