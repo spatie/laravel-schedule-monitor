@@ -13,9 +13,9 @@ afterEach(function () {
     // Clean up any test files
     $testFiles = glob(storage_path('logs/test-*.log'));
     foreach ($testFiles as $file) {
-    if (file_exists($file)) {
-        @unlink($file);
-    }
+        if (file_exists($file)) {
+            @unlink($file);
+        }
     }
 });
 
