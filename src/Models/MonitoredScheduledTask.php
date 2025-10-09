@@ -207,6 +207,7 @@ class MonitoredScheduledTask extends Model
             // In Laravel 12+, ScheduledTaskFailed will fire after this
             // In Laravel 9-11, ScheduledTaskFailed won't fire
             $laravelVersion = app()->version();
+
             return version_compare($laravelVersion, '12.0', '<');
         }
 
