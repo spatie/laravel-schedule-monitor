@@ -136,84 +136,31 @@ class MonitoredScheduledTask extends Model
     }
 
     /**
-     * @param ScheduledTaskFailed|ScheduledTaskFinished $event
+     * Mark a task as failed and create/update log item.
      *
+     * Handles dual-event scenario in Laravel 12 where both ScheduledTaskFinished
+     * and ScheduledTaskFailed fire for the same failure.
+     *
+     * @param ScheduledTaskFailed|ScheduledTaskFinished $event
      * @return $this
      */
     public function markAsFailed($event): self
     {
-        // Check if we already created a failed log for this exact task execution
-        // Both ScheduledTaskFinished and ScheduledTaskFailed reference the same task object
-        // when they fire for the same failure in Laravel 12
-        $logItem = null;
+        // Check if we already have a log from a previous event
+        $logItem = $this->findExistingFailedLog($event->task);
 
-        // Check if we've already marked this specific task object execution as failed
-        if (property_exists($event->task, '_scheduleMonitorFailedLogId')) {
-            $logItem = $this->logItems()->find($event->task->_scheduleMonitorFailedLogId);
-        }
-
-        // If no existing log found, create a new one with initial metadata
-        if (! $logItem) {
-            $initialMeta = [];
-
-            // Build initial metadata based on event type
-            if ($event instanceof ScheduledTaskFailed) {
-                $initialMeta['exit_code'] = $event->task->exitCode;
-
-                // Only set exception details if exception exists
-                // If exception is NULL, leave failure_message unset so ScheduledTaskFinished can provide fallback
-                if ($event->exception) {
-                    $initialMeta['failure_message'] = Str::limit($event->exception->getMessage(), 252);
-                    $initialMeta['exception_class'] = get_class($event->exception);
-                }
-            } elseif ($event instanceof ScheduledTaskFinished) {
-                $initialMeta = [
-                    'runtime' => $event->runtime,
-                    'exit_code' => $event->task->exitCode,
-                    'memory' => memory_get_usage(true),
-                    'output' => $this->getEventTaskOutput($event),
-                    'failure_message' => $this->extractFailureMessageFromTask($event->task),
-                ];
-            }
-
-            $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED, $initialMeta);
-
-            // Store the log ID on the task object to prevent duplicate logs
-            $event->task->_scheduleMonitorFailedLogId = $logItem->id;
-
-            // Update task timestamp only on first event
-            $this->update(['last_failed_at' => now()]);
-        } else {
-            // Second event: merge additional metadata without recreating the log
-            if ($event instanceof ScheduledTaskFailed) {
-                $meta = [
-                    'exit_code' => $event->task->exitCode,
-                ];
-
-                // Only set exception details if exception exists
-                if ($event->exception) {
-                    $meta['failure_message'] = Str::limit($event->exception->getMessage(), 252);
-                    $meta['exception_class'] = get_class($event->exception);
-                }
-            } elseif ($event instanceof ScheduledTaskFinished) {
-                $meta = [
-                    'runtime' => $event->runtime,
-                    'exit_code' => $event->task->exitCode,
-                    'memory' => memory_get_usage(true),
-                    'output' => $this->getEventTaskOutput($event),
-                ];
-
-                // Extract failure message if not already set by ScheduledTaskFailed event
-                if (! isset($logItem->meta['failure_message'])) {
-                    $meta['failure_message'] = $this->extractFailureMessageFromTask($event->task);
-                }
-            }
-
+        if ($logItem) {
+            // Second event: merge additional metadata
+            $meta = $this->buildFailureMetadata($event, $logItem->meta);
             $logItem->updateMeta($meta);
-
-            // DON'T update task timestamp on second event (already set)
+        } else {
+            // First event: create log with metadata and update timestamp
+            $meta = $this->buildFailureMetadata($event);
+            $logItem = $this->createFailedLogItem($event, $meta);
+            $this->update(['last_failed_at' => now()]);
         }
 
+        // Ping OhDear if this is the final event
         if ($this->shouldPing($event)) {
             $this->pingOhDear($logItem);
         }
@@ -234,7 +181,7 @@ class MonitoredScheduledTask extends Model
      * Laravel 9-11: ScheduledTaskFailed doesn't fire for exit code failures, only ScheduledTaskFinished
      *
      * Therefore:
-     * - ScheduledTaskFailed: Always ping (terminal event with complete metadata)
+     * - ScheduledTaskFailed: Always ping (final event with complete metadata)
      * - ScheduledTaskFinished:
      *   - Background tasks: ping (ScheduledTaskFailed never fires for background tasks)
      *   - Non-background in Laravel 12+: skip ping (ScheduledTaskFailed will follow)
@@ -246,7 +193,7 @@ class MonitoredScheduledTask extends Model
     private function shouldPing($event): bool
     {
         if ($event instanceof ScheduledTaskFailed) {
-            // ScheduledTaskFailed is the terminal event, always ping
+            // ScheduledTaskFailed is the final event, always ping
             return true;
         }
 
@@ -264,6 +211,81 @@ class MonitoredScheduledTask extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Build failure metadata for the given event.
+     *
+     * @param ScheduledTaskFailed|ScheduledTaskFinished $event
+     * @param array|null $existingMeta Existing metadata to check for failure_message
+     * @return array
+     */
+    private function buildFailureMetadata($event, ?array $existingMeta = null): array
+    {
+        if ($event instanceof ScheduledTaskFailed) {
+            $meta = ['exit_code' => $event->task->exitCode];
+
+            // Only set exception details if exception exists
+            if ($event->exception) {
+                $meta['failure_message'] = Str::limit($event->exception->getMessage(), 252);
+                $meta['exception_class'] = get_class($event->exception);
+            }
+
+            return $meta;
+        }
+
+        if ($event instanceof ScheduledTaskFinished) {
+            $meta = [
+                'runtime' => $event->runtime,
+                'exit_code' => $event->task->exitCode,
+                'memory' => memory_get_usage(true),
+                'output' => $this->getEventTaskOutput($event),
+            ];
+
+            // Extract failure message if not already set
+            if (! isset($existingMeta['failure_message'])) {
+                $meta['failure_message'] = $this->extractFailureMessageFromTask($event->task);
+            }
+
+            return $meta;
+        }
+
+        return [];
+    }
+
+    /**
+     * Find existing failed log item for this task execution.
+     *
+     * @param mixed $task
+     * @return MonitoredScheduledTaskLogItem|null
+     */
+    private function findExistingFailedLog($task): ?MonitoredScheduledTaskLogItem
+    {
+        if (! property_exists($task, '_scheduleMonitorFailedLogId')) {
+            return null;
+        }
+
+        return $this->logItems()->find($task->_scheduleMonitorFailedLogId);
+    }
+
+    /**
+     * Create a new failed log item and mark the task object to prevent duplicates.
+     *
+     * @param ScheduledTaskFailed|ScheduledTaskFinished $event
+     * @param array $meta
+     * @return MonitoredScheduledTaskLogItem
+     */
+    private function createFailedLogItem($event, array $meta): MonitoredScheduledTaskLogItem
+    {
+        $logItem = $this->createLogItem(
+            $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED,
+            $meta
+        );
+
+        // Store the log ID on the task object to prevent duplicate logs
+        $event->task->_scheduleMonitorFailedLogId = $logItem->id;
+
+        return $logItem;
     }
 
     /**
