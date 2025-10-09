@@ -195,7 +195,41 @@ class MonitoredScheduledTask extends Model
 
         $this->update(['last_failed_at' => now()]);
 
-        $this->pingOhDear($logItem);
+        // Ping strategy to avoid duplicate pings:
+        // Event firing order in Laravel 12+ for NON-BACKGROUND failed tasks:
+        //   1. ScheduledTaskFinished fires FIRST (exitCode != 0)
+        //   2. ScheduledTaskFailed fires SECOND (in catch block with exception)
+        //
+        // Background tasks NEVER fire ScheduledTaskFailed (use ScheduledBackgroundTaskFinished instead)
+        // Laravel 9-11: ScheduledTaskFailed doesn't fire for exit code failures, only ScheduledTaskFinished
+        //
+        // Therefore:
+        // - ScheduledTaskFailed: Always ping (terminal event with complete metadata)
+        // - ScheduledTaskFinished:
+        //   - Background tasks: ping (ScheduledTaskFailed never fires for background tasks)
+        //   - Non-background in Laravel 12+: skip ping (ScheduledTaskFailed will follow)
+        //   - Non-background in Laravel 9-11: ping (ScheduledTaskFailed doesn't fire)
+        $shouldPing = false;
+
+        if ($event instanceof ScheduledTaskFailed) {
+            // ScheduledTaskFailed is the terminal event, always ping
+            $shouldPing = true;
+        } elseif ($event instanceof ScheduledTaskFinished) {
+            if ($event->task->runInBackground) {
+                // Background tasks: ScheduledTaskFailed won't fire even in Laravel 12
+                $shouldPing = true;
+            } else {
+                // Non-background tasks: check Laravel version
+                // In Laravel 12+, ScheduledTaskFailed will fire after this
+                // In Laravel 9-11, ScheduledTaskFailed won't fire
+                $laravelVersion = app()->version();
+                $shouldPing = version_compare($laravelVersion, '12.0', '<');
+            }
+        }
+
+        if ($shouldPing) {
+            $this->pingOhDear($logItem);
+        }
 
         return $this;
     }
