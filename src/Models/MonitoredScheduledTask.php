@@ -162,11 +162,18 @@ class MonitoredScheduledTask extends Model
         }
 
         if ($event instanceof ScheduledTaskFailed) {
-            $logItem->updateMeta([
-                'failure_message' => Str::limit(optional($event->exception)->getMessage(), 252),
+            $meta = [
                 'exit_code' => $event->task->exitCode,
-                'exception_class' => $event->exception ? get_class($event->exception) : null,
-            ]);
+            ];
+
+            // Only set exception details if exception exists
+            // If exception is NULL, leave failure_message unset so ScheduledTaskFinished can provide fallback
+            if ($event->exception) {
+                $meta['failure_message'] = Str::limit($event->exception->getMessage(), 252);
+                $meta['exception_class'] = get_class($event->exception);
+            }
+
+            $logItem->updateMeta($meta);
         }
 
         if ($event instanceof ScheduledTaskFinished) {
