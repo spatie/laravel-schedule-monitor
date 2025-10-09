@@ -227,7 +227,18 @@ it('stores exception message in meta field for command() with exception', functi
     $logItem = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->first();
 
     expect($logItem->meta)->toHaveKey('failure_message');
-    expect($logItem->meta['failure_message'])->toContain('failing');
+
+    // Laravel 12+ fires ScheduledTaskFailed with actual exception message
+    // Laravel 9/10/11 only fires ScheduledTaskFinished, so we get fallback message
+    $laravelVersion = app()->version();
+    if (version_compare($laravelVersion, '12.0', '>=')) {
+        expect($logItem->meta['failure_message'])->toContain('failing');
+        expect($logItem->meta)->toHaveKey('exception_class');
+    } else {
+        // Laravel 9/10/11: fallback message
+        expect($logItem->meta['failure_message'])->toContain('exit code 1');
+    }
+
     expect($logItem->meta)->toHaveKey('exit_code');
     expect($logItem->meta['exit_code'])->toBe(1);
     expect($logItem->meta)->toHaveKey('runtime');
@@ -306,13 +317,18 @@ it('does not create duplicate failed logs when both events fire', function () {
     $failedLogs = $task->logItems()->where('type', MonitoredScheduledTaskLogItem::TYPE_FAILED)->get();
     expect($failedLogs)->toHaveCount(1);
 
-    // The single failed log should have metadata from BOTH events merged
+    // The single failed log should have metadata
     $failedLog = $failedLogs->first();
-    expect($failedLog->meta)->toHaveKey('failure_message'); // From ScheduledTaskFailed
-    expect($failedLog->meta)->toHaveKey('exception_class'); // From ScheduledTaskFailed
+    expect($failedLog->meta)->toHaveKey('failure_message');
     expect($failedLog->meta)->toHaveKey('runtime'); // From ScheduledTaskFinished
     expect($failedLog->meta)->toHaveKey('exit_code');
     expect($failedLog->meta['exit_code'])->toBe(1);
+
+    // Laravel 12+ has exception_class from ScheduledTaskFailed event
+    $laravelVersion = app()->version();
+    if (version_compare($laravelVersion, '12.0', '>=')) {
+        expect($failedLog->meta)->toHaveKey('exception_class');
+    }
 });
 
 it('extracts exception message from background task output', function () {

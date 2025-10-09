@@ -163,19 +163,27 @@ class MonitoredScheduledTask extends Model
 
         if ($event instanceof ScheduledTaskFailed) {
             $logItem->updateMeta([
-                'failure_message' => Str::limit(optional($event->exception)->getMessage(), 255),
+                'failure_message' => Str::limit(optional($event->exception)->getMessage(), 252),
                 'exit_code' => $event->task->exitCode,
                 'exception_class' => $event->exception ? get_class($event->exception) : null,
             ]);
         }
 
         if ($event instanceof ScheduledTaskFinished) {
-            $logItem->updateMeta([
+            $meta = [
                 'runtime' => $event->runtime,
                 'exit_code' => $event->task->exitCode,
                 'memory' => memory_get_usage(true),
                 'output' => $this->getEventTaskOutput($event),
-            ]);
+            ];
+
+            // Laravel 9/10/11 compatibility: ScheduledTaskFailed doesn't fire for non-zero exit codes
+            // Extract failure message if not already set by ScheduledTaskFailed event
+            if (! isset($logItem->meta['failure_message'])) {
+                $meta['failure_message'] = $this->extractFailureMessageFromTask($event->task);
+            }
+
+            $logItem->updateMeta($meta);
         }
 
         $this->update(['last_failed_at' => now()]);
@@ -183,6 +191,66 @@ class MonitoredScheduledTask extends Model
         $this->pingOhDear($logItem);
 
         return $this;
+    }
+
+    /**
+     * Extract failure message from task (reads output and parses).
+     * Used for Laravel 9/10/11 compatibility where ScheduledTaskFailed doesn't fire.
+     */
+    protected function extractFailureMessageFromTask($task): string
+    {
+        $output = $this->readTaskOutputFile($task);
+
+        return $this->extractFailureMessageFromOutput($output, $task->exitCode);
+    }
+
+    /**
+     * Extract a human-readable failure message from task output.
+     * Tries multiple patterns and falls back to generic message.
+     */
+    protected function extractFailureMessageFromOutput(?string $output, int $exitCode): string
+    {
+        if ($output) {
+            // Try to find exception message
+            if (preg_match('/Exception: (.+?)(?:\n|$)/i', $output, $matches)) {
+                return Str::limit($matches[1], 252);
+            }
+
+            // Try to find error message
+            if (preg_match('/Error: (.+?)(?:\n|$)/i', $output, $matches)) {
+                return Str::limit($matches[1], 252);
+            }
+
+            // Use last non-empty line
+            $lines = array_filter(explode("\n", trim($output)));
+            if (! empty($lines)) {
+                return Str::limit(end($lines), 252);
+            }
+        }
+
+        // Fallback: generic message with exit code
+        return "Command failed with exit code {$exitCode}";
+    }
+
+    /**
+     * Read task output file if it exists and is not the default output.
+     * Returns null if no output available.
+     */
+    private function readTaskOutputFile($task): ?string
+    {
+        if (is_null($task->output)) {
+            return null;
+        }
+
+        if ($task->output === $task->getDefaultOutput()) {
+            return null;
+        }
+
+        if (! is_file($task->output)) {
+            return null;
+        }
+
+        return file_get_contents($task->output) ?: null;
     }
 
     public function markAsSkipped(ScheduledTaskSkipped $event): self
@@ -229,18 +297,8 @@ class MonitoredScheduledTask extends Model
         $meta = [
             'exit_code' => $event->task->exitCode,
             'output' => $output,
+            'failure_message' => $this->extractFailureMessageFromOutput($output, $event->task->exitCode),
         ];
-
-        // Try to extract exception message from output
-        if ($output && preg_match('/Exception: (.+?)(?:\n|$)/i', $output, $matches)) {
-            $meta['failure_message'] = Str::limit($matches[1], 255);
-        } elseif ($output && preg_match('/Error: (.+?)(?:\n|$)/i', $output, $matches)) {
-            $meta['failure_message'] = Str::limit($matches[1], 255);
-        } elseif ($output) {
-            // Use last non-empty line as failure message
-            $lines = array_filter(explode("\n", trim($output)));
-            $meta['failure_message'] = Str::limit(end($lines), 255);
-        }
 
         $logItem->updateMeta($meta);
 
@@ -251,23 +309,13 @@ class MonitoredScheduledTask extends Model
         return $this;
     }
 
+    /**
+     * Get background task output - always reads if available.
+     * Background tasks bypass the storeOutputInDb config.
+     */
     protected function getBackgroundTaskOutput($task): ?string
     {
-        if (is_null($task->output)) {
-            return null;
-        }
-
-        if ($task->output === $task->getDefaultOutput()) {
-            return null;
-        }
-
-        if (! is_file($task->output)) {
-            return null;
-        }
-
-        $output = file_get_contents($task->output);
-
-        return $output ?: null;
+        return $this->readTaskOutputFile($task);
     }
 
     public function pingOhDear(MonitoredScheduledTaskLogItem $logItem): self
@@ -299,6 +347,9 @@ class MonitoredScheduledTask extends Model
     }
 
     /**
+     * Get event task output - respects storeOutputInDb config.
+     * Only reads if explicitly configured to store output in database.
+     *
      * @param ScheduledTaskFailed|ScheduledTaskFinished $event
      */
     public function getEventTaskOutput($event): ?string
@@ -307,20 +358,6 @@ class MonitoredScheduledTask extends Model
             return null;
         }
 
-        if (is_null($event->task->output)) {
-            return null;
-        }
-
-        if ($event->task->output === $event->task->getDefaultOutput()) {
-            return null;
-        }
-
-        if (! is_file($event->task->output)) {
-            return null;
-        }
-
-        $output = file_get_contents($event->task->output);
-
-        return $output ?: null;
+        return $this->readTaskOutputFile($event->task);
     }
 }
