@@ -146,12 +146,10 @@ class MonitoredScheduledTask extends Model
         // Both ScheduledTaskFinished and ScheduledTaskFailed reference the same task object
         // when they fire for the same failure in Laravel 12
         $logItem = null;
-        $isFirstEvent = true;
 
         // Check if we've already marked this specific task object execution as failed
         if (property_exists($event->task, '_scheduleMonitorFailedLogId')) {
             $logItem = $this->logItems()->find($event->task->_scheduleMonitorFailedLogId);
-            $isFirstEvent = false;
         }
 
         // If no existing log found, create a new one with initial metadata
@@ -197,8 +195,6 @@ class MonitoredScheduledTask extends Model
                     $meta['failure_message'] = Str::limit($event->exception->getMessage(), 252);
                     $meta['exception_class'] = get_class($event->exception);
                 }
-
-                $logItem->updateMeta($meta);
             } elseif ($event instanceof ScheduledTaskFinished) {
                 $meta = [
                     'runtime' => $event->runtime,
@@ -211,9 +207,9 @@ class MonitoredScheduledTask extends Model
                 if (! isset($logItem->meta['failure_message'])) {
                     $meta['failure_message'] = $this->extractFailureMessageFromTask($event->task);
                 }
-
-                $logItem->updateMeta($meta);
             }
+
+            $logItem->updateMeta($meta);
 
             // DON'T update task timestamp on second event (already set)
         }
