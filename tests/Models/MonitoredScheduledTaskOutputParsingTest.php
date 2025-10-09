@@ -13,9 +13,9 @@ afterEach(function () {
     // Clean up any test files
     $testFiles = glob(storage_path('logs/test-*.log'));
     foreach ($testFiles as $file) {
-        if (file_exists($file)) {
-            @unlink($file);
-        }
+    if (file_exists($file)) {
+        @unlink($file);
+    }
     }
 });
 
@@ -31,106 +31,106 @@ function callProtectedMethod($object, $method, ...$args)
     return $method->invoke($object, ...$args);
 }
 
-describe('extractFailureMessageFromOutput', function () {
-    it('extracts message from Exception: pattern', function () {
-        $output = "Some output\nException: Something went wrong\nStack trace...";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+// extractFailureMessageFromOutput tests
+it('extracts message from Exception: pattern', function () {
+    $output = "Some output\nException: Something went wrong\nStack trace...";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Something went wrong');
-    });
+    expect($message)->toBe('Something went wrong');
+});
 
-    it('extracts message from exception: pattern (case insensitive)', function () {
-        $output = "Some output\nexception: Case insensitive match\nStack trace...";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('extracts message from exception: pattern (case insensitive)', function () {
+    $output = "Some output\nexception: Case insensitive match\nStack trace...";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Case insensitive match');
-    });
+    expect($message)->toBe('Case insensitive match');
+});
 
-    it('extracts message from Error: pattern', function () {
-        $output = "Some output\nError: Fatal error occurred\nStack trace...";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('extracts message from Error: pattern', function () {
+    $output = "Some output\nError: Fatal error occurred\nStack trace...";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Fatal error occurred');
-    });
+    expect($message)->toBe('Fatal error occurred');
+});
 
-    it('extracts message from error: pattern (case insensitive)', function () {
-        $output = "Some output\nerror: Case insensitive error\nStack trace...";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('extracts message from error: pattern (case insensitive)', function () {
+    $output = "Some output\nerror: Case insensitive error\nStack trace...";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Case insensitive error');
-    });
+    expect($message)->toBe('Case insensitive error');
+});
 
-    it('uses last non-empty line as fallback', function () {
-        $output = "Line 1\nLine 2\nLine 3 is the last";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('uses last non-empty line as fallback', function () {
+    $output = "Line 1\nLine 2\nLine 3 is the last";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Line 3 is the last');
-    });
+    expect($message)->toBe('Line 3 is the last');
+});
 
-    it('returns generic message when output is null', function () {
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', null, 42);
+it('returns generic message when output is null', function () {
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', null, 42);
 
-        expect($message)->toBe('Command failed with exit code 42');
-    });
+    expect($message)->toBe('Command failed with exit code 42');
+});
 
-    it('returns generic message when output is empty string', function () {
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', '', 1);
+it('returns generic message when output is empty string', function () {
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', '', 1);
 
-        expect($message)->toBe('Command failed with exit code 1');
-    });
+    expect($message)->toBe('Command failed with exit code 1');
+});
 
-    it('truncates long messages to 255 characters', function () {
-        $longMessage = str_repeat('A', 300);
-        $output = "Exception: {$longMessage}";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('truncates long messages to 255 characters', function () {
+    $longMessage = str_repeat('A', 300);
+    $output = "Exception: {$longMessage}";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect(strlen($message))->toBe(255);
-        expect($message)->toStartWith(str_repeat('A', 252)); // 255 - 3 for "..."
-    });
+    expect(strlen($message))->toBe(255);
+    expect($message)->toStartWith(str_repeat('A', 252)); // 255 - 3 for "..."
+});
 
-    it('stops at newline in exception message', function () {
-        $output = "Exception: First line\nSecond line should not be included";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('stops at newline in exception message', function () {
+    $output = "Exception: First line\nSecond line should not be included";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('First line');
-    });
+    expect($message)->toBe('First line');
+});
 
-    it('takes first exception when multiple exist', function () {
-        $output = "Exception: First exception\nSome text\nException: Second exception";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('takes first exception when multiple exist', function () {
+    $output = "Exception: First exception\nSome text\nException: Second exception";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('First exception');
-    });
+    expect($message)->toBe('First exception');
+});
 
-    it('handles multi-line output with exception in middle', function () {
-        $output = <<<'OUTPUT'
+it('handles multi-line output with exception in middle', function () {
+    $output = <<<'OUTPUT'
 Starting command...
 Processing data...
 Exception: Failed to process item
 at SomeClass.php:123
 Cleaning up...
 OUTPUT;
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Failed to process item');
-    });
+    expect($message)->toBe('Failed to process item');
+});
 
-    it('handles whitespace-only output', function () {
-        $output = "   \n\n\t\t\n   ";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('handles whitespace-only output', function () {
+    $output = "   \n\n\t\t\n   ";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Command failed with exit code 1');
-    });
+    expect($message)->toBe('Command failed with exit code 1');
+});
 
-    it('prefers Exception over Error pattern', function () {
-        $output = "Error: Some error\nException: Some exception";
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+it('prefers Exception over Error pattern', function () {
+    $output = "Error: Some error\nException: Some exception";
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        expect($message)->toBe('Some exception');
-    });
+    expect($message)->toBe('Some exception');
+});
 
-    it('handles RuntimeException format', function () {
-        $output = <<<'OUTPUT'
+it('handles RuntimeException format', function () {
+    $output = <<<'OUTPUT'
 
    RuntimeException
 
@@ -138,180 +138,177 @@ OUTPUT;
 
   at vendor/laravel/framework/Database.php:42
 OUTPUT;
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', $output, 1);
 
-        // Should fall back to last non-empty line since there's no "Exception:" pattern
-        expect($message)->not->toBeEmpty();
-    });
-
-    it('includes correct exit code in fallback message', function () {
-        $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', null, 127);
-
-        expect($message)->toBe('Command failed with exit code 127');
-    });
+    // Should fall back to last non-empty line since there's no "Exception:" pattern
+    expect($message)->not->toBeEmpty();
 });
 
-describe('getBackgroundTaskOutput', function () {
-    it('reads output when file exists', function () {
-        $outputFile = storage_path('logs/test-background-output.log');
-        File::ensureDirectoryExists(dirname($outputFile));
-        File::put($outputFile, 'Background task output content');
+it('includes correct exit code in fallback message', function () {
+    $message = callProtectedMethod($this->task, 'extractFailureMessageFromOutput', null, 127);
 
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = $outputFile;
-
-        $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
-
-        expect($output)->toBe('Background task output content');
-
-        File::delete($outputFile);
-    });
-
-    it('returns null when output property is null', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = null;
-
-        $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
-
-        expect($output)->toBeNull();
-    });
-
-    it('returns null when output is default output', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $defaultOutput = $scheduledEvent->getDefaultOutput();
-        $scheduledEvent->output = $defaultOutput;
-
-        $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
-
-        expect($output)->toBeNull();
-    });
-
-    it('returns null when file does not exist', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = '/non/existent/file.log';
-
-        $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
-
-        expect($output)->toBeNull();
-    });
-
-    it('returns null when file exists but is empty', function () {
-        $outputFile = storage_path('logs/test-empty-output.log');
-        File::ensureDirectoryExists(dirname($outputFile));
-        File::put($outputFile, '');
-
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = $outputFile;
-
-        $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
-
-        expect($output)->toBeNull();
-
-        File::delete($outputFile);
-    });
+    expect($message)->toBe('Command failed with exit code 127');
 });
 
-describe('getEventTaskOutput', function () {
-    it('returns null when storeOutputInDb is false', function () {
-        $outputFile = storage_path('logs/test-event-output.log');
-        File::ensureDirectoryExists(dirname($outputFile));
-        File::put($outputFile, 'Event task output');
+// getBackgroundTaskOutput tests
+it('reads output when file exists', function () {
+    $outputFile = storage_path('logs/test-background-output.log');
+    File::ensureDirectoryExists(dirname($outputFile));
+    File::put($outputFile, 'Background task output content');
 
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = $outputFile;
-        // Don't call storeOutputInDb()
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = $outputFile;
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+    $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
 
-        $output = $this->task->getEventTaskOutput($event);
+    expect($output)->toBe('Background task output content');
 
-        expect($output)->toBeNull();
+    File::delete($outputFile);
+});
 
-        File::delete($outputFile);
-    });
+it('returns null when output property is null', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = null;
 
-    it('returns output when storeOutputInDb is true', function () {
-        $outputFile = storage_path('logs/test-event-store-output.log');
-        File::ensureDirectoryExists(dirname($outputFile));
-        File::put($outputFile, 'Stored event output');
+    $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
 
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = $outputFile;
-        $scheduledEvent->storeOutputInDb();
+    expect($output)->toBeNull();
+});
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+it('returns null when output is default output', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $defaultOutput = $scheduledEvent->getDefaultOutput();
+    $scheduledEvent->output = $defaultOutput;
 
-        $output = $this->task->getEventTaskOutput($event);
+    $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
 
-        expect($output)->toBe('Stored event output');
+    expect($output)->toBeNull();
+});
 
-        File::delete($outputFile);
-    });
+it('returns null when file does not exist', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = '/non/existent/file.log';
 
-    it('returns null when file does not exist even with storeOutputInDb', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = '/non/existent/event-file.log';
-        $scheduledEvent->storeOutputInDb();
+    $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+    expect($output)->toBeNull();
+});
 
-        $output = $this->task->getEventTaskOutput($event);
+it('returns null when file exists but is empty', function () {
+    $outputFile = storage_path('logs/test-empty-output.log');
+    File::ensureDirectoryExists(dirname($outputFile));
+    File::put($outputFile, '');
 
-        expect($output)->toBeNull();
-    });
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = $outputFile;
 
-    it('returns null when output is null', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = null;
-        $scheduledEvent->storeOutputInDb();
+    $output = callProtectedMethod($this->task, 'getBackgroundTaskOutput', $scheduledEvent);
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+    expect($output)->toBeNull();
 
-        $output = $this->task->getEventTaskOutput($event);
+    File::delete($outputFile);
+});
 
-        expect($output)->toBeNull();
-    });
+// getEventTaskOutput tests
+it('returns null when storeOutputInDb is false', function () {
+    $outputFile = storage_path('logs/test-event-output.log');
+    File::ensureDirectoryExists(dirname($outputFile));
+    File::put($outputFile, 'Event task output');
 
-    it('returns null when output is default output', function () {
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $defaultOutput = $scheduledEvent->getDefaultOutput();
-        $scheduledEvent->output = $defaultOutput;
-        $scheduledEvent->storeOutputInDb();
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = $outputFile;
+    // Don't call storeOutputInDb()
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
 
-        $output = $this->task->getEventTaskOutput($event);
+    $output = $this->task->getEventTaskOutput($event);
 
-        expect($output)->toBeNull();
-    });
+    expect($output)->toBeNull();
 
-    it('handles file with only whitespace', function () {
-        $outputFile = storage_path('logs/test-whitespace-output.log');
-        File::ensureDirectoryExists(dirname($outputFile));
-        File::put($outputFile, "   \n\n\t\t\n   ");
+    File::delete($outputFile);
+});
 
-        $schedule = app(Schedule::class);
-        $scheduledEvent = $schedule->command('test:command');
-        $scheduledEvent->output = $outputFile;
-        $scheduledEvent->storeOutputInDb();
+it('returns output when storeOutputInDb is true', function () {
+    $outputFile = storage_path('logs/test-event-store-output.log');
+    File::ensureDirectoryExists(dirname($outputFile));
+    File::put($outputFile, 'Stored event output');
 
-        $event = new ScheduledTaskFinished($scheduledEvent, 123);
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = $outputFile;
+    $scheduledEvent->storeOutputInDb();
 
-        $output = $this->task->getEventTaskOutput($event);
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
 
-        // Should return the whitespace content, not null
-        expect($output)->toBe("   \n\n\t\t\n   ");
+    $output = $this->task->getEventTaskOutput($event);
 
-        File::delete($outputFile);
-    });
+    expect($output)->toBe('Stored event output');
+
+    File::delete($outputFile);
+});
+
+it('returns null when file does not exist even with storeOutputInDb', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = '/non/existent/event-file.log';
+    $scheduledEvent->storeOutputInDb();
+
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
+
+    $output = $this->task->getEventTaskOutput($event);
+
+    expect($output)->toBeNull();
+});
+
+it('event task returns null when output is null', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = null;
+    $scheduledEvent->storeOutputInDb();
+
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
+
+    $output = $this->task->getEventTaskOutput($event);
+
+    expect($output)->toBeNull();
+});
+
+it('event task returns null when output is default output', function () {
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $defaultOutput = $scheduledEvent->getDefaultOutput();
+    $scheduledEvent->output = $defaultOutput;
+    $scheduledEvent->storeOutputInDb();
+
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
+
+    $output = $this->task->getEventTaskOutput($event);
+
+    expect($output)->toBeNull();
+});
+
+it('handles file with only whitespace', function () {
+    $outputFile = storage_path('logs/test-whitespace-output.log');
+    File::ensureDirectoryExists(dirname($outputFile));
+    File::put($outputFile, "   \n\n\t\t\n   ");
+
+    $schedule = app(Schedule::class);
+    $scheduledEvent = $schedule->command('test:command');
+    $scheduledEvent->output = $outputFile;
+    $scheduledEvent->storeOutputInDb();
+
+    $event = new ScheduledTaskFinished($scheduledEvent, 123);
+
+    $output = $this->task->getEventTaskOutput($event);
+
+    // Should return the whitespace content, not null
+    expect($output)->toBe("   \n\n\t\t\n   ");
+
+    File::delete($outputFile);
 });
