@@ -151,12 +151,12 @@ class MonitoredScheduledTask extends Model
 
         if ($logItem) {
             // Second event: merge additional metadata
-            $meta = $this->buildFailureMetadata($event, $logItem->meta);
-            $logItem->updateMeta($meta);
+            $additionalMetadata = $this->buildFailureMetadata($event, $logItem->meta);
+            $logItem->updateMeta($additionalMetadata);
         } else {
             // First event: create log with metadata and update timestamp
-            $meta = $this->buildFailureMetadata($event);
-            $logItem = $this->createFailedLogItem($event, $meta);
+            $metadata = $this->buildFailureMetadata($event);
+            $logItem = $this->createFailedLogItem($event, $metadata);
             $this->update(['last_failed_at' => now()]);
         }
 
