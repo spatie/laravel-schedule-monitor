@@ -143,6 +143,10 @@ class MonitoredScheduledTask extends Model
      */
     public function markAsFailed($event): self
     {
+        if ($event instanceof ScheduledTaskFailed && $this->alreadyMarkedAsFailedInCurrentRun()) {
+            return $this;
+        }
+
         $logItem = $this->createLogItem($this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED);
 
         if ($event instanceof ScheduledTaskFailed) {
@@ -165,6 +169,18 @@ class MonitoredScheduledTask extends Model
         $this->pingOhDear($logItem);
 
         return $this;
+    }
+
+    public function alreadyMarkedAsFailedInCurrentRun(): bool
+    {
+        if (is_null($this->last_started_at)) {
+            return false;
+        }
+
+        return $this->logItems()
+            ->where('type', $this->getMonitoredScheduleTaskLogItemModel()::TYPE_FAILED)
+            ->where('created_at', '>=', $this->last_started_at)
+            ->exists();
     }
 
     public function markAsSkipped(ScheduledTaskSkipped $event): self
