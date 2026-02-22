@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 4.2.0 - 2026-02-22
+
+Add Laravel 13.x support
+
 ## 4.1.0 - 2025-09-11
 
 - make Oh Dear ping job configurable
