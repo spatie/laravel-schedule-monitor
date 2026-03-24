@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Spatie\ScheduleMonitor\Events\OhDearPingFailed;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Support\OhDearPayload\OhDearPayloadFactory;
 use Spatie\ScheduleMonitor\Support\OhDearPayload\Payloads\Payload;
@@ -48,20 +49,18 @@ class PingOhDearJob implements ShouldQueue
         $pendingRequest = Http::retry(
             times: 3,
             sleepMilliseconds: config('schedule-monitor.oh_dear.retry_delay_ms', 10_000),
-        );
-
-        if ($debugLogging) {
-            $pendingRequest = $pendingRequest->withOptions([
-                'on_stats' => function (TransferStats $stats) use (&$transferStats) {
-                    $transferStats = $stats;
-                },
-            ]);
-        }
+        )->when($debugLogging, fn ($request) => $request->withOptions([
+            'on_stats' => function (TransferStats $stats) use (&$transferStats) {
+                $transferStats = $stats;
+            },
+        ]));
 
         try {
             $response = $pendingRequest->post($payload->url(), $payload->data());
             $response->throw();
         } catch (Throwable $exception) {
+            event(new OhDearPingFailed($this->logItem, $payload, $exception, $transferStats));
+
             if ($debugLogging) {
                 $this->logFailedPing($payload, $transferStats, $exception);
             }
