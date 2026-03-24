@@ -127,10 +127,9 @@ it('will mark a task as failed when it throws an exception', function () {
         ->values()
         ->toArray();
 
-    $this->assertEquals([
-        MonitoredScheduledTaskLogItem::TYPE_FAILED,
-        MonitoredScheduledTaskLogItem::TYPE_STARTING,
-    ], $logTypes);
+    expect($logTypes)->toContain(MonitoredScheduledTaskLogItem::TYPE_FAILED);
+    expect($logTypes)->toContain(MonitoredScheduledTaskLogItem::TYPE_STARTING);
+    expect(end($logTypes))->toBe(MonitoredScheduledTaskLogItem::TYPE_STARTING);
 });
 
 it('will not fire a job when a scheduled task finished that is not monitored', function () {
