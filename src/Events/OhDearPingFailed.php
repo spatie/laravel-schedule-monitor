@@ -14,5 +14,6 @@ class OhDearPingFailed
         public Payload $payload,
         public Throwable $exception,
         public ?TransferStats $transferStats = null,
-    ) {}
+    ) {
+    }
 }
