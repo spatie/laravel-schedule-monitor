@@ -11,9 +11,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Spatie\ScheduleMonitor\Events\OhDearPingFailed;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 use Spatie\ScheduleMonitor\Support\OhDearPayload\OhDearPayloadFactory;
+use Spatie\ScheduleMonitor\Support\OhDearPayload\Payloads\Payload;
 use Throwable;
 
 class PingOhDearJob implements ShouldQueue
@@ -58,12 +60,10 @@ class PingOhDearJob implements ShouldQueue
             $response = $pendingRequest->post($payload->url(), $payload->data());
             $response->throw();
         } catch (Throwable $exception) {
-            $event = new OhDearPingFailed($this->logItem, $payload, $exception, $transferStats);
-
-            event($event);
+            event(new OhDearPingFailed($this->logItem, $payload, $exception, $transferStats));
 
             if ($debugLogging) {
-                Log::warning('PingOhDearJob failed: '.$exception->getMessage(), $event->context());
+                $this->logFailedPing($payload, $transferStats, $exception);
             }
 
             throw $exception;
@@ -75,5 +75,50 @@ class PingOhDearJob implements ShouldQueue
     public function retryUntil(): DateTime
     {
         return now()->addMinutes(config('schedule-monitor.oh_dear.retry_job_for_minutes', 10))->toDateTime();
+    }
+
+    protected function logFailedPing(Payload $payload, ?TransferStats $transferStats, Throwable $exception): void
+    {
+        $context = [
+            'request' => [
+                'url' => $payload->url(),
+                'data' => $payload->data(),
+            ],
+            'exception' => $exception->getMessage(),
+        ];
+
+        if ($transferStats) {
+            $stats = $transferStats->getHandlerStats();
+
+            $context['timing'] = [
+                'namelookup_time_s' => $stats['namelookup_time'] ?? null,
+                'connect_time_s' => $stats['connect_time'] ?? null,
+                'appconnect_time_s' => $stats['appconnect_time'] ?? null,
+                'starttransfer_time_s' => $stats['starttransfer_time'] ?? null,
+                'total_time_s' => $stats['total_time'] ?? null,
+            ];
+
+            $context['connection'] = [
+                'primary_ip' => $stats['primary_ip'] ?? null,
+                'primary_port' => $stats['primary_port'] ?? null,
+                'local_ip' => $stats['local_ip'] ?? null,
+            ];
+
+            if ($transferStats->hasResponse()) {
+                $response = $transferStats->getResponse();
+
+                $context['response'] = [
+                    'status' => $response->getStatusCode(),
+                    'headers' => $response->getHeaders(),
+                    'body' => Str::limit((string) $response->getBody(), 1024),
+                ];
+            }
+
+            if ($request = $transferStats->getRequest()) {
+                $context['request']['headers'] = $request->getHeaders();
+            }
+        }
+
+        Log::warning('PingOhDearJob failed: '.$exception->getMessage(), $context);
     }
 }
