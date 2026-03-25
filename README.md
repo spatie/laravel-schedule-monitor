@@ -142,9 +142,31 @@ return [
          * The URL of the Oh Dear API.
          */
         'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
+
+        /*
+         * The delay in milliseconds between retry attempts when a ping fails.
+         */
+        'retry_delay_ms' => env('OH_DEAR_RETRY_DELAY_MS', 10_000),
+
+        /*
+         * When enabled, failed pings to Oh Dear will log detailed diagnostics
+         * including request timing, connection info, and response data.
+         * Useful for debugging connectivity issues with ping.ohdear.app.
+         */
+        'debug_logging' => env('OH_DEAR_DEBUG_LOGGING', false),
     ],
 ];
 ```
+
+#### Debugging failed pings
+
+If you're experiencing intermittent timeouts or connection issues when pinging Oh Dear, you can enable debug logging to get detailed diagnostics on every failed ping:
+
+```env
+OH_DEAR_DEBUG_LOGGING=true
+```
+
+When enabled, each failed ping will write a `Log::warning` with the full request details, cURL timing breakdown (DNS lookup, TCP connect, TLS handshake, time-to-first-byte), connection info (resolved IP, local IP), and the server response if one was received.
 
 #### Cleaning the database
 

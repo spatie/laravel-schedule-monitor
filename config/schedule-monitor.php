@@ -70,6 +70,11 @@ return [
         'retry_job_for_minutes' => 10,
 
         /*
+         * The delay in milliseconds between retry attempts when a ping fails.
+         */
+        'retry_delay_ms' => env('OH_DEAR_RETRY_DELAY_MS', 10_000),
+
+        /*
          * When set to true, we will automatically add the `PingOhDearJob` to Horizon's
          * silenced jobs.
          */
@@ -96,5 +101,12 @@ return [
          * The URL of the Oh Dear API.
          */
         'api_url' => env('OH_DEAR_API_URL', 'https://ohdear.app/api/'),
+
+        /*
+         * When enabled, failed pings to Oh Dear will log detailed diagnostics
+         * including request timing, connection info, and response data.
+         * Useful for debugging connectivity issues with ping.ohdear.app.
+         */
+        'debug_logging' => env('OH_DEAR_DEBUG_LOGGING', false),
     ],
 ];
