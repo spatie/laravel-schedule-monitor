@@ -48,8 +48,14 @@ abstract class Task
 
     public function name(): ?string
     {
-        return $this->getMonitoredScheduledTasks()->getMonitorName($this->event)
+        $name = $this->getMonitoredScheduledTasks()->getMonitorName($this->event)
             ?? $this->defaultName();
+
+        if ($name === null) {
+            return null;
+        }
+
+        return Str::limit($name, 255, '');
     }
 
     public function shouldMonitor(): bool
