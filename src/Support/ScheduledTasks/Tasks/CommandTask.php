@@ -19,7 +19,7 @@ class CommandTask extends Task
 
     public function defaultName(): ?string
     {
-        return Str::limit(Str::after($this->event->command,self::artisanString() . ' '), 255, '');
+        return Str::after($this->event->command, self::artisanString() . ' ');
     }
 
     public function type(): string

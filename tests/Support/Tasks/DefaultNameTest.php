@@ -54,3 +54,15 @@ it('truncates a long job task name so it fits the name column', function () {
     expect($task->name())->toStartWith('LongJob')
         ->and(mb_strlen($task->name()))->toBeLessThanOrEqual(255);
 });
+
+it('truncates a long custom monitor name so it fits the name column', function () {
+    TestKernel::replaceScheduledTasks(function (Schedule $schedule) {
+        $schedule->command('list')->daily()->monitorName(str_repeat('a', 300));
+    });
+
+    $task = ScheduledTasks::createForSchedule()
+        ->uniqueTasks()
+        ->first(fn (Task $task) => $task->type() === 'command');
+
+    expect(mb_strlen($task->name()))->toBeLessThanOrEqual(255);
+});

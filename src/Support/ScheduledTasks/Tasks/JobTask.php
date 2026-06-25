@@ -4,7 +4,6 @@ namespace Spatie\ScheduleMonitor\Support\ScheduledTasks\Tasks;
 
 use Illuminate\Console\Scheduling\CallbackEvent;
 use Illuminate\Console\Scheduling\Event;
-use Illuminate\Support\Str;
 
 class JobTask extends Task
 {
@@ -29,7 +28,7 @@ class JobTask extends Task
 
     public function defaultName(): ?string
     {
-        return Str::limit($this->event->description, 255, '');
+        return $this->event->description;
     }
 
     public function type(): string
