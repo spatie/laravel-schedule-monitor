@@ -19,7 +19,7 @@ class ShellTask extends Task
 
     public function defaultName(): ?string
     {
-        return Str::limit($this->event->command, 255);
+        return Str::limit($this->event->command, 255, '');
     }
 
     public function type(): string
