@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 4.3.1 - 2026-06-25
+
+### What's Changed
+
+* Truncate scheduled task names to fit the name column by @martin-ro in https://github.com/spatie/laravel-schedule-monitor/pull/140
+
+### New Contributors
+
+* @martin-ro made their first contribution in https://github.com/spatie/laravel-schedule-monitor/pull/140
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/4.3.0...4.3.1
+
 ## 4.3.0 - 2026-03-25
 
 - Drop Laravel 9/10 and PHP 8.1 support
