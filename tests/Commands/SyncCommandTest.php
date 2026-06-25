@@ -5,7 +5,6 @@ use Spatie\ScheduleMonitor\Commands\SyncCommand;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestJob;
 use Spatie\ScheduleMonitor\Tests\TestClasses\TestKernel;
-use function Spatie\Snapshots\assertMatchesSnapshot;
 use Spatie\TestTime\TestTime;
 
 beforeEach(function () {
@@ -80,7 +79,48 @@ it('can sync the schedule with the db and oh dear', function () {
         'timezone' => 'Asia/Kolkata',
     ]);
 
-    assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([
+        [
+            'name' => 'dummy',
+            'type' => 'cron',
+            'cron_expression' => '* * * * *',
+            'grace_time_in_minutes' => 5,
+            'server_timezone' => 'UTC',
+            'description' => '',
+            'uuid' => 'test-uuid-9',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-9',
+        ],
+        [
+            'name' => 'execute',
+            'type' => 'cron',
+            'cron_expression' => '*/15 * * * *',
+            'grace_time_in_minutes' => 5,
+            'server_timezone' => 'UTC',
+            'description' => '',
+            'uuid' => 'test-uuid-10',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-10',
+        ],
+        [
+            'name' => 'my-closure',
+            'type' => 'cron',
+            'cron_expression' => '0 * * * *',
+            'grace_time_in_minutes' => 5,
+            'server_timezone' => 'UTC',
+            'description' => '',
+            'uuid' => 'test-uuid-11',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-11',
+        ],
+        [
+            'name' => TestJob::class,
+            'type' => 'cron',
+            'cron_expression' => '0 0 * * *',
+            'grace_time_in_minutes' => 5,
+            'server_timezone' => 'Asia/Kolkata',
+            'description' => '',
+            'uuid' => 'test-uuid-12',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-12',
+        ],
+    ]);
 });
 
 it('can use the keep old option to non destructively update the schedule with db and oh dear', function () {
@@ -148,7 +188,28 @@ it('can use the keep old option to non destructively update the schedule with db
         'timezone' => 'UTC',
     ]);
 
-    assertMatchesSnapshot($this->ohDear->getSyncedCronCheckAttributes());
+    expect($this->ohDear->getSyncedCronCheckAttributes())->toEqual([
+        [
+            'name' => 'dummy-2',
+            'type' => 'cron',
+            'cron_expression' => '0 * * * *',
+            'grace_time_in_minutes' => 5,
+            'description' => '',
+            'server_timezone' => 'UTC',
+            'uuid' => 'test-uuid-5',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-5',
+        ],
+        [
+            'name' => 'dummy-3',
+            'type' => 'cron',
+            'cron_expression' => '0 0 * * *',
+            'grace_time_in_minutes' => 5,
+            'description' => '',
+            'server_timezone' => 'UTC',
+            'uuid' => 'test-uuid-6',
+            'ping_url' => 'https://ping.ohdear.app/test-uuid-6',
+        ],
+    ]);
 });
 
 it('will not monitor commands without a name', function () {
