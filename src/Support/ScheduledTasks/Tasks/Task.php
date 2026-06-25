@@ -55,9 +55,6 @@ abstract class Task
             return null;
         }
 
-        // The name is stored in a varchar(255) column. We truncate with an empty
-        // suffix on purpose: the default `...` suffix would let the result grow to
-        // 258 characters and still overflow the column.
         return Str::limit($name, 255, '');
     }
 
