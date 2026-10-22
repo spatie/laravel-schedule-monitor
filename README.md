@@ -11,7 +11,7 @@ This package can also sync your schedule with [Oh Dear](https://ohdear.app). Oh 
 
 ## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-schedule-monitor.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-schedule-monitor)
+[<img src="https://spatie.be/github-ad-image/laravel-schedule-monitor.jpg" width="419px" />](https://spatie.be/github-ad-click/laravel-schedule-monitor)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
