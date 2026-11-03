@@ -24,6 +24,8 @@ abstract class Task
 
     protected ?MonitoredScheduledTask $monitoredScheduledTask = null;
 
+    protected bool $monitoredScheduledTaskLoaded = false;
+
     abstract public static function canHandleEvent(Event $event): bool;
 
     abstract public function defaultName(): ?string;
@@ -35,10 +37,25 @@ abstract class Task
         $this->event = $event;
 
         $this->uniqueId = (string)Str::uuid();
+    }
 
-        if (! empty($this->name())) {
-            $this->monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findByName($this->name());
+    /*
+     * The row is looked up on first use, not in the constructor. The event listeners
+     * and the sync command build a Task only to read its name, and never use the row.
+     */
+    protected function monitoredScheduledTask(): ?MonitoredScheduledTask
+    {
+        if ($this->monitoredScheduledTaskLoaded) {
+            return $this->monitoredScheduledTask;
         }
+
+        $this->monitoredScheduledTaskLoaded = true;
+
+        if (empty($this->name())) {
+            return null;
+        }
+
+        return $this->monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findByName($this->name());
     }
 
     public function uniqueId(): string
@@ -71,7 +88,7 @@ abstract class Task
 
     public function isBeingMonitored(): bool
     {
-        return ! is_null($this->monitoredScheduledTask);
+        return ! is_null($this->monitoredScheduledTask());
     }
 
     public function shouldMonitorAtOhDear(): bool
@@ -95,7 +112,7 @@ abstract class Task
             return false;
         }
 
-        return ! empty($this->monitoredScheduledTask->ping_url);
+        return ! empty($this->monitoredScheduledTask()->ping_url);
     }
 
     public function previousRunAt(): CarbonInterface
@@ -123,22 +140,22 @@ abstract class Task
 
     public function lastRunStartedAt(): ?CarbonInterface
     {
-        return optional($this->monitoredScheduledTask)->last_started_at;
+        return optional($this->monitoredScheduledTask())->last_started_at;
     }
 
     public function lastRunFinishedAt(): ?CarbonInterface
     {
-        return optional($this->monitoredScheduledTask)->last_finished_at;
+        return optional($this->monitoredScheduledTask())->last_finished_at;
     }
 
     public function lastRunFailedAt(): ?CarbonInterface
     {
-        return optional($this->monitoredScheduledTask)->last_failed_at;
+        return optional($this->monitoredScheduledTask())->last_failed_at;
     }
 
     public function lastRunSkippedAt(): ?CarbonInterface
     {
-        return optional($this->monitoredScheduledTask)->last_skipped_at;
+        return optional($this->monitoredScheduledTask())->last_skipped_at;
     }
 
     public function lastRunFinishedTooLate(): bool
@@ -149,7 +166,7 @@ abstract class Task
 
         $lastFinishedAt = $this->lastRunFinishedAt()
             ? $this->lastRunFinishedAt()
-            : $this->monitoredScheduledTask->created_at->subSecond();
+            : $this->monitoredScheduledTask()->created_at->subSecond();
 
         $expectedNextRunStart = $this->nextRunAt($lastFinishedAt);
         $shouldHaveFinishedAt = $expectedNextRunStart->addMinutes($this->graceTimeInMinutes());
