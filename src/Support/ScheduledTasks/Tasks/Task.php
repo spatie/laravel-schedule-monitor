@@ -22,10 +22,6 @@ abstract class Task
 
     protected string $uniqueId;
 
-    protected ?MonitoredScheduledTask $monitoredScheduledTask = null;
-
-    protected bool $monitoredScheduledTaskLoaded = false;
-
     abstract public static function canHandleEvent(Event $event): bool;
 
     abstract public function defaultName(): ?string;
@@ -39,23 +35,15 @@ abstract class Task
         $this->uniqueId = (string)Str::uuid();
     }
 
-    /*
-     * The row is looked up on first use, not in the constructor. The event listeners
-     * and the sync command build a Task only to read its name, and never use the row.
-     */
     protected function monitoredScheduledTask(): ?MonitoredScheduledTask
     {
-        if ($this->monitoredScheduledTaskLoaded) {
-            return $this->monitoredScheduledTask;
-        }
+        return once(function () {
+            if (empty($this->name())) {
+                return null;
+            }
 
-        $this->monitoredScheduledTaskLoaded = true;
-
-        if (empty($this->name())) {
-            return null;
-        }
-
-        return $this->monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findByName($this->name());
+            return $this->getMonitoredScheduleTaskModel()->findByName($this->name());
+        });
     }
 
     public function uniqueId(): string
