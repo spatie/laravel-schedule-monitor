@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-schedule-monitor` will be documented in this file
 
+## 4.3.2 - 2026-11-04
+
+### What's Changed
+
+* Reduce database queries during scheduler events and schedule synchronization by looking up monitored task rows only when needed, by @mattiasgeniar in https://github.com/spatie/laravel-schedule-monitor/pull/141.
+* Keep each task's first-read monitoring snapshot, including missing rows, independent of Laravel's global `once()` cache lifecycle.
+* Retire end-of-life Laravel 11 CI jobs rather than bypassing Composer security advisories. Package PHP and Laravel requirements are unchanged.
+
+**Full Changelog**: https://github.com/spatie/laravel-schedule-monitor/compare/4.3.1...4.3.2
+
 ## 4.3.1 - 2026-06-25
 
 ### What's Changed
