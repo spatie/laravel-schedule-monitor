@@ -22,6 +22,10 @@ abstract class Task
 
     protected string $uniqueId;
 
+    protected ?MonitoredScheduledTask $monitoredScheduledTask = null;
+
+    protected bool $monitoredScheduledTaskLoaded = false;
+
     abstract public static function canHandleEvent(Event $event): bool;
 
     abstract public function defaultName(): ?string;
@@ -37,13 +41,15 @@ abstract class Task
 
     protected function monitoredScheduledTask(): ?MonitoredScheduledTask
     {
-        return once(function () {
-            if (empty($this->name())) {
-                return null;
+        if (! $this->monitoredScheduledTaskLoaded) {
+            if (! empty($this->name())) {
+                $this->monitoredScheduledTask = $this->getMonitoredScheduleTaskModel()->findByName($this->name());
             }
 
-            return $this->getMonitoredScheduleTaskModel()->findByName($this->name());
-        });
+            $this->monitoredScheduledTaskLoaded = true;
+        }
+
+        return $this->monitoredScheduledTask;
     }
 
     public function uniqueId(): string
