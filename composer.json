@@ -26,8 +26,8 @@
     "require-dev": {
         "mockery/mockery": "^1.4",
         "orchestra/testbench": "^9.6|^10.0|^11.0",
-        "pestphp/pest": "^2.34|^3.7|^4.4",
-        "pestphp/pest-plugin-laravel": "^2.3|^3.1|^4.1",
+        "pestphp/pest": "^2.34|^3.7|^4.4|^5.0",
+        "pestphp/pest-plugin-laravel": "^2.3|^3.1|^4.1|^5.0",
         "spatie/pest-plugin-snapshots": "^1.1|^2.1",
         "spatie/phpunit-snapshot-assertions": "^4.2|^5.1",
         "spatie/test-time": "^1.2"
