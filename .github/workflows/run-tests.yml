@@ -42,6 +42,11 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: Allow installing Laravel 11
+        # Laravel 11 no longer gets security fixes, so Composer refuses to install any 11.x release by default.
+        if: matrix.laravel == '11.*'
+        run: composer config policy.advisories.block false
+
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
