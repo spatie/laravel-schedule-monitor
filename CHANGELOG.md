@@ -6,7 +6,7 @@ All notable changes to `laravel-schedule-monitor` will be documented in this fil
 
 ### What's Changed
 
-* Fix application-timezone conversion for immutable Carbon dates in scheduled tasks, preventing the PHP 8.5 discarded-return-value warning in , by @morphsteve in https://github.com/spatie/laravel-schedule-monitor/pull/144.
+* Fix application-timezone conversion for immutable Carbon dates in scheduled tasks, preventing the PHP 8.5 discarded-return-value warning in `schedule-monitor:list`, by @morphsteve in https://github.com/spatie/laravel-schedule-monitor/pull/144.
 * Add regression coverage for next-run times with both mutable and immutable Carbon dates.
 * Expand CI coverage to PHP 8.5 and 8.6 and allow Pest 5 in https://github.com/spatie/laravel-schedule-monitor/pull/143.
 * Update CI dependency-installation handling in https://github.com/spatie/laravel-schedule-monitor/pull/142. Package PHP and Laravel requirements are unchanged.
