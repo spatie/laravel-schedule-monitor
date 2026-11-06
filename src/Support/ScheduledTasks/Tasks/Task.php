@@ -125,11 +125,7 @@ abstract class Task
             $this->timezone()
         );
 
-        $date = Date::instance($dateTime);
-
-        $date->setTimezone(config('app.timezone'));
-
-        return $date;
+        return Date::instance($dateTime)->setTimezone(config('app.timezone'));
     }
 
     public function lastRunStartedAt(): ?CarbonInterface
