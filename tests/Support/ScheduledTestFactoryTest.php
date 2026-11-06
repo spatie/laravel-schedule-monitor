@@ -1,6 +1,9 @@
 <?php
 
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Once;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
@@ -72,21 +75,34 @@ test('a task can be marked as not to be monitored', function () {
     expect(ScheduledTaskFactory::createForEvent($event)->shouldMonitor(false))->toBeTrue();
 });
 
-it('can handle timezones', function () {
+it('can handle timezones', function (string $dateClass) {
     TestTime::freeze('Y-m-d H:i:s', '2020-02-01 00:00:00');
 
-    $schedule = app()->make(Schedule::class);
+    Date::use($dateClass);
 
-    $appTimezoneEvent = $schedule->command('foo:bar')->daily();
-    $appTimezoneTask = ScheduledTaskFactory::createForEvent($appTimezoneEvent);
-    expect($appTimezoneTask->timezone())->toEqual('UTC');
-    expect($appTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'))->toEqual('2020-02-02 00:00:00');
+    try {
+        $schedule = app()->make(Schedule::class);
 
-    $otherTimezoneEvent = $schedule->command('foo:bar')->daily()->timezone('Asia/Kolkata');
-    $otherTimezoneTask = ScheduledTaskFactory::createForEvent($otherTimezoneEvent);
-    expect($otherTimezoneTask->timezone())->toEqual('Asia/Kolkata');
-    expect($otherTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'))->toEqual('2020-02-01 18:30:00');
-});
+        $appTimezoneEvent = $schedule->command('foo:bar')->daily();
+        $appTimezoneTask = ScheduledTaskFactory::createForEvent($appTimezoneEvent);
+        expect($appTimezoneTask->timezone())->toEqual('UTC');
+        expect($appTimezoneTask->nextRunAt()->format('Y-m-d H:i:s'))->toEqual('2020-02-02 00:00:00');
+
+        $otherTimezoneEvent = $schedule->command('foo:bar')->daily()->timezone('Asia/Kolkata');
+        $otherTimezoneTask = ScheduledTaskFactory::createForEvent($otherTimezoneEvent);
+        $nextRunAt = $otherTimezoneTask->nextRunAt();
+
+        expect($otherTimezoneTask->timezone())->toEqual('Asia/Kolkata');
+        expect($nextRunAt)->toBeInstanceOf($dateClass)
+            ->and($nextRunAt->timezoneName)->toBe('UTC')
+            ->and($nextRunAt->format('Y-m-d H:i:s'))->toEqual('2020-02-01 18:30:00');
+    } finally {
+        Date::useDefault();
+    }
+})->with([
+    'mutable' => [Carbon::class],
+    'immutable' => [CarbonImmutable::class],
+]);
 
 it('loads monitoring state on first read and keeps a snapshot for that task', function () {
     $event = app(Schedule::class)->command('foo:bar')->hourly();
