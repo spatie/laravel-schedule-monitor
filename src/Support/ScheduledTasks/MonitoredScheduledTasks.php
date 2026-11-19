@@ -84,7 +84,7 @@ class MonitoredScheduledTasks
     {
         return [
             $target::class,
-            spl_object_hash($target),
+            spl_object_id($target),
             $key,
         ];
     }
